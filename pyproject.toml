@@ -6,7 +6,9 @@ authors = [
     { name = "ttimasdf", email = "opensource@rabit.pw" }
 ]
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "mcp>=1.6.0",
+]
 
 dynamic = ["version"]
 
