@@ -1,0 +1,46 @@
+# serializer version: 1
+# name: test_disassembly_range
+  list([
+    TextContent(type='text', text='0x8a1: push    rbp\n0x8a2: mov     rbp, rsp\n0x8a5: sub     rsp, 0xc0\n0x8ac: mov     dword [rbp-0xb4], edi', annotations=None),
+  ])
+# ---
+# name: test_high_level_il
+  list([
+    TextContent(type='text', text='0x8ac: int32_t argc_1 = argc\n0x8b2: char** argv_1 = argv\n0x8b9: void* fsbase\n0x8b9: int64_t rax = *(fsbase + 0x28)\n0x8d4: printf("Enter the flag\\n>>> ")\n0x8ef: void var_98\n0x8ef: __isoc99_scanf("%s", &var_98)\n0x8fe: uint64_t rax_3 = strlen(&var_98)\n0x912: if (rax_3 u<= 0x20)\n0x91b: puts("Incorrect!")\n0x925: exit(1)\n0x925: noreturn\n0x92a: int64_t i = 0\n0x9ab: while (i u< rax_3)\n0x97d: if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n0x986: puts("Incorrect!")\n0x990: exit(1)\n0x990: noreturn\n0x995: i += 1\n0x9b4: puts("Correct!")\n0x9cb: if (rax == *(fsbase + 0x28))\n0x9d3: return 0\n0x9cd: __stack_chk_fail()\n0x9cd: noreturn\n', annotations=None),
+  ])
+# ---
+# name: test_medium_level_il
+  list([
+    TextContent(type='text', text='0x8ac: argc_1 = argc\n0x8b2: argv_1 = argv\n0x8b9: rax = [fsbase + 0x28].q\n0x8c2: var_10 = rax\n0x8cf: rax_1 = 0\n0x8d4: 0x6b0("Enter the flag\\n>>> ")\n0x8e0: rsi = &var_98\n0x8ea: rax_2 = 0\n0x8ef: 0x6c0("%s", rsi)\n0x8fb: rdi = &var_98\n0x8fe: rax_3 = 0x690(rdi)\n0x903: var_a8 = rax_3\n0x912: if (var_a8 u> 0x20) then 13 @ 0x92a else 15 @ 0x91b\n0x92a: i = 0\n0x935: goto 18 @ 0x99d\n0x91b: 0x680("Incorrect!")\n0x925: 0x6d0(1)\n0x925: noreturn\n0x99d: rax_11 = i\n0x9ab: if (rax_11 u< var_a8) then 20 @ 0x93e else 31 @ 0x9b4\n0x93e: rax_4 = i\n0x945: rax_5 = rax_4 + &var_98\n0x948: rax_6 = [rax_5].b\n0x94b: rax_7 = rax_6\n0x94e: rdi_1 = rax_7\n0x950: rax_8 = 0x7fa(rdi_1)\n0x955: var_a0_1 = rax_8\n0x95c: rax_9 = i\n0x963: rdx = rax_9 << 3\n0x972: rax_10 = [rdx + 0x2014e0].q\n0x97d: if (var_a0_1 == rax_10) then 36 @ 0x995 else 38 @ 0x986\n0x9b4: 0x680("Correct!")\n0x9b9: rax_12 = 0\n0x9be: rcx = var_10\n0x9c2: rcx_1 = rcx ^ [fsbase + 0x28].q\n0x9cb: if (rcx_1 == 0) then 41 @ 0x9d3 else 42 @ 0x9cd\n0x995: i = i + 1\n0x995: goto 18 @ 0x99d\n0x986: 0x680("Incorrect!")\n0x990: 0x6d0(1)\n0x990: noreturn\n0x9d3: return 0\n0x9cd: 0x6a0()\n0x9cd: noreturn\n', annotations=None),
+  ])
+# ---
+# name: test_pseudo_c
+  list([
+    TextContent(type='text', text='\n  int32_t new_function_name(int32_t argc, char** argv, char** envp)\n\n{\n   int32_t argc_1 = argc;\n   char** argv_1 = argv;\n   void* fsbase;\n   int64_t rax = *(fsbase + 0x28);\n   printf("Enter the flag\\n>>> ");\n   void var_98;\n   __isoc99_scanf("%s", &var_98);\n   uint64_t rax_3 = strlen(&var_98);\n   \n   if (rax_3 <= 0x20)\n   {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for (int64_t i = 0; i < rax_3; i += 1)\n   {\n      if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n      {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if (rax == *(fsbase + 0x28))\n      return 0;\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
+  ])
+# ---
+# name: test_pseudo_c_invalid_address
+  list([
+    TextContent(type='text', text="Error: Invalid address format 'invalid_address'. Expected hex string (e.g., '0x1000')", annotations=None),
+  ])
+# ---
+# name: test_pseudo_rust
+  list([
+    TextContent(type='text', text='\n  fn new_function_name(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32\n\n{\n   let argc_1: i32 = argc;\n   let argv_1: *mut *mut i8 = argv;\n   let fsbase: *mut c_void;\n   let rax: i64 = *fsbase.byte_offset(0x28);\n   printf("Enter the flag\\n>>> ");\n   let mut var_98: ();\n   __isoc99_scanf("%s", &var_98);\n   let rax_3: u64 = strlen(&var_98);\n   \n   if rax_3 <= 0x20 {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for i in 0..rax_3 {\n      if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if rax == *fsbase.byte_offset(0x28) {\n      return 0;\n   }\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
+  ])
+# ---
+# name: test_rename_symbol_function
+  list([
+    TextContent(type='text', text="Successfully renamed function at 0x000008a1 from 'main' to 'new_function_name'", annotations=None),
+  ])
+# ---
+# name: test_rename_symbol_invalid_address
+  list([
+    TextContent(type='text', text="Error: Invalid address format 'invalid_address'. Expected hex string (e.g., '0x1000')", annotations=None),
+  ])
+# ---
+# name: test_update_analysis_and_wait
+  list([
+    TextContent(type='text', text='Analysis updated successfully for tests/binary/beleaf.elf.bndb', annotations=None),
+  ])
+# ---
