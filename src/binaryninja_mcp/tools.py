@@ -1,6 +1,6 @@
-from typing import Dict, List, Any, Optional, Tuple, Union
+from typing import List, Optional
 import binaryninja as bn
-from mcp.types import TextContent, ImageContent, EmbeddedResource
+from mcp.types import TextContent
 
 class MCPTools:
     """Tool handler for Binary Ninja MCP tools"""
@@ -84,17 +84,28 @@ class MCPTools:
                     text=f"Error: No function found at address {address}"
                 )]
 
-            # Get decompiled code
-            decompiled = func.hlil.decompile()
-            if not decompiled:
-                return [TextContent(
-                    type="text",
-                    text=f"Error: Failed to decompile function at {address}"
-                )]
+            lines = []
+            settings = bn.DisassemblySettings()
+            settings.set_option(bn.DisassemblyOption.ShowAddress, False)
+            settings.set_option(bn.DisassemblyOption.WaitForIL, True)
+            obj = bn.LinearViewObject.language_representation(self.bv, settings)
+            cursor_end = bn.LinearViewCursor(obj)
+            cursor_end.seek_to_address(func.highest_address)
+            body = self.bv.get_next_linear_disassembly_lines(cursor_end)
+            cursor_end.seek_to_address(func.highest_address)
+            header = self.bv.get_previous_linear_disassembly_lines(cursor_end)
+
+            for line in header:
+                lines.append(f'{str(line)}\n')
+
+            for line in body:
+                lines.append(f'{str(line)}\n')
+
+            lines_of_code = ''.join(lines)
 
             return [TextContent(
                 type="text",
-                text=str(decompiled)
+                text=lines_of_code
             )]
         except ValueError:
             return [TextContent(
@@ -126,43 +137,29 @@ class MCPTools:
                     text=f"Error: No function found at address {address}"
                 )]
 
-            # Check if Rust decompiler is available
-            if not hasattr(func, "rust_decompile") and not hasattr(func.hlil, "rust_decompile"):
-                return [TextContent(
-                    type="text",
-                    text="Error: Rust decompiler is not available in this version of Binary Ninja"
-                )]
+            lines = []
+            settings = bn.DisassemblySettings()
+            settings.set_option(bn.DisassemblyOption.ShowAddress, False)
+            settings.set_option(bn.DisassemblyOption.WaitForIL, True)
+            obj = bn.LinearViewObject.language_representation(self.bv, settings, language="Pseudo Rust")
+            cursor_end = bn.LinearViewCursor(obj)
+            cursor_end.seek_to_address(func.highest_address)
+            body = self.bv.get_next_linear_disassembly_lines(cursor_end)
+            cursor_end.seek_to_address(func.highest_address)
+            header = self.bv.get_previous_linear_disassembly_lines(cursor_end)
 
-            # Try to decompile to Rust
-            try:
-                if hasattr(func, "rust_decompile"):
-                    decompiled = func.rust_decompile()
-                else:
-                    decompiled = func.hlil.rust_decompile()
+            for line in header:
+                lines.append(f'{str(line)}\n')
 
-                if not decompiled:
-                    return [TextContent(
-                        type="text",
-                        text=f"Error: Failed to decompile function at {address} to Rust"
-                    )]
+            for line in body:
+                lines.append(f'{str(line)}\n')
 
-                return [TextContent(
-                    type="text",
-                    text=str(decompiled)
-                )]
-            except:
-                # Fallback to C decompilation with a note
-                decompiled = func.hlil.decompile()
-                if not decompiled:
-                    return [TextContent(
-                        type="text",
-                        text=f"Error: Failed to decompile function at {address}"
-                    )]
+            lines_of_code = ''.join(lines)
 
-                return [TextContent(
-                    type="text",
-                    text=f"// Note: Rust decompilation failed, showing C decompilation instead\n{str(decompiled)}"
-                )]
+            return [TextContent(
+                type="text",
+                text=lines_of_code
+            )]
         except ValueError:
             return [TextContent(
                 type="text",
@@ -201,9 +198,14 @@ class MCPTools:
                     text=f"Error: Failed to get HLIL for function at {address}"
                 )]
 
+            # Format the HLIL output
+            lines = []
+            for instruction in hlil.instructions:
+                lines.append(f"{instruction.address:#x}: {instruction}\n")
+
             return [TextContent(
                 type="text",
-                text=str(hlil)
+                text=''.join(lines)
             )]
         except ValueError:
             return [TextContent(
@@ -243,9 +245,14 @@ class MCPTools:
                     text=f"Error: Failed to get MLIL for function at {address}"
                 )]
 
+            # Format the MLIL output
+            lines = []
+            for instruction in mlil.instructions:
+                lines.append(f"{instruction.address:#x}: {instruction}\n")
+
             return [TextContent(
                 type="text",
-                text=str(mlil)
+                text=''.join(lines)
             )]
         except ValueError:
             return [TextContent(
@@ -274,15 +281,26 @@ class MCPTools:
             # If length is provided, disassemble that range
             if length is not None:
                 disasm = []
-                for i in range(0, length, 4):  # Assuming 4-byte instructions for simplicity
-                    current_addr = addr + i
-                    if current_addr >= self.bv.end:
-                        break
+                # Get instruction lengths instead of assuming 4-byte instructions
+                current_addr = addr
+                remaining_length = length
+
+                while remaining_length > 0 and current_addr < self.bv.end:
+                    # Get instruction length at this address
+                    instr_length = self.bv.get_instruction_length(current_addr)
+                    if instr_length == 0:
+                        instr_length = 1  # Fallback to 1 byte if instruction length is unknown
 
                     # Get disassembly at this address
                     tokens = self.bv.get_disassembly(current_addr)
                     if tokens:
                         disasm.append(f"{hex(current_addr)}: {tokens}")
+
+                    current_addr += instr_length
+                    remaining_length -= instr_length
+
+                    if remaining_length <= 0:
+                        break
 
                 if not disasm:
                     return [TextContent(
@@ -303,16 +321,23 @@ class MCPTools:
                     text=f"Error: No function found at address {address}"
                 )]
 
-            # Get function disassembly
-            disasm = []
-            for block in func.basic_blocks:
-                disasm.append(f"# Basic Block {hex(block.start)}")
-                for addr in range(block.start, block.end):
-                    tokens = self.bv.get_disassembly(addr)
-                    if tokens:
-                        disasm.append(f"{hex(addr)}: {tokens}")
+            # Get function disassembly using linear disassembly
+            lines = []
+            settings = bn.DisassemblySettings()
+            settings.set_option(bn.DisassemblyOption.ShowAddress, True)
+            obj = bn.LinearViewObject.disassembly(self.bv, settings)
+            cursor = bn.LinearViewCursor(obj)
+            cursor.seek_to_address(func.start)
 
-            if not disasm:
+            # Get all lines until we reach the end of the function
+            while cursor.current_address < func.highest_address:
+                line = self.bv.get_next_linear_disassembly_lines(cursor)
+                if not line:
+                    break
+                for l in line:
+                    lines.append(f"{str(l)}")
+
+            if not lines:
                 return [TextContent(
                     type="text",
                     text=f"Error: Failed to disassemble function at {address}"
@@ -320,7 +345,7 @@ class MCPTools:
 
             return [TextContent(
                 type="text",
-                text="\n".join(disasm)
+                text="\n".join(lines)
             )]
         except ValueError:
             return [TextContent(

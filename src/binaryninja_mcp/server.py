@@ -12,10 +12,10 @@ from mcp.server.stdio import stdio_server
 from mcp.types import Tool, Resource, ResourceTemplate, TextContent
 from pydantic import AnyUrl
 
-from binaryninja_mcp.consts import DEFAULT_PORT
+from binaryninja_mcp.consts import DEFAULT_PORT, TEST_BINARY_PATH_ELF
 from binaryninja_mcp.resources import MCPResource
 from binaryninja_mcp.tools import MCPTools
-from binaryninja_mcp.utils import bv_name
+from binaryninja_mcp.utils import bv_name, disable_binaryninja_user_plugins
 
 
 @dataclass
@@ -516,7 +516,8 @@ if __name__ == "__main__":
     uv run ./src/binaryninja_mcp/server.py
     """
 
-    bv = bn.load("tests/binary/beleaf.elf", update_analysis=False)
+    disable_binaryninja_user_plugins()
+    bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
     server = create_mcp_server([bv])
 
     # if False:
@@ -545,5 +546,5 @@ if __name__ == "__main__":
 # launched by `mcp dev server.py`
 elif __name__ == "server_module":
     print("loading server module")
-    # bv = bn.load("tests/binary/beleaf.elf", update_analysis=False)
+    # bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
     server = create_mcp_server()

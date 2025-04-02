@@ -7,6 +7,7 @@ import uvicorn
 import logging
 from binaryninja_mcp.server import create_mcp_server, create_sse_app
 from binaryninja_mcp.consts import DEFAULT_PORT
+from binaryninja_mcp.utils import disable_binaryninja_user_plugins
 
 @click.group()
 def cli():
@@ -20,6 +21,8 @@ def cli():
 def server(listen_host, listen_port, filename):
     """Start an MCP server for the given binary file"""
     logging.basicConfig(level=logging.INFO)
+
+    disable_binaryninja_user_plugins()
 
     # Load the binary view
     bv = load(filename)
