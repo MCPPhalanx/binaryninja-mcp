@@ -1,5 +1,3 @@
-from binaryninja import *
-from binaryninja_mcp import do_nothing
+from binaryninja_mcp.plugin import plugin_init
 
-
-PluginCommand.register("Useless Plugin", "Basically does nothing", do_nothing)
+plugin_init()

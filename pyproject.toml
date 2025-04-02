@@ -21,7 +21,7 @@ dev = [
 ]
 
 [project.scripts]
-binaryninja-mcp = "binaryninja_mcp:main"
+binaryninja-mcp = "binaryninja_mcp.cli:cli"
 
 [build-system]
 requires = ["hatchling", "hatch-nodejs-version"]
