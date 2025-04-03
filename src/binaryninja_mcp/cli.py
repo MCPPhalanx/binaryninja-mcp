@@ -1,10 +1,13 @@
 import click
+from exceptiongroup import ExceptionGroup
 import uvicorn
 import logging
 from binaryninja_mcp.server import create_mcp_server, create_sse_app
 from binaryninja_mcp.consts import DEFAULT_PORT
 from binaryninja_mcp.utils import disable_binaryninja_user_plugins, find_binaryninja_path
 from binaryninja_mcp.log import setup_logging
+
+logger = logging.getLogger(__package__)
 
 @click.group()
 @click.option('-v', '--verbose', count=True, help='Enable verbose debug logging')
@@ -29,13 +32,13 @@ def server(listen_host, listen_port, filename):
     # Load the binary view
     bv = load(filename)
     if not bv:
-        click.echo(f"Failed to load binary: {filename}", err=True)
+        logger.error("Failed to load binary: %s", filename)
         return
 
     mcp = create_mcp_server([bv])
 
     # Run SSE server
-    click.echo(f"Starting MCP server for {filename} on port {listen_port}")
+    logger.info("Starting MCP server for %s on port %d", filename, listen_port)
 
     app = create_sse_app(mcp)
     uvicorn.run(app, host=listen_host, port=listen_port, timeout_graceful_shutdown=2)
@@ -59,14 +62,13 @@ def client(host, port):
         | Exception,
     ) -> None:
         if isinstance(message, Exception):
-            click.echo(f"Error: {message}", err=True)
+            logger.error("Error: %s", message)
             return
 
     async def run_client():
         # Connect to SSE server
         url = f"http://{host}:{port}/sse"
-        click.echo(f"Connecting to MCP server at {url}", err=True)
-
+        logger.info("Connecting to MCP server at %s", url)
         # Create stdio server to relay messages
         async with stdio_server() as (stdio_read, stdio_write):
             # Connect to SSE server
@@ -75,7 +77,10 @@ def client(host, port):
                 async with ClientSession(
                     sse_read, sse_write, message_handler=message_handler
                 ) as session:
-                    click.echo(f"Connected to MCP server at {host}:{port}", err=True)
+                    logger.info("Connected to MCP server at %s:%d", host, port)
+
+                    # Create a disconnection event to signal when either connection is broken
+                    disconnection_event = anyio.Event()
 
                     # Create a proxy to relay messages between stdio and SSE
                     # Forward messages from stdio to SSE
@@ -85,7 +90,9 @@ def client(host, port):
                                 message = await stdio_read.receive()
                                 await sse_write.send(message)
                         except Exception as e:
-                            click.echo(f"Error forwarding stdio to SSE: {e}", err=True)
+                            logger.error("Error forwarding stdio to SSE: %s", e)
+                            # Signal disconnection and exit
+                            disconnection_event.set()
 
                     # Forward messages from SSE to stdio
                     async def forward_sse_to_stdio():
@@ -94,20 +101,36 @@ def client(host, port):
                                 message = await sse_read.receive()
                                 await stdio_write.send(message)
                         except Exception as e:
-                            click.echo(f"Error forwarding SSE to stdio: {e}", err=True)
+                            logger.error("Error forwarding SSE to stdio: %s", e)
+                            # Signal disconnection and exit
+                            disconnection_event.set()
 
-                    # Run both forwarding tasks concurrently
+                    # Function to wait for disconnection and exit
+                    async def wait_for_disconnection():
+                        await disconnection_event.wait()
+                        # Once disconnection is detected, just return to exit the task group
+                        logger.info("Disconnection detected, exiting...")
+                        raise SystemExit(0)
+
+                    # Run all tasks concurrently
                     async with anyio.create_task_group() as tg:
                         tg.start_soon(forward_stdio_to_sse)
                         tg.start_soon(forward_sse_to_stdio)
+                        tg.start_soon(wait_for_disconnection)
 
     try:
         # Use anyio.run with trio backend as in the reference code
         anyio.run(run_client, backend="trio")
     except KeyboardInterrupt:
-        click.echo("\nDisconnected", err=True)
+        logger.info("\nDisconnected")
+    except ExceptionGroup as eg:
+        logger.error("anyio job error: %s", repr(eg.exceptions))
+        # Exit with error code
+        raise SystemExit(1)
     except Exception as e:
-        click.echo(f"Connection error: {e}", err=True)
+        logger.error("Connection error: %s", e)
+        # Exit with error code
+        raise SystemExit(1)
 
 @cli.command()
 @click.option('--binja-path', type=click.Path(exists=True), help='Custom Binary Ninja install path')
@@ -120,7 +143,7 @@ def install_api(binja_path, silent, uninstall, force, install_on_root, install_o
     """Install/uninstall Binary Ninja API"""
     install_path = find_binaryninja_path(binja_path)
     if not install_path:
-        click.echo("Could not find Binary Ninja install directory, please provide the path via --binja-path", err=True)
+        logger.error("Could not find Binary Ninja install directory, please provide the path via --binja-path")
         raise SystemExit(1)
 
     install_script = install_path / 'scripts/install_api.py'
@@ -141,9 +164,9 @@ def install_api(binja_path, silent, uninstall, force, install_on_root, install_o
         )
 
     if not result:
-        click.echo("Operation failed", err=True)
+        logger.error("Operation failed")
         raise SystemExit(1)
-    click.echo("Operation succeeded")
+    logger.info("Operation succeeded")
 
 if __name__ == '__main__':
     cli()
