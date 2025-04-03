@@ -3,7 +3,7 @@ import uvicorn
 import logging
 from binaryninja_mcp.server import create_mcp_server, create_sse_app
 from binaryninja_mcp.consts import DEFAULT_PORT
-from binaryninja_mcp.utils import disable_binaryninja_user_plugins
+from binaryninja_mcp.utils import disable_binaryninja_user_plugins, find_binaryninja_path
 
 @click.group()
 def cli():
@@ -105,6 +105,42 @@ def client(host, port):
         click.echo("\nDisconnected", err=True)
     except Exception as e:
         click.echo(f"Connection error: {e}", err=True)
+
+@cli.command()
+@click.option('--binja-path', type=click.Path(exists=True), help='Custom Binary Ninja install path')
+@click.option('--silent', is_flag=True, help='Run in non-interactive mode')
+@click.option('--uninstall', is_flag=True, help='Uninstall instead of install')
+@click.option('--force', is_flag=True, help='Force installation')
+@click.option('--install-on-root', is_flag=True, help='Install to system Python')
+@click.option('--install-on-pyenv', is_flag=True, help='Install to pyenv')
+def install_api(binja_path, silent, uninstall, force, install_on_root, install_on_pyenv):
+    """Install/uninstall Binary Ninja API"""
+    install_path = find_binaryninja_path(binja_path)
+    if not install_path:
+        click.echo("Could not find Binary Ninja install directory, please provide the path via --binja-path", err=True)
+        raise SystemExit(1)
+
+    install_script = install_path / 'scripts/install_api.py'
+    # Import from found script
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("install_api", install_script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    if uninstall:
+        result = module.uninstall()
+    else:
+        result = module.install(
+            interactive=not silent,
+            on_root=install_on_root,
+            on_pyenv=install_on_pyenv,
+            force=force
+        )
+
+    if not result:
+        click.echo("Operation failed", err=True)
+        raise SystemExit(1)
+    click.echo("Operation succeeded")
 
 if __name__ == '__main__':
     cli()
