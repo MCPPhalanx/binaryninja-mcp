@@ -21,7 +21,7 @@
 # ---
 # name: test_pseudo_c_invalid_address
   list([
-    TextContent(type='text', text="Error: Invalid address format 'invalid_address'. Expected hex string (e.g., '0x1000')", annotations=None),
+    TextContent(type='text', text="Error: No function found with name/address 'invalid_address'", annotations=None),
   ])
 # ---
 # name: test_pseudo_rust
@@ -31,12 +31,12 @@
 # ---
 # name: test_rename_symbol_function
   list([
-    TextContent(type='text', text="Successfully renamed function at 0x000008a1 from 'main' to 'new_function_name'", annotations=None),
+    TextContent(type='text', text="Successfully renamed function at 0x8a1 from 'main' to 'new_function_name'", annotations=None),
   ])
 # ---
 # name: test_rename_symbol_invalid_address
   list([
-    TextContent(type='text', text="Error: Invalid address format 'invalid_address'. Expected hex string (e.g., '0x1000')", annotations=None),
+    TextContent(type='text', text="Error: No function or data variable found with name/address 'invalid_address'", annotations=None),
   ])
 # ---
 # name: test_update_analysis_and_wait
