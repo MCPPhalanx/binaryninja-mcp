@@ -77,7 +77,7 @@ class MCPServerPlugin:
                 host=self.listen_host,
                 port=self.listen_port,
                 # loop="asyncio",
-                log_level="warn",
+                log_level="warning",
                 timeout_graceful_shutdown=2,
             )
             self.uvicorn_server = uvicorn.Server(config)
