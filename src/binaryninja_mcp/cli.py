@@ -1,8 +1,4 @@
 import click
-import asyncio
-from binaryninja import load
-from starlette.applications import Starlette
-from starlette.routing import Mount
 import uvicorn
 import logging
 from binaryninja_mcp.server import create_mcp_server, create_sse_app
@@ -20,6 +16,8 @@ def cli():
 @click.argument('filename')
 def server(listen_host, listen_port, filename):
     """Start an MCP server for the given binary file"""
+    from binaryninja import load
+
     logging.basicConfig(level=logging.INFO)
 
     disable_binaryninja_user_plugins()
@@ -51,7 +49,6 @@ def client(host, port):
     from mcp.shared.session import RequestResponder
     from mcp.server.stdio import stdio_server
     import mcp.types as types
-    from functools import partial
 
     async def message_handler(
         message: RequestResponder[types.ServerRequest, types.ClientResult]

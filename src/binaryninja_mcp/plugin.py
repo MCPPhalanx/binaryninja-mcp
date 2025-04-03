@@ -1,18 +1,13 @@
 from binaryninja.binaryview import BinaryView, BinaryViewType
 from binaryninja.log import log_info, log_debug
-from binaryninja.interaction import get_text_line_input
 from binaryninja.plugin import PluginCommand, BackgroundTaskThread
 from binaryninja.settings import Settings
 from binaryninja_mcp.consts import DEFAULT_PORT
 from binaryninja_mcp.utils import bv_name
 from binaryninja_mcp.server import create_mcp_server, create_sse_app
 from typing import Optional, Dict
-import contextlib
-import time
 import threading
 import uvicorn
-from starlette.applications import Starlette
-from starlette.routing import Mount
 
 TAG = "MCPServer"
 SETTINGS_NAMESPACE = "mcpserver"
