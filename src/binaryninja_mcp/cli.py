@@ -34,7 +34,7 @@ def server(listen_host, listen_port, filename):
     click.echo(f"Starting MCP server for {filename} on port {listen_port}")
 
     app = create_sse_app(mcp)
-    uvicorn.run(app, host=listen_host, port=listen_port)
+    uvicorn.run(app, host=listen_host, port=listen_port, timeout_graceful_shutdown=2)
 
 @cli.command()
 @click.option('--host', default='localhost', help='SSE server host')

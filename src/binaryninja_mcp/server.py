@@ -529,7 +529,7 @@ if __name__ == "__main__":
     if transport == "sse":
         import uvicorn
         starlette_app = create_sse_app(server)
-        uvicorn.run(starlette_app, host="localhost", port=DEFAULT_PORT)
+        uvicorn.run(starlette_app, host="localhost", port=DEFAULT_PORT, timeout_graceful_shutdown=2)
     else:
         from mcp.server.stdio import stdio_server
 
