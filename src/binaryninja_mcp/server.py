@@ -395,6 +395,12 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
         logger.debug("Calling tool: %s with args: %s", name, arguments)
         bnctx: BNContext = server.request_context.lifespan_context
 
+        if name == "list_filename":
+            return [TextContent(
+                type="text",
+                text=json.dumps(list(bnctx.bvs.keys()), indent=2)
+            )]
+
         # Validate required arguments
         if "filename" not in arguments:
             return [TextContent(
