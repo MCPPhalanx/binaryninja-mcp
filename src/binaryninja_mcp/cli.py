@@ -4,11 +4,17 @@ import logging
 from binaryninja_mcp.server import create_mcp_server, create_sse_app
 from binaryninja_mcp.consts import DEFAULT_PORT
 from binaryninja_mcp.utils import disable_binaryninja_user_plugins, find_binaryninja_path
+from binaryninja_mcp.log import setup_logging
 
 @click.group()
-def cli():
+@click.option('-v', '--verbose', count=True, help='Enable verbose debug logging')
+def cli(verbose):
     """MCP CLI tool for Binary Ninja"""
-    pass
+    log_level, third_party_log_level = {
+        0: (logging.INFO, logging.WARNING),
+        1: (logging.DEBUG, logging.WARNING),
+    }.get(verbose, (logging.DEBUG, logging.DEBUG))
+    setup_logging(log_level=log_level, third_party_log_level=third_party_log_level)
 
 @cli.command()
 @click.option('--listen-host', default="localhost", help='SSE bind address')
@@ -17,8 +23,6 @@ def cli():
 def server(listen_host, listen_port, filename):
     """Start an MCP server for the given binary file"""
     from binaryninja import load
-
-    logging.basicConfig(level=logging.INFO)
 
     disable_binaryninja_user_plugins()
 
@@ -41,7 +45,6 @@ def server(listen_host, listen_port, filename):
 @click.option('--port', default=DEFAULT_PORT, help='SSE server port')
 def client(host, port):
     """Connect to an MCP SSE server and relay to stdio"""
-    logging.basicConfig(level=logging.INFO)
 
     import anyio
     from mcp.client.session import ClientSession

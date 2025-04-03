@@ -1,11 +1,12 @@
 import asyncio
 import json
+import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from typing import AsyncIterator, Dict, List, Optional, Any, Iterable
 
 import binaryninja as bn
-from binaryninja.log import log_info, log_debug
+from binaryninja_mcp.log import setup_logging
 from mcp.server.lowlevel import Server
 from mcp.server.lowlevel.helper_types import ReadResourceContents
 from mcp.server.stdio import stdio_server
@@ -16,6 +17,8 @@ from binaryninja_mcp.consts import DEFAULT_PORT, TEST_BINARY_PATH_ELF
 from binaryninja_mcp.resources import MCPResource
 from binaryninja_mcp.tools import MCPTools
 from binaryninja_mcp.utils import bv_name, disable_binaryninja_user_plugins
+
+logger = logging.getLogger(__package__)
 
 
 @dataclass
@@ -52,6 +55,7 @@ class BNContext:
             counter += 1
 
         self.bvs[name] = bv
+        logger.debug("Added BinaryView %s as '%s'", bv, name)
         return name
 
     def get_bv(self, name: str) -> Optional[bn.BinaryView]:
@@ -63,7 +67,11 @@ class BNContext:
         Returns:
             The BinaryView if found, None otherwise
         """
-        return self.bvs.get(name)
+        logger.debug("Looking up BinaryView: %s", name)
+        bv = self.bvs.get(name)
+        if not bv:
+            logger.warning("BinaryView not found: %s", name)
+        return bv
 
 
 @asynccontextmanager
@@ -78,6 +86,7 @@ async def lifespan(server: Server) -> AsyncIterator[BNContext]:
     try:
         yield context
     finally:
+        logger.info("Cleaning up BNContext")
         if not bn.core_ui_enabled():
             # TODO: Cleanup resources
             pass
@@ -129,12 +138,14 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                     description=f"List of {resource_type} in the binary",
                     mimeType="application/json"
                 ))
+        logger.debug("Listing available resources, %d bvs => %d resources", len(bnctx.bvs), len(resources))
 
         return resources
 
     @server.list_resource_templates()
     async def list_resource_templates() -> List[ResourceTemplate]:
         """List all available resource templates"""
+        logger.debug("Listing resource templates")
         return [
             ResourceTemplate(
                 uriTemplate="binaryninja://{filename}/triage_summary",
@@ -189,6 +200,7 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
     @server.read_resource()
     async def read_resource(uri: AnyUrl) -> Iterable[ReadResourceContents]:
         """Read a resource by URI"""
+        logger.debug("Reading resource: %s", uri)
         bnctx: BNContext = server.request_context.lifespan_context
 
         # Parse the URI
@@ -243,6 +255,7 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
     @server.list_tools()
     async def list_tools() -> List[Tool]:
         """List all available tools"""
+        logger.debug("Listing available tools")
         return [
             Tool(
                 name="rename_symbol",
@@ -379,6 +392,7 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
     @server.call_tool()
     async def call_tool(name: str, arguments: Dict[str, Any]) -> Iterable[TextContent]:
         """Call a tool by name with arguments"""
+        logger.debug("Calling tool: %s with args: %s", name, arguments)
         bnctx: BNContext = server.request_context.lifespan_context
 
         # Validate required arguments
@@ -518,6 +532,7 @@ if __name__ == "__main__":
 
     disable_binaryninja_user_plugins()
     bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
+    setup_logging(logging.DEBUG)
     server = create_mcp_server([bv])
 
     # if False:

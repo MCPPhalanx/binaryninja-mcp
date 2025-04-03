@@ -1,5 +1,6 @@
 from binaryninja.binaryview import BinaryView, BinaryViewType
-from binaryninja.log import log_info, log_debug
+import logging
+from binaryninja_mcp.log import setup_logging
 from binaryninja.plugin import PluginCommand, BackgroundTaskThread
 from binaryninja.settings import Settings
 from binaryninja_mcp.consts import DEFAULT_PORT
@@ -9,7 +10,7 @@ from typing import Optional, Dict
 import threading
 import uvicorn
 
-TAG = "MCPServer"
+logger = logging.getLogger(__package__)
 SETTINGS_NAMESPACE = "mcpserver"
 
 class MCPServerPlugin:
@@ -49,10 +50,10 @@ class MCPServerPlugin:
         self.settings.set_string(f"{SETTINGS_NAMESPACE}.listen_port", str(self.listen_port))
 
     def on_binaryview_initial_analysis_completion(self, bv: BinaryView):
-        log_info(f"bv={bv} bv.file={bv.file}", TAG)
+        logger.info(f"bv={bv} bv.file={bv.file}")
         name = bv_name(bv)
         self.bvs[name] = bv
-        log_info(f"Tracking BinaryView: {name}", TAG)
+        logger.info(f"Tracking BinaryView: {name}")
         if self.auto_start and not self.server_running():
             # Auto-start server on plugin init
             self.start_server()
@@ -82,7 +83,7 @@ class MCPServerPlugin:
             self.uvicorn_server = uvicorn.Server(config)
             self.uvicorn_server.run()
         except Exception as e:
-            log_info(f"Server error: {str(e)}", TAG)
+            logger.error(f"Server error: {str(e)}")
 
     def start_server(self):
         """Start the MCP server"""
@@ -90,27 +91,28 @@ class MCPServerPlugin:
         if not self.server_thread or not self.server_thread.is_alive():
             self.server_thread = threading.Thread(target=self.run_server, daemon=False)
             self.server_thread.start()
-            log_info(f"MCP Server started on {self.listen_host}:{self.listen_port}", TAG)
+            logger.info(f"MCP Server started on {self.listen_host}:{self.listen_port}")
 
     def stop_server(self):
         """Stop the MCP server"""
         if self.uvicorn_server:
-            self.uvicorn_server.should_exit = True
+            self.uvicorn_server.shutdown()
         if self.server_thread:
             self.server_thread.join()
-        log_info("MCP Server stopped", TAG)
+        logger.info("MCP Server stopped")
 
     def debug_bvs_status(self):
         """Check opened BinaryViews status"""
         for name, bv in list(self.bvs.items()):
             if not bv or bv.file.closed:
-                log_debug(f"BinaryView closed: {name}", TAG)
+                logger.debug(f"BinaryView closed: {name}")
                 del self.bvs[name]
 
 # Global plugin instance
 plugin = MCPServerPlugin()
 
 def plugin_init():
+    setup_logging()
     # Register global handler for all BinaryView events
     BinaryViewType.add_binaryview_initial_analysis_completion_event(plugin.on_binaryview_initial_analysis_completion)
 
