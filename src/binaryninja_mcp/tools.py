@@ -9,11 +9,33 @@ class MCPTools:
         """Initialize with a Binary Ninja BinaryView"""
         self.bv = bv
 
-    def rename_symbol(self, address: str, new_name: str) -> List[TextContent]:
+    def resolve_symbol(self, address_or_name: str) -> Optional[int]:
+        """Resolve a symbol name or address to a numeric address
+
+        Args:
+            address_or_name: Either a hex address string or symbol name
+
+        Returns:
+            Numeric address if found, None otherwise
+        """
+        try:
+            return int(address_or_name, 16)
+        except ValueError:
+            # Search functions
+            for func in self.bv.functions:
+                if func.name == address_or_name:
+                    return func.start
+            # Search data variables
+            for addr, var in self.bv.data_vars.items():
+                if var.name == address_or_name:
+                    return addr
+            return None
+
+    def rename_symbol(self, address_or_name: str, new_name: str) -> List[TextContent]:
         """Rename a function or a data variable
 
         Args:
-            address: Address of the function or data variable (hex string)
+            address_or_name: Address (hex string) or name of the symbol
             new_name: New name for the symbol
 
         Returns:
@@ -21,7 +43,12 @@ class MCPTools:
         """
         try:
             # Convert hex string to int
-            addr = int(address, 16)
+            addr = self.resolve_symbol(address_or_name)
+            if addr is None:
+                return [TextContent(
+                    type="text",
+                    text=f"Error: No function or data variable found with name/address '{address_or_name}'"
+                )]
 
             # Check if address is a function
             func = self.bv.get_function_at(addr)
@@ -30,7 +57,7 @@ class MCPTools:
                 func.name = new_name
                 return [TextContent(
                     type="text",
-                    text=f"Successfully renamed function at {address} from '{old_name}' to '{new_name}'"
+                    text=f"Successfully renamed function at {hex(addr)} from '{old_name}' to '{new_name}'"
                 )]
 
             # Check if address is a data variable
@@ -47,17 +74,17 @@ class MCPTools:
 
                 return [TextContent(
                     type="text",
-                    text=f"Successfully renamed data variable at {address} from '{old_name}' to '{new_name}'"
+                    text=f"Successfully renamed data variable at {hex(addr)} from '{old_name}' to '{new_name}'"
                 )]
 
             return [TextContent(
                 type="text",
-                text=f"Error: No function or data variable found at address {address}"
+                text=f"Error: No function or data variable found with name/address '{address_or_name}'"
             )]
         except ValueError:
             return [TextContent(
                 type="text",
-                text=f"Error: Invalid address format '{address}'. Expected hex string (e.g., '0x1000')"
+                text=f"Error: Invalid address format '{address_or_name}'. Expected hex string (e.g., '0x1000') or symbol name"
             )]
         except Exception as e:
             return [TextContent(
@@ -65,23 +92,28 @@ class MCPTools:
                 text=f"Error: {str(e)}"
             )]
 
-    def pseudo_c(self, address: str) -> List[TextContent]:
+    def pseudo_c(self, address_or_name: str) -> List[TextContent]:
         """Get pseudo C code of a specified function
 
         Args:
-            address: Address of the function (hex string)
+            address_or_name: Address (hex string) or name of the function
 
         Returns:
             List containing a TextContent with the pseudo C code
         """
         try:
-            addr = int(address, 16)
-            func = self.bv.get_function_at(addr)
+            addr = self.resolve_symbol(address_or_name)
+            if addr is None:
+                return [TextContent(
+                    type="text",
+                    text=f"Error: No function found with name/address '{address_or_name}'"
+                )]
 
+            func = self.bv.get_function_at(addr)
             if not func:
                 return [TextContent(
                     type="text",
-                    text=f"Error: No function found at address {address}"
+                    text=f"Error: No function found at address {hex(addr)}"
                 )]
 
             lines = []
@@ -110,7 +142,7 @@ class MCPTools:
         except ValueError:
             return [TextContent(
                 type="text",
-                text=f"Error: Invalid address format '{address}'. Expected hex string (e.g., '0x1000')"
+                text=f"Error: Invalid address format '{address_or_name}'. Expected hex string (e.g., '0x1000') or symbol name"
             )]
         except Exception as e:
             return [TextContent(
@@ -118,23 +150,28 @@ class MCPTools:
                 text=f"Error: {str(e)}"
             )]
 
-    def pseudo_rust(self, address: str) -> List[TextContent]:
+    def pseudo_rust(self, address_or_name: str) -> List[TextContent]:
         """Get pseudo Rust code of a specified function
 
         Args:
-            address: Address of the function (hex string)
+            address_or_name: Address (hex string) or name of the function
 
         Returns:
             List containing a TextContent with the pseudo Rust code
         """
         try:
-            addr = int(address, 16)
-            func = self.bv.get_function_at(addr)
+            addr = self.resolve_symbol(address_or_name)
+            if addr is None:
+                return [TextContent(
+                    type="text",
+                    text=f"Error: No function found with name/address '{address_or_name}'"
+                )]
 
+            func = self.bv.get_function_at(addr)
             if not func:
                 return [TextContent(
                     type="text",
-                    text=f"Error: No function found at address {address}"
+                    text=f"Error: No function found at address {hex(addr)}"
                 )]
 
             lines = []
@@ -163,7 +200,7 @@ class MCPTools:
         except ValueError:
             return [TextContent(
                 type="text",
-                text=f"Error: Invalid address format '{address}'. Expected hex string (e.g., '0x1000')"
+                text=f"Error: Invalid address format '{address_or_name}'. Expected hex string (e.g., '0x1000') or symbol name"
             )]
         except Exception as e:
             return [TextContent(
@@ -171,23 +208,28 @@ class MCPTools:
                 text=f"Error: {str(e)}"
             )]
 
-    def high_level_il(self, address: str) -> List[TextContent]:
+    def high_level_il(self, address_or_name: str) -> List[TextContent]:
         """Get high level IL of a specified function
 
         Args:
-            address: Address of the function (hex string)
+            address_or_name: Address (hex string) or name of the function
 
         Returns:
             List containing a TextContent with the HLIL
         """
         try:
-            addr = int(address, 16)
-            func = self.bv.get_function_at(addr)
+            addr = self.resolve_symbol(address_or_name)
+            if addr is None:
+                return [TextContent(
+                    type="text",
+                    text=f"Error: No function found with name/address '{address_or_name}'"
+                )]
 
+            func = self.bv.get_function_at(addr)
             if not func:
                 return [TextContent(
                     type="text",
-                    text=f"Error: No function found at address {address}"
+                    text=f"Error: No function found at address {hex(addr)}"
                 )]
 
             # Get HLIL
@@ -195,7 +237,7 @@ class MCPTools:
             if not hlil:
                 return [TextContent(
                     type="text",
-                    text=f"Error: Failed to get HLIL for function at {address}"
+                    text=f"Error: Failed to get HLIL for function at {hex(addr)}"
                 )]
 
             # Format the HLIL output
@@ -210,7 +252,7 @@ class MCPTools:
         except ValueError:
             return [TextContent(
                 type="text",
-                text=f"Error: Invalid address format '{address}'. Expected hex string (e.g., '0x1000')"
+                text=f"Error: Invalid address format '{address_or_name}'. Expected hex string (e.g., '0x1000') or symbol name"
             )]
         except Exception as e:
             return [TextContent(
@@ -218,23 +260,28 @@ class MCPTools:
                 text=f"Error: {str(e)}"
             )]
 
-    def medium_level_il(self, address: str) -> List[TextContent]:
+    def medium_level_il(self, address_or_name: str) -> List[TextContent]:
         """Get medium level IL of a specified function
 
         Args:
-            address: Address of the function (hex string)
+            address_or_name: Address (hex string) or name of the function
 
         Returns:
             List containing a TextContent with the MLIL
         """
         try:
-            addr = int(address, 16)
-            func = self.bv.get_function_at(addr)
+            addr = self.resolve_symbol(address_or_name)
+            if addr is None:
+                return [TextContent(
+                    type="text",
+                    text=f"Error: No function found with name/address '{address_or_name}'"
+                )]
 
+            func = self.bv.get_function_at(addr)
             if not func:
                 return [TextContent(
                     type="text",
-                    text=f"Error: No function found at address {address}"
+                    text=f"Error: No function found at address {hex(addr)}"
                 )]
 
             # Get MLIL
@@ -242,7 +289,7 @@ class MCPTools:
             if not mlil:
                 return [TextContent(
                     type="text",
-                    text=f"Error: Failed to get MLIL for function at {address}"
+                    text=f"Error: Failed to get MLIL for function at {hex(addr)}"
                 )]
 
             # Format the MLIL output
@@ -257,7 +304,7 @@ class MCPTools:
         except ValueError:
             return [TextContent(
                 type="text",
-                text=f"Error: Invalid address format '{address}'. Expected hex string (e.g., '0x1000')"
+                text=f"Error: Invalid address format '{address_or_name}'. Expected hex string (e.g., '0x1000') or symbol name"
             )]
         except Exception as e:
             return [TextContent(
@@ -265,18 +312,23 @@ class MCPTools:
                 text=f"Error: {str(e)}"
             )]
 
-    def disassembly(self, address: str, length: Optional[int] = None) -> List[TextContent]:
+    def disassembly(self, address_or_name: str, length: Optional[int] = None) -> List[TextContent]:
         """Get disassembly of a function or specified range
 
         Args:
-            address: Address to start disassembly (hex string)
+            address_or_name: Address (hex string) or name to start disassembly
             length: Optional length of bytes to disassemble
 
         Returns:
             List containing a TextContent with the disassembly
         """
         try:
-            addr = int(address, 16)
+            addr = self.resolve_symbol(address_or_name)
+            if addr is None:
+                return [TextContent(
+                    type="text",
+                    text=f"Error: No symbol found with name/address '{address_or_name}'"
+                )]
 
             # If length is provided, disassemble that range
             if length is not None:
@@ -305,7 +357,7 @@ class MCPTools:
                 if not disasm:
                     return [TextContent(
                         type="text",
-                        text=f"Error: Failed to disassemble at address {address} with length {length}"
+                        text=f"Error: Failed to disassemble at address {hex(addr)} with length {length}"
                     )]
 
                 return [TextContent(
@@ -318,7 +370,7 @@ class MCPTools:
             if not func:
                 return [TextContent(
                     type="text",
-                    text=f"Error: No function found at address {address}"
+                    text=f"Error: No function found at address {hex(addr)}"
                 )]
 
             # Get function disassembly using linear disassembly
@@ -340,7 +392,7 @@ class MCPTools:
             if not lines:
                 return [TextContent(
                     type="text",
-                    text=f"Error: Failed to disassemble function at {address}"
+                    text=f"Error: Failed to disassemble function at {hex(addr)}"
                 )]
 
             return [TextContent(
@@ -350,7 +402,7 @@ class MCPTools:
         except ValueError:
             return [TextContent(
                 type="text",
-                text=f"Error: Invalid address format '{address}'. Expected hex string (e.g., '0x1000')"
+                text=f"Error: Invalid address format '{address_or_name}'. Expected hex string (e.g., '0x1000') or symbol name"
             )]
         except Exception as e:
             return [TextContent(

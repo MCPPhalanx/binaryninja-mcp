@@ -267,16 +267,16 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                             "type": "string",
                             "description": "Name of the binary file"
                         },
-                        "address": {
+                        "address_or_name": {
                             "type": "string",
-                            "description": "Address of the function or data variable (hex string)"
+                            "description": "Address (hex string) or name of the function or data variable"
                         },
                         "new_name": {
                             "type": "string",
                             "description": "New name for the symbol"
                         }
                     },
-                    "required": ["filename", "address", "new_name"]
+                    "required": ["filename", "address_or_name", "new_name"]
                 }
             ),
             Tool(
@@ -289,12 +289,12 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                             "type": "string",
                             "description": "Name of the binary file"
                         },
-                        "address": {
+                        "address_or_name": {
                             "type": "string",
-                            "description": "Address of the function (hex string)"
+                            "description": "Address (hex string) or name of the function"
                         }
                     },
-                    "required": ["filename", "address"]
+                    "required": ["filename", "address_or_name"]
                 }
             ),
             Tool(
@@ -307,12 +307,12 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                             "type": "string",
                             "description": "Name of the binary file"
                         },
-                        "address": {
+                        "address_or_name": {
                             "type": "string",
-                            "description": "Address of the function (hex string)"
+                            "description": "Address (hex string) or name of the function"
                         }
                     },
-                    "required": ["filename", "address"]
+                    "required": ["filename", "address_or_name"]
                 }
             ),
             Tool(
@@ -325,12 +325,12 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                             "type": "string",
                             "description": "Name of the binary file"
                         },
-                        "address": {
+                        "address_or_name": {
                             "type": "string",
-                            "description": "Address of the function (hex string)"
+                            "description": "Address (hex string) or name of the function"
                         }
                     },
-                    "required": ["filename", "address"]
+                    "required": ["filename", "address_or_name"]
                 }
             ),
             Tool(
@@ -343,12 +343,12 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                             "type": "string",
                             "description": "Name of the binary file"
                         },
-                        "address": {
+                        "address_or_name": {
                             "type": "string",
-                            "description": "Address of the function (hex string)"
+                            "description": "Address (hex string) or name of the function"
                         }
                     },
-                    "required": ["filename", "address"]
+                    "required": ["filename", "address_or_name"]
                 }
             ),
             Tool(
@@ -361,16 +361,16 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
                             "type": "string",
                             "description": "Name of the binary file"
                         },
-                        "address": {
+                        "address_or_name": {
                             "type": "string",
-                            "description": "Address to start disassembly (hex string)"
+                            "description": "Address (hex string) or name to start disassembly"
                         },
                         "length": {
                             "type": "integer",
                             "description": "Optional length of bytes to disassemble"
                         }
                     },
-                    "required": ["filename", "address"]
+                    "required": ["filename", "address_or_name"]
                 }
             ),
             Tool(
@@ -416,53 +416,53 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
 
         # Call the appropriate method based on tool name
         if name == "rename_symbol":
-            if "address" not in arguments or "new_name" not in arguments:
+            if "address_or_name" not in arguments or "new_name" not in arguments:
                 return [TextContent(
                     type="text",
-                    text="Error: Missing required arguments 'address' and/or 'new_name'"
+                    text="Error: Missing required arguments 'address_or_name' and/or 'new_name'"
                 )]
-            return tools.rename_symbol(arguments["address"], arguments["new_name"])
+            return tools.rename_symbol(arguments["address_or_name"], arguments["new_name"])
 
         elif name == "pseudo_c":
-            if "address" not in arguments:
+            if "address_or_name" not in arguments:
                 return [TextContent(
                     type="text",
-                    text="Error: Missing required argument 'address'"
+                    text="Error: Missing required argument 'address_or_name'"
                 )]
-            return tools.pseudo_c(arguments["address"])
+            return tools.pseudo_c(arguments["address_or_name"])
 
         elif name == "pseudo_rust":
-            if "address" not in arguments:
+            if "address_or_name" not in arguments:
                 return [TextContent(
                     type="text",
-                    text="Error: Missing required argument 'address'"
+                    text="Error: Missing required argument 'address_or_name'"
                 )]
-            return tools.pseudo_rust(arguments["address"])
+            return tools.pseudo_rust(arguments["address_or_name"])
 
         elif name == "high_level_il":
-            if "address" not in arguments:
+            if "address_or_name" not in arguments:
                 return [TextContent(
                     type="text",
-                    text="Error: Missing required argument 'address'"
+                    text="Error: Missing required argument 'address_or_name'"
                 )]
-            return tools.high_level_il(arguments["address"])
+            return tools.high_level_il(arguments["address_or_name"])
 
         elif name == "medium_level_il":
-            if "address" not in arguments:
+            if "address_or_name" not in arguments:
                 return [TextContent(
                     type="text",
-                    text="Error: Missing required argument 'address'"
+                    text="Error: Missing required argument 'address_or_name'"
                 )]
-            return tools.medium_level_il(arguments["address"])
+            return tools.medium_level_il(arguments["address_or_name"])
 
         elif name == "disassembly":
-            if "address" not in arguments:
+            if "address_or_name" not in arguments:
                 return [TextContent(
                     type="text",
-                    text="Error: Missing required argument 'address'"
+                    text="Error: Missing required argument 'address_or_name'"
                 )]
             length = arguments.get("length")
-            return tools.disassembly(arguments["address"], length)
+            return tools.disassembly(arguments["address_or_name"], length)
 
         elif name == "update_analysis_and_wait":
             return tools.update_analysis_and_wait()
