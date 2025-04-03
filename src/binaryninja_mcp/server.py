@@ -257,6 +257,128 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
         """List all available tools"""
         logger.debug("Listing available tools")
         return [
+            # Resource access tools
+            Tool(
+                name="get_triage_summary",
+                description="Get basic information as shown in BinaryNinja Triage view",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_imports",
+                description="Get dictionary of imported symbols",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_exports",
+                description="Get dictionary of exported symbols",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_segments",
+                description="Get list of memory segments",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_sections",
+                description="Get list of binary sections",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_strings",
+                description="Get list of strings found in the binary",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_functions",
+                description="Get list of functions",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="get_data_variables",
+                description="Get list of data variables",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "Name of the binary file"
+                        }
+                    },
+                    "required": ["filename"]
+                }
+            ),
+            Tool(
+                name="list_filename",
+                description="List file names of all opened files",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            ),
             Tool(
                 name="rename_symbol",
                 description="Rename a function or a data variable",
@@ -472,6 +594,31 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
 
         elif name == "update_analysis_and_wait":
             return tools.update_analysis_and_wait()
+
+        # Resource access tools
+        elif name == "get_triage_summary":
+            return tools.get_triage_summary()
+
+        elif name == "get_imports":
+            return tools.get_imports()
+
+        elif name == "get_exports":
+            return tools.get_exports()
+
+        elif name == "get_segments":
+            return tools.get_segments()
+
+        elif name == "get_sections":
+            return tools.get_sections()
+
+        elif name == "get_strings":
+            return tools.get_strings()
+
+        elif name == "get_functions":
+            return tools.get_functions()
+
+        elif name == "get_data_variables":
+            return tools.get_data_variables()
 
         else:
             return [TextContent(

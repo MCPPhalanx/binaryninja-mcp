@@ -1,5 +1,7 @@
+import json
 from typing import List, Optional
 import binaryninja as bn
+from binaryninja_mcp.resources import MCPResource
 from mcp.types import TextContent
 
 class MCPTools:
@@ -8,6 +10,7 @@ class MCPTools:
     def __init__(self, bv: bn.BinaryView):
         """Initialize with a Binary Ninja BinaryView"""
         self.bv = bv
+        self.resource = MCPResource(bv)
 
     def resolve_symbol(self, address_or_name: str) -> Optional[int]:
         """Resolve a symbol name or address to a numeric address
@@ -408,6 +411,119 @@ class MCPTools:
             return [TextContent(
                 type="text",
                 text=f"Error: {str(e)}"
+            )]
+
+    # Resource access tools
+    def get_triage_summary(self) -> List[TextContent]:
+        """Get basic information as shown in BinaryNinja Triage view"""
+        try:
+            data = self.resource.triage_summary()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting triage summary: {str(e)}"
+            )]
+
+    def get_imports(self) -> List[TextContent]:
+        """Get dictionary of imported symbols"""
+        try:
+            data = self.resource.imports()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting imports: {str(e)}"
+            )]
+
+    def get_exports(self) -> List[TextContent]:
+        """Get dictionary of exported symbols"""
+        try:
+            data = self.resource.exports()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting exports: {str(e)}"
+            )]
+
+    def get_segments(self) -> List[TextContent]:
+        """Get list of memory segments"""
+        try:
+            data = self.resource.segments()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting segments: {str(e)}"
+            )]
+
+    def get_sections(self) -> List[TextContent]:
+        """Get list of binary sections"""
+        try:
+            data = self.resource.sections()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting sections: {str(e)}"
+            )]
+
+    def get_strings(self) -> List[TextContent]:
+        """Get list of strings found in the binary"""
+        try:
+            data = self.resource.strings()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting strings: {str(e)}"
+            )]
+
+    def get_functions(self) -> List[TextContent]:
+        """Get list of functions"""
+        try:
+            data = self.resource.functions()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting functions: {str(e)}"
+            )]
+
+    def get_data_variables(self) -> List[TextContent]:
+        """Get list of data variables"""
+        try:
+            data = self.resource.data_variables()
+            return [TextContent(
+                type="text",
+                text=json.dumps(data, indent=2)
+            )]
+        except Exception as e:
+            return [TextContent(
+                type="text",
+                text=f"Error getting data variables: {str(e)}"
             )]
 
     def update_analysis_and_wait(self) -> List[TextContent]:
