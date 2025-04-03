@@ -1,27 +1,30 @@
 # binaryninja-mcp
+
 MCP Server for Binary Ninja
 
-## Installation
+# Installation
 
-### Server Setup
+## Server Setup
 
 There are two ways to run the MCP server:
 
-1. **Binary Ninja Plugin**:
+1. **Binary Ninja UI Plugin**:
    - Install the plugin via Binary Ninja's plugin manager
-   - The MCP server will start automatically when first file is loaded
-     - auto start configurable via `Settings - MCP Server - Auto Start`
+   - The MCP server will start automatically when first file is loaded.
+     - Auto start is configurable via `Settings - MCP Server - Auto Start`
+     - Listen port is configurable via `Settings - MCP Server - Server port number`
    - All opened files are exposed to separate resources, see [Available Resources](README.md#available-resources) section below
 
 2. **Binary Ninja Headless Mode**:
    ```bash
-   uvx binaryninja-mcp server <filename.exe-elf-bndb> [filename]...
+   uvx binaryninja-mcp server <filename> [filename]...
    ```
+   - `filename` could be any binary files or BNDB, like in UI mode, all opened files are available to the MCP client.
    - Server runs on default port 7000
    - Use `--port` flag to specify a different port
-   - This setup
 
-### MCP Client Setup
+
+## MCP Client Setup
 
 1. **Claude Desktop (stdio relay client)**:
    Configure the client to connect via stdio transport using built-in relay.
@@ -50,7 +53,7 @@ There are two ways to run the MCP server:
         client
         ```
 
-## Available Tools
+# Available Tools for MCP Clients
 
 The MCP server provides the following tools:
 
@@ -62,7 +65,10 @@ The MCP server provides the following tools:
 - `disassembly`: Get disassembly of a function or specified range
 - `update_analysis_and_wait`: Update analysis for the binary and wait for completion
 
-## Available Resources
+# Available Resources for MCP Clients
+
+MCP Resources can be accessed via URIs in the format:
+`binaryninja://{filename}/{resource_type}`
 
 The server provides these resource types for each binary:
 
@@ -75,31 +81,17 @@ The server provides these resource types for each binary:
 - `functions`: List of functions
 - `data_variables`: List of data variables
 
-Resources can be accessed via URIs in the format:
-`binaryninja://{filename}/{resource_type}`
+# Development
 
-## Example Usage
+[uv](https://github.com/astral-sh/uv) is the recommanded package management tool for this project.
 
-```python
-# Connect to server and list available tools
-import mcp
+## Clone directory to Binary Ninja Plugin Directory
 
-client = mcp.Client()
-tools = client.list_tools()
-print("Available tools:", [t.name for t in tools])
-
-# Get pseudo C for a function
-result = client.call_tool("pseudo_c", {
-    "filename": "sample.elf",
-    "address": "0x401000"
-})
-print(result)
+```powershell
+git clone https://github.com/MCPPhalanx/binaryninja-mcp.git "${env:APPDATA}\Binary Ninja\plugins\MCPPhalanx_binaryninja_mcp"
 ```
 
-
-## Development
-
-### Setup Environment
+## Setup Python Environment
 
 Binary Ninja API must be installed into virtualenv manually.
 
@@ -112,7 +104,9 @@ python $env:LOCALAPPDATA\Programs\Vector35\BinaryNinja\scripts\install_api.py
 uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabled()}")'
 ```
 
-### MCP Client Dev Setup
+## Setup MCP Client for Development
+
+For clients with stdio transport like Claude, change directory to development directory.
 
 ```json
 {
@@ -129,22 +123,36 @@ uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabl
 }
 ```
 
-### Build
+## Build
 ```bash
 uv build
 ```
 
-### Test
+## Test
 ```bash
 pytest
 # To update test snapshots:
 pytest --snapshot-update
 ```
 
-### Release
+## Version Bump
+
+The PyPI package version is automatically derived from Binary Ninja's `plugin.json` (using package.json format), maintaining version consistency between the BN plugin and PyPI package.
+
+```bash
+# bump alpha version
+uvx hatch version a
+
+# bump release version
+uvx hatch version minor,rc
+uvx hatch version release
+```
+See: [Versioning - Hatch](https://hatch.pypa.io/1.12/version/)
+
+## Release
 ```bash
 uv publish
 ```
 
-## License
+# License
 [Apache 2.0](LICENSE)
