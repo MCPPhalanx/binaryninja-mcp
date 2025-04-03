@@ -106,7 +106,7 @@ uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabl
 
 ## Setup MCP Client for Development
 
-For clients with stdio transport like Claude, change directory to development directory.
+For MCP clients with stdio transport like Claude Desktop, change working directory to development folder.
 
 ```json
 {
@@ -122,6 +122,8 @@ For clients with stdio transport like Claude, change directory to development di
   }
 }
 ```
+
+SSE-enabled MCP clients can connect using: `http://localhost:7000/sse`
 
 ## Build
 ```bash
