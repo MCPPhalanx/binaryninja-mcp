@@ -4,7 +4,8 @@ from pathlib import Path, PurePath
 try:
     import binaryninja as bn
 except ImportError:
-    pass
+    import warnings
+    warnings.warn("Install BinaryNinja API First")
 
 def bv_name(bv: bn.BinaryView) -> str:
     return PurePath(bv.file.filename).name if bv.file else "unnamed"
