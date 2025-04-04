@@ -26,9 +26,10 @@ dev = [
 binaryninja-mcp = "binaryninja_mcp.cli:cli"
 
 [build-system]
-requires = ["hatchling", "hatch-nodejs-version"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-source = "nodejs"
+source = "regex"
 path = "plugin.json"
+pattern = '"version" *: *"(?P<version>[^"]+)"'
