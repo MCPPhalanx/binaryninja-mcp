@@ -15,10 +15,14 @@ def textcontent_no_error(result):
 	return True
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session', autouse=True)
+def binaryninja_setup():
+	disable_binaryninja_user_plugins()
+
+
+@pytest.fixture(scope='function')
 def bv():
 	"""Fixture that loads the beleaf.elf binary"""
-	disable_binaryninja_user_plugins()
 	bv = bn.load(TEST_BINARY_PATH_ELF)
 	yield bv
 	bv.file.close()

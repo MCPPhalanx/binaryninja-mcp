@@ -21,7 +21,7 @@
 # ---
 # name: test_pseudo_c
   list([
-    TextContent(type='text', text='\n  int32_t new_function_name(int32_t argc, char** argv, char** envp)\n\n{\n   int32_t argc_1 = argc;\n   char** argv_1 = argv;\n   void* fsbase;\n   int64_t rax = *(fsbase + 0x28);\n   printf("Enter the flag\\n>>> ");\n   void var_98;\n   __isoc99_scanf("%s", &var_98);\n   uint64_t rax_3 = strlen(&var_98);\n   \n   if (rax_3 <= 0x20)\n   {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for (int64_t i = 0; i < rax_3; i += 1)\n   {\n      if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n      {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if (rax == *(fsbase + 0x28))\n      return 0;\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
+    TextContent(type='text', text='\n  int32_t main(int32_t argc, char** argv, char** envp)\n\n{\n   int32_t argc_1 = argc;\n   char** argv_1 = argv;\n   void* fsbase;\n   int64_t rax = *(fsbase + 0x28);\n   printf("Enter the flag\\n>>> ");\n   void var_98;\n   __isoc99_scanf("%s", &var_98);\n   uint64_t rax_3 = strlen(&var_98);\n   \n   if (rax_3 <= 0x20)\n   {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for (int64_t i = 0; i < rax_3; i += 1)\n   {\n      if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n      {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if (rax == *(fsbase + 0x28))\n      return 0;\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
   ])
 # ---
 # name: test_pseudo_c_invalid_address
@@ -31,7 +31,7 @@
 # ---
 # name: test_pseudo_rust
   list([
-    TextContent(type='text', text='\n  fn new_function_name(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32\n\n{\n   let argc_1: i32 = argc;\n   let argv_1: *mut *mut i8 = argv;\n   let fsbase: *mut c_void;\n   let rax: i64 = *fsbase.byte_offset(0x28);\n   printf("Enter the flag\\n>>> ");\n   let mut var_98: ();\n   __isoc99_scanf("%s", &var_98);\n   let rax_3: u64 = strlen(&var_98);\n   \n   if rax_3 <= 0x20 {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for i in 0..rax_3 {\n      if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if rax == *fsbase.byte_offset(0x28) {\n      return 0;\n   }\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
+    TextContent(type='text', text='\n  fn main(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32\n\n{\n   let argc_1: i32 = argc;\n   let argv_1: *mut *mut i8 = argv;\n   let fsbase: *mut c_void;\n   let rax: i64 = *fsbase.byte_offset(0x28);\n   printf("Enter the flag\\n>>> ");\n   let mut var_98: ();\n   __isoc99_scanf("%s", &var_98);\n   let rax_3: u64 = strlen(&var_98);\n   \n   if rax_3 <= 0x20 {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for i in 0..rax_3 {\n      if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if rax == *fsbase.byte_offset(0x28) {\n      return 0;\n   }\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
   ])
 # ---
 # name: test_rename_symbol_function
