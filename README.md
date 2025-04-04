@@ -99,9 +99,9 @@ Binary Ninja API must be installed into virtualenv manually.
 
 ```bash
 uv venv
-uv sync
+uv sync --dev
 # install binaryninja API
-python $env:LOCALAPPDATA\Programs\Vector35\BinaryNinja\scripts\install_api.py
+binaryninja-mcp install-api
 # check API is correctly installed
 uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabled()}")'
 ```
