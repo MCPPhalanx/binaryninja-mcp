@@ -26,10 +26,10 @@
 	},
 	"dependencies": {
 		"pip": [
-			"binaryninja-mcp==0.2.0"
+			"binaryninja-mcp==0.2.1"
 		]
 	},
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"author": "Known Rabbit",
 	"minimumbinaryninjaversion": 3164
 }
