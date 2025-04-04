@@ -9,49 +9,49 @@ MCP Server for Binary Ninja
 There are two ways to run the MCP server:
 
 1. **Binary Ninja UI Plugin**:
+
    - Install the plugin via Binary Ninja's plugin manager
    - The MCP server will start automatically when first file is loaded.
      - Auto start is configurable via `Settings - MCP Server - Auto Start`
-     - Listen port is configurable via `Settings - MCP Server - Server port number`
-   - All opened files are exposed to separate resources, see [Available Resources](README.md#available-resources) section below
+     - Listen port is configurable via
+       `Settings - MCP Server - Server port number`
+   - All opened files are exposed to separate resources, see
+     [Available Resources](README.md#available-resources) section below
 
 2. **Binary Ninja Headless Mode**:
    ```bash
    uvx binaryninja-mcp server <filename> [filename]...
    ```
-   - `filename` could be any binary files or BNDB, like in UI mode, all opened files are available to the MCP client.
+   - `filename` could be any binary files or BNDB, like in UI mode, all opened
+     files are available to the MCP client.
    - Server runs on default port 7000
    - Use `--port` flag to specify a different port
 
-
 ## MCP Client Setup
 
-1. **Claude Desktop (stdio relay client)**:
-   Configure the client to connect via stdio transport using built-in relay.
+1. **Claude Desktop (stdio relay client)**: Configure the client to connect via
+   stdio transport using built-in relay.
 
    ```json
    {
-       "mcpServers": {
-           "binaryninja": {
-               "command": "uvx",
-               "args": [
-                   "binaryninja-mcp", "client"
-               ]
-           }
+     "mcpServers": {
+       "binaryninja": {
+         "command": "uvx",
+         "args": ["binaryninja-mcp", "client"]
        }
+     }
    }
    ```
-
 
 2. **Cherry Studio**:
    - **SSE endpoint** (recommanded): URL: `http://localhost:7000/sse`
    - **stdio client**:
-      - Command: `uvx`
-      - Arguments:
-        ```
-        binaryninja-mcp
-        client
-        ```
+     - Command: `uvx`
+     - Arguments:
+       ```
+       binaryninja-mcp
+       client
+       ```
 
 # Available Tools for MCP Clients
 
@@ -63,7 +63,8 @@ The MCP server provides the following tools:
 - `high_level_il`: Get high level IL of a specified function
 - `medium_level_il`: Get medium level IL of a specified function
 - `disassembly`: Get disassembly of a function or specified range
-- `update_analysis_and_wait`: Update analysis for the binary and wait for completion
+- `update_analysis_and_wait`: Update analysis for the binary and wait for
+  completion
 
 # Available Resources for MCP Clients
 
@@ -83,7 +84,8 @@ The server provides these resource types for each binary:
 
 # Development
 
-[uv](https://github.com/astral-sh/uv) is the recommanded package management tool for this project.
+[uv](https://github.com/astral-sh/uv) is the recommanded package management tool
+for this project.
 
 ## Clone directory to Binary Ninja Plugin Directory
 
@@ -106,7 +108,8 @@ uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabl
 
 ## Setup MCP Client for Development
 
-For MCP clients with stdio transport like Claude Desktop, change working directory to development folder.
+For MCP clients with stdio transport like Claude Desktop, change working
+directory to development folder.
 
 ```json
 {
@@ -114,9 +117,11 @@ For MCP clients with stdio transport like Claude Desktop, change working directo
     "binaryninja": {
       "command": "uv",
       "args": [
-        "--directory", "C:/path/to/binaryninja-mcp",
+        "--directory",
+        "C:/path/to/binaryninja-mcp",
         "run",
-        "binaryninja-mcp", "client"
+        "binaryninja-mcp",
+        "client"
       ]
     }
   }
@@ -126,11 +131,13 @@ For MCP clients with stdio transport like Claude Desktop, change working directo
 SSE-enabled MCP clients can connect using: `http://localhost:7000/sse`
 
 ## Build
+
 ```bash
 uv build
 ```
 
 ## Test
+
 ```bash
 pytest
 # To update test snapshots:
@@ -139,7 +146,9 @@ pytest --snapshot-update
 
 ## Version Bump
 
-The PyPI package version is automatically derived from Binary Ninja's `plugin.json` (using package.json format), maintaining version consistency between the BN plugin and PyPI package.
+The PyPI package version is automatically derived from Binary Ninja's
+`plugin.json` (using package.json format), maintaining version consistency
+between the BN plugin and PyPI package.
 
 ```bash
 # bump alpha version
@@ -149,12 +158,15 @@ uvx hatch version a
 uvx hatch version minor,rc
 uvx hatch version release
 ```
+
 See: [Versioning - Hatch](https://hatch.pypa.io/1.12/version/)
 
 ## Release
+
 ```bash
 uv publish
 ```
 
 # License
+
 [Apache 2.0](LICENSE)
