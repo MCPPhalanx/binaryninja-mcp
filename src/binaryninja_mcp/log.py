@@ -1,11 +1,10 @@
 import logging
 import sys
+import warnings
 
 try:
 	from binaryninja.log import Logger as BNLogger
 except ImportError:
-	import warnings
-
 	warnings.warn('Install BinaryNinja API First')
 
 BINJA_LOG_TAG = 'MCPServer'
@@ -17,7 +16,10 @@ class BinjaLogHandler(logging.Handler):
 	def __init__(self, level=logging.NOTSET):
 		super().__init__(level)
 		self.setFormatter(logging.Formatter('[%(name)s] %(message)s'))
-		self.logger = BNLogger(0, BINJA_LOG_TAG)
+		try:
+			self.logger = BNLogger(0, BINJA_LOG_TAG)
+		except NameError:
+			raise ImportError('Install BinaryNinja API First')
 
 	def emit(self, record):
 		try:
@@ -42,10 +44,14 @@ def setup_logging(log_level=logging.INFO, third_party_log_level=logging.WARNING)
 	Args:
 	    dev_mode (bool): If True, set log level to DEBUG
 	"""
+	log_handlers = [logging.StreamHandler(sys.stderr)]
 	# Configure handlers
-	binja_handler = BinjaLogHandler()
-	stream_handler = logging.StreamHandler(sys.stderr)
-	logging.basicConfig(level=third_party_log_level, handlers=[stream_handler, binja_handler])
+	try:
+		log_handlers.append(BinjaLogHandler())
+	except ImportError:
+		warnings.warn('Skipped BinaryNinja Logger since BN API not installed')
+
+	logging.basicConfig(level=third_party_log_level, handlers=log_handlers)
 
 	current_package = logging.getLogger('binaryninja_mcp')
 	current_package.setLevel(log_level)
