@@ -7,7 +7,7 @@ from binaryninja_mcp.consts import DEFAULT_PORT
 from binaryninja_mcp.utils import disable_binaryninja_user_plugins, find_binaryninja_path
 from binaryninja_mcp.log import setup_logging
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 @click.group()
 @click.option('-v', '--verbose', count=True, help='Enable verbose debug logging')

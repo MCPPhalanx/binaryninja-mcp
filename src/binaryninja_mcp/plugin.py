@@ -10,7 +10,7 @@ from typing import Optional, Dict
 import threading
 import uvicorn
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 SETTINGS_NAMESPACE = "mcpserver"
 
 class MCPServerPlugin:
@@ -61,11 +61,6 @@ class MCPServerPlugin:
     def server_running(self) -> bool:
         return bool(self.server_thread and self.server_thread.is_alive())
 
-    def server_control(self, bv: BinaryView):
-        if self.server_running():
-            self.stop_server()
-        else:
-            self.start_server()
 
     def run_server(self):
         """Background task thread entry point"""
@@ -101,7 +96,13 @@ class MCPServerPlugin:
             self.server_thread.join()
         logger.info("MCP Server stopped")
 
-    def debug_bvs_status(self):
+    def menu_server_control(self, bv: BinaryView):
+        if self.server_running():
+            self.stop_server()
+        else:
+            self.start_server()
+
+    def menu_debug_bvs_status(self, bv: BinaryView):
         """Check opened BinaryViews status"""
         for name, bv in list(self.bvs.items()):
             if not bv or bv.file.closed:
@@ -119,11 +120,12 @@ def plugin_init():
     PluginCommand.register(
         "MCPServer\\Start/Stop Server",
         "Start/Stop Server",
-        plugin.server_control
+        plugin.menu_server_control
     )
 
     PluginCommand.register(
         "MCPServer\\Debug Menu",
         "Check BinaryView Status",
-        plugin.debug_bvs_status
+        plugin.menu_debug_bvs_status
     )
+    logger.debug("Plugin is loaded!")

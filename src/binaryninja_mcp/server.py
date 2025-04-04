@@ -18,7 +18,7 @@ from binaryninja_mcp.resources import MCPResource
 from binaryninja_mcp.tools import MCPTools
 from binaryninja_mcp.utils import bv_name, disable_binaryninja_user_plugins
 
-logger = logging.getLogger(__package__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass
