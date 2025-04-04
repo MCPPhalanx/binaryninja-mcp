@@ -390,22 +390,24 @@ class MCPTools:
 				]
 
 			# Get function disassembly using linear disassembly
-			lines = []
+			result_lines = []
 			settings = bn.DisassemblySettings()
 			settings.set_option(bn.DisassemblyOption.ShowAddress, True)
-			obj = bn.LinearViewObject.disassembly(self.bv, settings)
-			cursor = bn.LinearViewCursor(obj)
-			cursor.seek_to_address(func.start)
 
-			# Get all lines until we reach the end of the function
-			while cursor.current_address < func.highest_address:
+			# Use single_function_disassembly which is specifically for disassembling a single function
+			obj = bn.LinearViewObject.single_function_disassembly(func, settings)
+			cursor = bn.LinearViewCursor(obj)
+			cursor.seek_to_begin()
+
+			# Get all lines until we reach the end
+			while not cursor.after_end:
 				lines = self.bv.get_next_linear_disassembly_lines(cursor)
 				if not lines:
 					break
 				for line in lines:
-					lines.append(f'{str(line)}')
+					result_lines.append(str(line))
 
-			if not lines:
+			if not result_lines:
 				return [
 					TextContent(
 						type='text',
@@ -413,7 +415,7 @@ class MCPTools:
 					)
 				]
 
-			return [TextContent(type='text', text='\n'.join(lines))]
+			return [TextContent(type='text', text='\n'.join(result_lines))]
 		except ValueError:
 			return [
 				TextContent(
