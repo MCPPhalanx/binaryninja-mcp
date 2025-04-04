@@ -65,6 +65,14 @@ The MCP server provides the following tools:
 - `disassembly`: Get disassembly of a function or specified range
 - `update_analysis_and_wait`: Update analysis for the binary and wait for
   completion
+- `get_triage_summary`: Get basic information from BinaryNinja Triage view
+- `get_imports`: Get dictionary of imported symbols
+- `get_exports`: Get dictionary of exported symbols
+- `get_segments`: Get list of memory segments
+- `get_sections`: Get list of binary sections
+- `get_strings`: Get list of strings found in the binary
+- `get_functions`: Get list of functions
+- `get_data_variables`: Get list of data variables
 
 # Available Resources for MCP Clients
 
