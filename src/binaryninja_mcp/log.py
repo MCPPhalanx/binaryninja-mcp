@@ -1,7 +1,7 @@
 import logging
 import sys
 try:
-    from binaryninja.log import log_info, log_debug, log_warn, log_error, log_alert
+    from binaryninja.log import Logger as BNLogger
 except ImportError:
     import warnings
     warnings.warn("Install BinaryNinja API First")
@@ -15,20 +15,21 @@ class BinjaLogHandler(logging.Handler):
     def __init__(self, level=logging.NOTSET):
         super().__init__(level)
         self.setFormatter(logging.Formatter('[%(name)s] %(message)s'))
+        self.logger = BNLogger(0, BINJA_LOG_TAG)
 
     def emit(self, record):
         try:
             msg = self.format(record)
             if record.levelno >= logging.FATAL:
-                log_alert(msg, BINJA_LOG_TAG)
+                self.logger.log_alert(msg)
             elif record.levelno >= logging.ERROR:
-                log_error(msg, BINJA_LOG_TAG)
+                self.logger.log_error(msg)
             elif record.levelno >= logging.WARNING:
-                log_warn(msg, BINJA_LOG_TAG)
+                self.logger.log_warn(msg)
             elif record.levelno >= logging.INFO:
-                log_info(msg, BINJA_LOG_TAG)
+                self.logger.log_info(msg)
             elif record.levelno >= logging.DEBUG:
-                log_debug(msg, BINJA_LOG_TAG)
+                self.logger.log_debug(msg)
         except Exception:
             self.handleError(record)
 
