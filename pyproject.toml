@@ -33,3 +33,11 @@ build-backend = "hatchling.build"
 source = "regex"
 path = "plugin.json"
 pattern = '"version" *: *"(?P<version>[^"]+)"'
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
