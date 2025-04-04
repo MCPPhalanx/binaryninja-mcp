@@ -116,7 +116,8 @@ plugin = MCPServerPlugin()
 
 
 def plugin_init():
-	setup_logging()
+	# Binary Ninja has log filter in GUI, always output debug logs
+	setup_logging(logging.DEBUG)
 	# Register global handler for all BinaryView events
 	BinaryViewType.add_binaryview_initial_analysis_completion_event(
 		plugin.on_binaryview_initial_analysis_completion
