@@ -1,6 +1,5 @@
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 import binaryninja as bn
-import json
 
 class MCPResource:
     """Resource handler for Binary Ninja MCP resources"""

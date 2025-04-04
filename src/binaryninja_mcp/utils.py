@@ -12,7 +12,7 @@ def bv_name(bv: bn.BinaryView) -> str:
 
 def disable_binaryninja_user_plugins():
     if (bn_already_init := getattr(bn, "_plugin_init")) is not None:
-        assert bn_already_init == False, "disable_binaryninja_user_plugins should be called before Binary Ninja initialization"
+        assert bn_already_init is False, "disable_binaryninja_user_plugins should be called before Binary Ninja initialization"
     os.environ["BN_DISABLE_USER_PLUGINS"] = "y"
 
 def find_binaryninja_path(extra_path: str = None) -> (Path | None):

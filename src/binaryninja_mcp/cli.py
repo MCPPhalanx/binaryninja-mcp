@@ -76,7 +76,7 @@ def client(host, port):
                 # Create client session
                 async with ClientSession(
                     sse_read, sse_write, message_handler=message_handler
-                ) as session:
+                ):
                     logger.info("Connected to MCP server at %s:%d", host, port)
 
                     # Create a disconnection event to signal when either connection is broken

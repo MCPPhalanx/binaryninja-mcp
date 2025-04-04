@@ -386,11 +386,11 @@ class MCPTools:
 
             # Get all lines until we reach the end of the function
             while cursor.current_address < func.highest_address:
-                line = self.bv.get_next_linear_disassembly_lines(cursor)
-                if not line:
+                lines = self.bv.get_next_linear_disassembly_lines(cursor)
+                if not lines:
                     break
-                for l in line:
-                    lines.append(f"{str(l)}")
+                for line in lines:
+                    lines.append(f"{str(line)}")
 
             if not lines:
                 return [TextContent(

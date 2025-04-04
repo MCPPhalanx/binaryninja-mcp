@@ -39,8 +39,6 @@ def setup_logging(log_level=logging.INFO, third_party_log_level=logging.WARNING)
     Args:
         dev_mode (bool): If True, set log level to DEBUG
     """
-    root = logging.getLogger()
-
     # Configure handlers
     binja_handler = BinjaLogHandler()
     stream_handler = logging.StreamHandler(sys.stderr)
@@ -48,5 +46,3 @@ def setup_logging(log_level=logging.INFO, third_party_log_level=logging.WARNING)
 
     current_package = logging.getLogger("binaryninja_mcp")
     current_package.setLevel(log_level)
-
-    return
