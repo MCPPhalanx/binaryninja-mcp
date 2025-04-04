@@ -10,7 +10,7 @@ except ImportError:
 	warnings.warn('Install BinaryNinja API First')
 
 
-def bv_name(bv: bn.BinaryView) -> str:
+def bv_name(bv: 'bn.BinaryView') -> str:
 	return PurePath(bv.file.filename).name if bv.file else 'unnamed'
 
 
