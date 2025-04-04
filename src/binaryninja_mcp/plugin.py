@@ -52,10 +52,9 @@ class MCPServerPlugin:
 		self.settings.set_bool(f'{SETTINGS_NAMESPACE}.listen_port', self.auto_start)
 
 	def on_binaryview_initial_analysis_completion(self, bv: BinaryView):
-		logger.info(f'bv={bv} bv.file={bv.file}')
 		name = bv_name(bv)
 		self.bvs[name] = bv
-		logger.info(f'Tracking BinaryView: {name}')
+		logger.debug('bv=%s bv.file=%s name=%s', bv, bv.file, name)
 		if self.auto_start and not self.server_running():
 			# Auto-start server on plugin init
 			self.start_server()
@@ -79,7 +78,7 @@ class MCPServerPlugin:
 			self.uvicorn_server = uvicorn.Server(config)
 			self.uvicorn_server.run()
 		except Exception as e:
-			logger.error(f'Server error: {str(e)}')
+			logger.error('Server error: %s', repr(e))
 
 	def start_server(self):
 		"""Start the MCP server"""
@@ -87,7 +86,7 @@ class MCPServerPlugin:
 		if not self.server_thread or not self.server_thread.is_alive():
 			self.server_thread = threading.Thread(target=self.run_server, daemon=False)
 			self.server_thread.start()
-			logger.info(f'MCP Server started on {self.listen_host}:{self.listen_port}')
+			logger.info('MCP Server started on %s:%d', self.listen_host, self.listen_port)
 
 	def stop_server(self):
 		"""Stop the MCP server"""
@@ -106,9 +105,8 @@ class MCPServerPlugin:
 	def menu_debug_bvs_status(self, bv: BinaryView):
 		"""Check opened BinaryViews status"""
 		for name, bv in list(self.bvs.items()):
-			if not bv or bv.file.closed:
-				logger.debug(f'BinaryView closed: {name}')
-				del self.bvs[name]
+			logger.debug('name=%s, bv=%s', name, bv)
+			logger.debug('bv.file.analysis_changed=%s', bv.file.analysis_changed)
 
 
 # Global plugin instance
