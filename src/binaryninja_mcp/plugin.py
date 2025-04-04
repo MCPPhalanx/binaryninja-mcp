@@ -41,21 +41,15 @@ class MCPServerPlugin:
 
 	def load_settings(self):
 		"""Load settings from persistent storage"""
-		self.listen_host = (
-			self.settings.get_string(f'{SETTINGS_NAMESPACE}.listen_host') or 'localhost'
-		)
-		self.listen_port = int(
-			self.settings.get_string(f'{SETTINGS_NAMESPACE}.listen_port') or DEFAULT_PORT
-		)
-		self.auto_start = self.settings.get_string(f'{SETTINGS_NAMESPACE}.auto_start') in {
-			'true',
-			'1',
-		}
+		self.listen_host = self.settings.get_string(f'{SETTINGS_NAMESPACE}.listen_host')
+		self.listen_port = self.settings.get_integer(f'{SETTINGS_NAMESPACE}.listen_port')
+		self.auto_start = self.settings.get_bool(f'{SETTINGS_NAMESPACE}.auto_start')
 
 	def save_settings(self):
 		"""Persist current settings"""
 		self.settings.set_string(f'{SETTINGS_NAMESPACE}.listen_host', self.listen_host)
-		self.settings.set_string(f'{SETTINGS_NAMESPACE}.listen_port', str(self.listen_port))
+		self.settings.set_integer(f'{SETTINGS_NAMESPACE}.listen_port', self.listen_port)
+		self.settings.set_bool(f'{SETTINGS_NAMESPACE}.listen_port', self.auto_start)
 
 	def on_binaryview_initial_analysis_completion(self, bv: BinaryView):
 		logger.info(f'bv={bv} bv.file={bv.file}')
