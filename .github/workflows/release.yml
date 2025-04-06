@@ -7,15 +7,9 @@ on:
       - v*
 
 jobs:
-  pypi:
-    name: Publish to PyPI
+  release-build:
+    name: Build Release Package
     runs-on: ubuntu-latest
-    # Environment and permissions trusted publishing.
-    environment:
-      # Create this environment in the GitHub repository under Settings -> Environments
-      name: release
-    permissions:
-      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
@@ -29,4 +23,40 @@ jobs:
         run: uv run --isolated --no-project --with pytest --with dist/*.whl tests/smoke_test.py
       - name: Smoke test (source distribution)
         run: uv run --isolated --no-project --with pytest --with dist/*.tar.gz tests/smoke_test.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uv-dists
+          path: dist/binaryninja_mcp-*
+
+  upload_github:
+    name: Upload to Github Release
+    needs: [release-build]
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: uv-dists
+          path: dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/binaryninja_mcp-*
+          generate_release_notes: true
+
+  upload_pypi:
+    name: Upload to PyPI
+    needs: [release-build]
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: uv-dists
+          path: dist
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - run: uv publish --trusted-publishing always
