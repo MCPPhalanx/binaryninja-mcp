@@ -32,6 +32,8 @@ jobs:
     name: Upload to Github Release
     needs: [release-build]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     environment:
       name: release
     steps:
