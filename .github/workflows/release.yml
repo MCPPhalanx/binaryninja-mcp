@@ -20,9 +20,9 @@ jobs:
       - run: uv build
       # Check that basic features work and we didn't miss to include crucial files
       - name: Smoke test (wheel)
-        run: uv run --isolated --no-project --with pytest --with dist/*.whl tests/smoke_test.py
+        run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
       - name: Smoke test (source distribution)
-        run: uv run --isolated --no-project --with pytest --with dist/*.tar.gz tests/smoke_test.py
+        run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
       - uses: actions/upload-artifact@v4
         with:
           name: uv-dists
