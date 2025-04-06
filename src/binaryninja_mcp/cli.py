@@ -1,5 +1,4 @@
 import click
-from exceptiongroup import ExceptionGroup
 import uvicorn
 import logging
 from binaryninja_mcp.consts import DEFAULT_PORT
@@ -127,12 +126,11 @@ def client(host, port):
 		anyio.run(run_client, backend='trio')
 	except KeyboardInterrupt:
 		logger.info('\nDisconnected')
-	except ExceptionGroup as eg:
-		logger.error('anyio job error: %s', repr(eg.exceptions))
-		# Exit with error code
-		raise SystemExit(1)
 	except Exception as e:
-		logger.error('Connection error: %s', e)
+		if e.__class__.__name__ == 'ExceptionGroup':
+			logger.error('anyio job error: %s', repr(e.exceptions))
+		else:
+			logger.error('Connection error: %s', e)
 		# Exit with error code
 		raise SystemExit(1)
 
