@@ -1,0 +1,3 @@
+from binaryninja_mcp.utils import disable_binaryninja_user_plugins
+
+disable_binaryninja_user_plugins()

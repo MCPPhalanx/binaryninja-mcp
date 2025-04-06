@@ -2,7 +2,6 @@ import pytest
 import binaryninja as bn
 from binaryninja_mcp.consts import TEST_BINARY_PATH_ELF
 from binaryninja_mcp.tools import MCPTools
-from binaryninja_mcp.utils import disable_binaryninja_user_plugins
 
 ADDR_MAIN = '0x000008a1'
 
@@ -13,11 +12,6 @@ def textcontent_no_error(result):
 		if 'Error: ' in content.text:
 			return False
 	return True
-
-
-@pytest.fixture(scope='session', autouse=True)
-def binaryninja_setup():
-	disable_binaryninja_user_plugins()
 
 
 @pytest.fixture(scope='function')
