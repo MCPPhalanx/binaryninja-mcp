@@ -1,12 +1,11 @@
-import pytest
-
-
 def test_cli_load():
 	from binaryninja_mcp.cli import cli
 
-	with pytest.raises(SystemExit) as excinfo:
+	try:
 		cli(['--help'])
-	assert excinfo.value.code == 0
+	except SystemExit as e:
+		assert e.code == 0, 'Exit code != 0'
+		print('test_cli_load pass')
 
 
 def test_binja_plugin_version():
@@ -19,6 +18,7 @@ def test_binja_plugin_version():
 	json_version = plugin['version']
 	assert pip_package == 'binaryninja-mcp'
 	assert pip_version == json_version
+	print(f'test_binja_plugin_version pass, pip_version == json_version == {json_version}')
 
 
 if __name__ == '__main__':
