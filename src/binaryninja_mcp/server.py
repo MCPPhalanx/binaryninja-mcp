@@ -4,13 +4,12 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from typing import AsyncIterator, Dict, List, Optional
 
-
 import binaryninja as bn
-from binaryninja_mcp.log import setup_logging
-from mcp.server.fastmcp import FastMCP, Context
+from mcp.server.fastmcp import Context, FastMCP
 from mcp.types import TextContent
 
 from binaryninja_mcp.consts import TEST_BINARY_PATH_ELF
+from binaryninja_mcp.log import setup_logging
 from binaryninja_mcp.resources import MCPResource
 from binaryninja_mcp.tools import MCPTools
 from binaryninja_mcp.utils import bv_name, disable_binaryninja_user_plugins

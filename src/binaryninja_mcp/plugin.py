@@ -1,14 +1,16 @@
-from binaryninja.binaryview import BinaryView, BinaryViewType
 import logging
-from binaryninja_mcp.log import setup_logging
-from binaryninja.plugin import PluginCommand, BackgroundTaskThread
-from binaryninja.settings import Settings
-from binaryninja_mcp.consts import DEFAULT_PORT
-from binaryninja_mcp.utils import bv_name
-from binaryninja_mcp.server import create_mcp_server, create_sse_app
-from typing import Optional, Dict
 import threading
+from typing import Dict, Optional
+
 import uvicorn
+from binaryninja.binaryview import BinaryView, BinaryViewType
+from binaryninja.plugin import BackgroundTaskThread, PluginCommand
+from binaryninja.settings import Settings
+
+from binaryninja_mcp.consts import DEFAULT_PORT
+from binaryninja_mcp.log import setup_logging
+from binaryninja_mcp.server import create_mcp_server
+from binaryninja_mcp.utils import bv_name
 
 logger = logging.getLogger(__name__)
 SETTINGS_NAMESPACE = 'mcpserver'
@@ -66,7 +68,7 @@ class MCPServerPlugin:
 		"""Background task thread entry point"""
 		try:
 			mcp = create_mcp_server(list(self.bvs.values()))
-			app = create_sse_app(mcp)
+			app = mcp.sse_app()
 			config = uvicorn.Config(
 				app,
 				host=self.listen_host,
