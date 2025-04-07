@@ -38,18 +38,23 @@ class BinjaLogHandler(logging.Handler):
 			self.handleError(record)
 
 
-def setup_logging(log_level=logging.INFO, third_party_log_level=logging.WARNING):
+def setup_logging(
+	log_level=logging.INFO, third_party_log_level=logging.WARNING, setup_for_plugin=False
+):
 	"""Configure Python logging to use BinaryNinja's logging system
 
 	Args:
 	    dev_mode (bool): If True, set log level to DEBUG
 	"""
-	log_handlers = [logging.StreamHandler(sys.stderr)]
-	# Configure handlers
-	try:
-		log_handlers.append(BinjaLogHandler())
-	except ImportError:
-		warnings.warn('Skipped BinaryNinja Logger since BN API not installed')
+	log_handlers = []
+	if setup_for_plugin:
+		# Configure handlers
+		try:
+			log_handlers.append(BinjaLogHandler())
+		except ImportError:
+			warnings.warn('Skipped BinaryNinja Logger since BN API not installed')
+	else:
+		logging.StreamHandler(sys.stderr)
 
 	logging.basicConfig(level=third_party_log_level, handlers=log_handlers)
 
