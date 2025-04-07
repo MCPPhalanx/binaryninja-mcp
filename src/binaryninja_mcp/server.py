@@ -2,17 +2,15 @@ import json
 import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
-from typing import AsyncIterator, Dict, List, Optional, Any, Iterable
+from typing import AsyncIterator, Dict, List, Optional
+
 
 import binaryninja as bn
 from binaryninja_mcp.log import setup_logging
-from mcp.server.lowlevel import Server
-from mcp.server.lowlevel.helper_types import ReadResourceContents
-from mcp.server.stdio import stdio_server
-from mcp.types import Tool, Resource, ResourceTemplate, TextContent
-from pydantic import AnyUrl
+from mcp.server.fastmcp import FastMCP, Context
+from mcp.types import TextContent
 
-from binaryninja_mcp.consts import DEFAULT_PORT, TEST_BINARY_PATH_ELF
+from binaryninja_mcp.consts import TEST_BINARY_PATH_ELF
 from binaryninja_mcp.resources import MCPResource
 from binaryninja_mcp.tools import MCPTools
 from binaryninja_mcp.utils import bv_name, disable_binaryninja_user_plugins
@@ -75,7 +73,7 @@ class BNContext:
 
 
 @asynccontextmanager
-async def lifespan(server: Server) -> AsyncIterator[BNContext]:
+async def lifespan(server: FastMCP) -> AsyncIterator[BNContext]:
 	"""Application lifecycle manager with initial BinaryViews"""
 	context = BNContext()
 
@@ -92,7 +90,7 @@ async def lifespan(server: Server) -> AsyncIterator[BNContext]:
 			pass
 
 
-def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Server:
+def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None, **mcp_settings) -> FastMCP:
 	"""Initialize MCP server with optional initial BinaryViews
 
 	Args:
@@ -101,582 +99,291 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None) -> Serv
 	Returns:
 	    Configured MCP server instance
 	"""
-	server = Server(
+	mcp = FastMCP(
 		name='BinaryNinja',
 		version='1.0.0',
-		instructions='MCP server for Binary Ninja analysis',
+		description='MCP server for Binary Ninja analysis',
 		lifespan=lifespan,
+		**mcp_settings,
 	)
 
 	# Store initial BinaryViews for use in lifespan
-	server.initial_bvs = initial_bvs or []
+	mcp.initial_bvs = initial_bvs or []
 
-	# Register resource handlers
-	@server.list_resources()
-	async def list_resources() -> List[Resource]:
-		"""List all available resources"""
-		bnctx: BNContext = server.request_context.lifespan_context
-		resources = []
-
-		# Add a resource for each BinaryView
-		for name in bnctx.bvs:
-			resources.append(
-				Resource(
-					uri=f'binaryninja://{name}/triage_summary',
-					name=f'Triage Summary for {name}',
-					description='Basic information as shown in BinaryNinja Triage view',
-					mimeType='application/json',
-				)
-			)
-
-			# Add other resource types
-			for resource_type in [
-				'imports',
-				'exports',
-				'segments',
-				'sections',
-				'strings',
-				'functions',
-				'data_variables',
-			]:
-				resources.append(
-					Resource(
-						uri=f'binaryninja://{name}/{resource_type}',
-						name=f'{resource_type.capitalize()} for {name}',
-						description=f'List of {resource_type} in the binary',
-						mimeType='application/json',
-					)
-				)
-		logger.debug(
-			'Listing available resources, %d bvs => %d resources',
-			len(bnctx.bvs),
-			len(resources),
-		)
-
-		return resources
-
-	@server.list_resource_templates()
-	async def list_resource_templates() -> List[ResourceTemplate]:
-		"""List all available resource templates"""
-		logger.debug('Listing resource templates')
-		return [
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/triage_summary',
-				name='Triage Summary',
-				description='Basic information as shown in BinaryNinja Triage view',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/imports',
-				name='Imports',
-				description='Dictionary of imported symbols or functions with properties',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/exports',
-				name='Exports',
-				description='Dictionary of exported symbols or functions with properties',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/segments',
-				name='Segments',
-				description='List of memory segments',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/sections',
-				name='Sections',
-				description='List of binary sections',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/strings',
-				name='Strings',
-				description='List of strings found in the binary',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/functions',
-				name='Functions',
-				description='List of functions',
-				mimeType='application/json',
-			),
-			ResourceTemplate(
-				uriTemplate='binaryninja://{filename}/data_variables',
-				name='Data Variables',
-				description='List of data variables',
-				mimeType='application/json',
-			),
-		]
-
-	@server.read_resource()
-	async def read_resource(uri: AnyUrl) -> Iterable[ReadResourceContents]:
-		"""Read a resource by URI"""
-		logger.debug('Reading resource: %s', uri)
-		bnctx: BNContext = server.request_context.lifespan_context
-
-		# Parse the URI
-		uri_str = str(uri)
-		if not uri_str.startswith('binaryninja://'):
-			raise ValueError(f'Invalid URI scheme: {uri_str}')
-
-		# Extract filename and resource type
-		path = uri_str[len('binaryninja://') :]
-		parts = path.split('/')
-
-		if len(parts) != 2:
-			raise ValueError(f'Invalid URI format: {uri_str}')
-
-		filename, resource_type = parts
-
-		# Get the BinaryView
+	# Resource handlers
+	@mcp.resource('binaryninja://{filename}/triage_summary')
+	def resource_get_triage_summary(filename: str) -> str:
+		"""Get basic information as shown in BinaryNinja Triage view"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
 		bv = bnctx.get_bv(filename)
 		if not bv:
 			raise ValueError(f'BinaryView not found: {filename}')
 
-		# Create resource handler
 		resource = MCPResource(bv)
+		data = resource.triage_summary()
+		return json.dumps(data, indent=2)
 
-		# Call the appropriate method based on resource type
-		if resource_type == 'triage_summary':
-			data = resource.triage_summary()
-		elif resource_type == 'imports':
-			data = resource.imports()
-		elif resource_type == 'exports':
-			data = resource.exports()
-		elif resource_type == 'segments':
-			data = resource.segments()
-		elif resource_type == 'sections':
-			data = resource.sections()
-		elif resource_type == 'strings':
-			data = resource.strings()
-		elif resource_type == 'functions':
-			data = resource.functions()
-		elif resource_type == 'data_variables':
-			data = resource.data_variables()
-		else:
-			raise ValueError(f'Unknown resource type: {resource_type}')
+	@mcp.resource('binaryninja://{filename}/imports')
+	def resource_get_imports(filename: str) -> str:
+		"""Get dictionary of imported symbols or functions with properties"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
 
-		# Return the data as JSON
-		return [
-			ReadResourceContents(content=json.dumps(data, indent=2), mime_type='application/json')
-		]
+		resource = MCPResource(bv)
+		data = resource.imports()
+		return json.dumps(data, indent=2)
 
-	# Register tool handlers
-	@server.list_tools()
-	async def list_tools() -> List[Tool]:
-		"""List all available tools"""
-		logger.debug('Listing available tools')
-		return [
-			# Resource access tools
-			Tool(
-				name='get_triage_summary',
-				description='Get basic information as shown in BinaryNinja Triage view',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_imports',
-				description='Get dictionary of imported symbols',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_exports',
-				description='Get dictionary of exported symbols',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_segments',
-				description='Get list of memory segments',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_sections',
-				description='Get list of binary sections',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_strings',
-				description='Get list of strings found in the binary',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_functions',
-				description='Get list of functions',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='get_data_variables',
-				description='Get list of data variables',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-			Tool(
-				name='list_filename',
-				description='List file names of all opened files',
-				inputSchema={'type': 'object', 'properties': {}, 'required': []},
-			),
-			Tool(
-				name='rename_symbol',
-				description='Rename a function or a data variable',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						},
-						'address_or_name': {
-							'type': 'string',
-							'description': 'Address (hex string) or name of the function or data variable',
-						},
-						'new_name': {
-							'type': 'string',
-							'description': 'New name for the symbol',
-						},
-					},
-					'required': ['filename', 'address_or_name', 'new_name'],
-				},
-			),
-			Tool(
-				name='pseudo_c',
-				description='Get pseudo C code of a specified function',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						},
-						'address_or_name': {
-							'type': 'string',
-							'description': 'Address (hex string) or name of the function',
-						},
-					},
-					'required': ['filename', 'address_or_name'],
-				},
-			),
-			Tool(
-				name='pseudo_rust',
-				description='Get pseudo Rust code of a specified function',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						},
-						'address_or_name': {
-							'type': 'string',
-							'description': 'Address (hex string) or name of the function',
-						},
-					},
-					'required': ['filename', 'address_or_name'],
-				},
-			),
-			Tool(
-				name='high_level_il',
-				description='Get high level IL of a specified function',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						},
-						'address_or_name': {
-							'type': 'string',
-							'description': 'Address (hex string) or name of the function',
-						},
-					},
-					'required': ['filename', 'address_or_name'],
-				},
-			),
-			Tool(
-				name='medium_level_il',
-				description='Get medium level IL of a specified function',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						},
-						'address_or_name': {
-							'type': 'string',
-							'description': 'Address (hex string) or name of the function',
-						},
-					},
-					'required': ['filename', 'address_or_name'],
-				},
-			),
-			Tool(
-				name='disassembly',
-				description='Get disassembly of a function or specified range',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						},
-						'address_or_name': {
-							'type': 'string',
-							'description': 'Address (hex string) or name to start disassembly',
-						},
-						'length': {
-							'type': 'integer',
-							'description': 'Optional length of bytes to disassemble',
-						},
-					},
-					'required': ['filename', 'address_or_name'],
-				},
-			),
-			Tool(
-				name='update_analysis_and_wait',
-				description='Update analysis for the binary and wait for it to complete',
-				inputSchema={
-					'type': 'object',
-					'properties': {
-						'filename': {
-							'type': 'string',
-							'description': 'Name of the binary file',
-						}
-					},
-					'required': ['filename'],
-				},
-			),
-		]
+	@mcp.resource('binaryninja://{filename}/exports')
+	def resource_get_exports(filename: str) -> str:
+		"""Get dictionary of exported symbols or functions with properties"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
 
-	@server.call_tool()
-	async def call_tool(name: str, arguments: Dict[str, Any]) -> Iterable[TextContent]:
-		"""Call a tool by name with arguments"""
-		logger.debug('Calling tool: %s with args: %s', name, arguments)
-		bnctx: BNContext = server.request_context.lifespan_context
+		resource = MCPResource(bv)
+		data = resource.exports()
+		return json.dumps(data, indent=2)
 
-		if name == 'list_filename':
-			return [TextContent(type='text', text=json.dumps(list(bnctx.bvs.keys()), indent=2))]
+	@mcp.resource('binaryninja://{filename}/segments')
+	def resource_get_segments(filename: str) -> str:
+		"""Get list of memory segments"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
 
-		# Validate required arguments
-		if 'filename' not in arguments:
-			return [TextContent(type='text', text="Error: Missing required argument 'filename'")]
+		resource = MCPResource(bv)
+		data = resource.segments()
+		return json.dumps(data, indent=2)
 
-		# Get the BinaryView
-		filename = arguments['filename']
+	@mcp.resource('binaryninja://{filename}/sections')
+	def resource_get_sections(filename: str) -> str:
+		"""Get list of binary sections"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
+
+		resource = MCPResource(bv)
+		data = resource.sections()
+		return json.dumps(data, indent=2)
+
+	@mcp.resource('binaryninja://{filename}/strings')
+	def resource_get_strings(filename: str) -> str:
+		"""Get list of strings found in the binary"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
+
+		resource = MCPResource(bv)
+		data = resource.strings()
+		return json.dumps(data, indent=2)
+
+	@mcp.resource('binaryninja://{filename}/functions')
+	def resource_get_functions(filename: str) -> str:
+		"""Get list of functions"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
+
+		resource = MCPResource(bv)
+		data = resource.functions()
+		return json.dumps(data, indent=2)
+
+	@mcp.resource('binaryninja://{filename}/data_variables')
+	def resource_get_data_variables(filename: str) -> str:
+		"""Get list of data variables"""
+		bnctx: BNContext = mcp.get_context().request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			raise ValueError(f'BinaryView not found: {filename}')
+
+		resource = MCPResource(bv)
+		data = resource.data_variables()
+		return json.dumps(data, indent=2)
+
+	# Tool handlers
+	@mcp.tool()
+	def list_filename(ctx: Context) -> List[str]:
+		"""List file names of all opened files"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		return list(bnctx.bvs.keys())
+
+	@mcp.tool()
+	def get_triage_summary(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get basic information as shown in BinaryNinja Triage view"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
 		bv = bnctx.get_bv(filename)
 		if not bv:
 			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		# Create tool handler
 		tools = MCPTools(bv)
+		return tools.get_triage_summary()
 
-		# Call the appropriate method based on tool name
-		if name == 'rename_symbol':
-			if 'address_or_name' not in arguments or 'new_name' not in arguments:
-				return [
-					TextContent(
-						type='text',
-						text="Error: Missing required arguments 'address_or_name' and/or 'new_name'",
-					)
-				]
-			return tools.rename_symbol(arguments['address_or_name'], arguments['new_name'])
+	@mcp.tool()
+	def get_imports(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get dictionary of imported symbols"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		elif name == 'pseudo_c':
-			if 'address_or_name' not in arguments:
-				return [
-					TextContent(
-						type='text',
-						text="Error: Missing required argument 'address_or_name'",
-					)
-				]
-			return tools.pseudo_c(arguments['address_or_name'])
+		tools = MCPTools(bv)
+		return tools.get_imports()
 
-		elif name == 'pseudo_rust':
-			if 'address_or_name' not in arguments:
-				return [
-					TextContent(
-						type='text',
-						text="Error: Missing required argument 'address_or_name'",
-					)
-				]
-			return tools.pseudo_rust(arguments['address_or_name'])
+	@mcp.tool()
+	def get_exports(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get dictionary of exported symbols"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		elif name == 'high_level_il':
-			if 'address_or_name' not in arguments:
-				return [
-					TextContent(
-						type='text',
-						text="Error: Missing required argument 'address_or_name'",
-					)
-				]
-			return tools.high_level_il(arguments['address_or_name'])
+		tools = MCPTools(bv)
+		return tools.get_exports()
 
-		elif name == 'medium_level_il':
-			if 'address_or_name' not in arguments:
-				return [
-					TextContent(
-						type='text',
-						text="Error: Missing required argument 'address_or_name'",
-					)
-				]
-			return tools.medium_level_il(arguments['address_or_name'])
+	@mcp.tool()
+	def get_segments(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get list of memory segments"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		elif name == 'disassembly':
-			if 'address_or_name' not in arguments:
-				return [
-					TextContent(
-						type='text',
-						text="Error: Missing required argument 'address_or_name'",
-					)
-				]
-			length = arguments.get('length')
-			return tools.disassembly(arguments['address_or_name'], length)
+		tools = MCPTools(bv)
+		return tools.get_segments()
 
-		elif name == 'update_analysis_and_wait':
-			return tools.update_analysis_and_wait()
+	@mcp.tool()
+	def get_sections(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get list of binary sections"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		# Resource access tools
-		elif name == 'get_triage_summary':
-			return tools.get_triage_summary()
+		tools = MCPTools(bv)
+		return tools.get_sections()
 
-		elif name == 'get_imports':
-			return tools.get_imports()
+	@mcp.tool()
+	def get_strings(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get list of strings found in the binary"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		elif name == 'get_exports':
-			return tools.get_exports()
+		tools = MCPTools(bv)
+		return tools.get_strings()
 
-		elif name == 'get_segments':
-			return tools.get_segments()
+	@mcp.tool()
+	def get_functions(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get list of functions"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		elif name == 'get_sections':
-			return tools.get_sections()
+		tools = MCPTools(bv)
+		return tools.get_functions()
 
-		elif name == 'get_strings':
-			return tools.get_strings()
+	@mcp.tool()
+	def get_data_variables(filename: str, ctx: Context) -> List[TextContent]:
+		"""Get list of data variables"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		elif name == 'get_functions':
-			return tools.get_functions()
+		tools = MCPTools(bv)
+		return tools.get_data_variables()
 
-		elif name == 'get_data_variables':
-			return tools.get_data_variables()
+	@mcp.tool()
+	def rename_symbol(
+		filename: str, address_or_name: str, new_name: str, ctx: Context
+	) -> List[TextContent]:
+		"""Rename a function or a data variable"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-		else:
-			return [TextContent(type='text', text=f'Error: Unknown tool: {name}')]
+		tools = MCPTools(bv)
+		return tools.rename_symbol(address_or_name, new_name)
 
-	return server
+	@mcp.tool()
+	def pseudo_c(filename: str, address_or_name: str, ctx: Context) -> List[TextContent]:
+		"""Get pseudo C code of a specified function"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
+		tools = MCPTools(bv)
+		return tools.pseudo_c(address_or_name)
 
-def create_sse_app(server: Server):
-	"""Create a Starlette application for SSE transport
+	@mcp.tool()
+	def pseudo_rust(filename: str, address_or_name: str, ctx: Context) -> List[TextContent]:
+		"""Get pseudo Rust code of a specified function"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-	Args:
-	    server: The MCP server instance
+		tools = MCPTools(bv)
+		return tools.pseudo_rust(address_or_name)
 
-	Returns:
-	    A Starlette application configured for SSE transport
-	"""
-	from mcp.server.sse import SseServerTransport
-	from starlette.applications import Starlette
-	from starlette.routing import Mount, Route
+	@mcp.tool()
+	def high_level_il(filename: str, address_or_name: str, ctx: Context) -> List[TextContent]:
+		"""Get high level IL of a specified function"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-	sse = SseServerTransport('/messages/')
+		tools = MCPTools(bv)
+		return tools.high_level_il(address_or_name)
 
-	async def handle_sse(request):
-		async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
-			await server.run(streams[0], streams[1], server.create_initialization_options())
+	@mcp.tool()
+	def medium_level_il(filename: str, address_or_name: str, ctx: Context) -> List[TextContent]:
+		"""Get medium level IL of a specified function"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-	starlette_app = Starlette(
-		debug=True,
-		routes=[
-			Route('/sse', endpoint=handle_sse),
-			Mount('/messages/', app=sse.handle_post_message),
-		],
-	)
+		tools = MCPTools(bv)
+		return tools.medium_level_il(address_or_name)
 
-	return starlette_app
+	@mcp.tool()
+	def disassembly(
+		filename: str, address_or_name: str, ctx: Context, length: Optional[int] = None
+	) -> List[TextContent]:
+		"""Get disassembly of a function or specified range"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
+		tools = MCPTools(bv)
+		return tools.disassembly(address_or_name, length)
 
-async def run_stdio_server(initial_bvs: Optional[List[bn.BinaryView]] = None):
-	"""Run the MCP server over stdio
+	@mcp.tool()
+	def update_analysis_and_wait(filename: str, ctx: Context) -> List[TextContent]:
+		"""Update analysis for the binary and wait for it to complete"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		if not bv:
+			return [TextContent(type='text', text=f'Error: BinaryView not found: {filename}')]
 
-	Args:
-	    initial_bvs: Optional list of BinaryViews to initialize the server with
-	"""
-	server = create_mcp_server(initial_bvs)
+		tools = MCPTools(bv)
+		return tools.update_analysis_and_wait()
 
-	async with stdio_server() as (read_stream, write_stream):
-		await server.run(read_stream, write_stream, server.create_initialization_options())
+	return mcp
 
 
 if __name__ == '__main__':
@@ -690,35 +397,11 @@ if __name__ == '__main__':
 	setup_logging(logging.DEBUG)
 	server = create_mcp_server([bv])
 
-	# if False:
-	# else:
-	#     server = create_mcp_server()
-	#     app = server.sse_app
 	transport = 'stdio'
-
-	if transport == 'sse':
-		import uvicorn
-
-		starlette_app = create_sse_app(server)
-		uvicorn.run(
-			starlette_app,
-			host='localhost',
-			port=DEFAULT_PORT,
-			timeout_graceful_shutdown=2,
-		)
-	else:
-		from mcp.server.stdio import stdio_server
-
-		async def arun():
-			async with stdio_server() as streams:
-				await server.run(streams[0], streams[1], server.create_initialization_options())
-
-		import anyio
-
-		anyio.run(arun)
+	server.run(transport)
 
 # launched by `mcp dev server.py`
 elif __name__ == 'server_module':
 	print('loading server module')
-	# bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
-	server = create_mcp_server()
+	bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
+	server = create_mcp_server([bv])
