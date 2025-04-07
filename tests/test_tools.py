@@ -1,6 +1,4 @@
 import pytest
-import binaryninja as bn
-from binaryninja_mcp.consts import TEST_BINARY_PATH_ELF
 from binaryninja_mcp.tools import MCPTools
 
 ADDR_MAIN = '0x000008a1'
@@ -12,14 +10,6 @@ def textcontent_no_error(result):
 		if 'Error: ' in content.text:
 			return False
 	return True
-
-
-@pytest.fixture(scope='function')
-def bv():
-	"""Fixture that loads the beleaf.elf binary"""
-	bv = bn.load(TEST_BINARY_PATH_ELF)
-	yield bv
-	bv.file.close()
 
 
 @pytest.fixture
