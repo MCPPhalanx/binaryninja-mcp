@@ -35,7 +35,7 @@ def pytest_generate_tests(metafunc: pytest.Metafunc):
 def textcontent_no_error(result: List[TextContent]) -> bool:
 	"""Helper to verify no error messages in TextContent results"""
 	for content in result.content:
-		if 'Error: ' in content.text:
+		if content.text.startswith('Error'):
 			return False
 	return True
 
