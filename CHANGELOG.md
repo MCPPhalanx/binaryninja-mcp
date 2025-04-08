@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.3.0
+
+### Major Changes
+
+- Refactored server implementation with FastMCP
+- Improved error handling using FastMCP error handling system
+
+### Fixes
+
+- Fixed compatibility issues with ExceptionGroup imports
+- Fixed resource tools functionality
+
+### Development Changes
+
+- Added test cases for MCP Server with snapshot testing
+- Removed pytest dependency from release workflow and smoke tests
+- Added workflow permissions for GitHub release creation
+- Added isort to ruff configuration
+- Improved code organization with better import sorting
+- Added test snapshots for MCP tools
+
+## v0.2.2
+
+### Development Changes
+
+- Added GitHub release action
+- Moved Binary Ninja configuration to conftest
+- Added pre-commit hooks for code quality
+
 ## v0.2.1
 
 ### Fixes
