@@ -1,51 +1,1942 @@
 # serializer version: 1
 # name: test_disassembly_function
-  list([
-    TextContent(type='text', text='\n  int32_t main(int32_t argc, char** argv, char** envp)\n\n000008a1  push    rbp\n000008a2  mov     rbp, rsp\n000008a5  sub     rsp, 0xc0\n000008ac  mov     dword [rbp-0xb4], edi\n000008b2  mov     qword [rbp-0xc0], rsi\n000008b9  mov     rax, qword [fs:0x28]\n000008c2  mov     qword [rbp-0x8], rax\n000008c6  xor     eax, eax\n000008c8  lea     rdi, [rel data_a64]  {"Enter the flag\\n>>> "}\n000008cf  mov     eax, 0x0\n000008d4  call    printf\n000008d9  lea     rax, [rbp-0x90]\n000008e0  mov     rsi, rax\n000008e3  lea     rdi, [rel data_a78]\n000008ea  mov     eax, 0x0\n000008ef  call    __isoc99_scanf\n000008f4  lea     rax, [rbp-0x90]\n000008fb  mov     rdi, rax\n000008fe  call    strlen\n00000903  mov     qword [rbp-0xa0], rax\n0000090a  cmp     qword [rbp-0xa0], 0x20\n00000912  ja      0x92a\n\n00000914  lea     rdi, [rel data_a7b]  {"Incorrect!"}\n0000091b  call    puts\n00000920  mov     edi, 0x1\n00000925  call    exit\n{ Does not return }\n\n0000092a  mov     qword [rbp-0xa8], 0x0\n00000935  jmp     0x99d\n\n00000937  lea     rdx, [rbp-0x90]\n0000093e  mov     rax, qword [rbp-0xa8]\n00000945  add     rax, rdx\n00000948  movzx   eax, byte [rax]\n0000094b  movsx   eax, al\n0000094e  mov     edi, eax\n00000950  call    sub_7fa\n00000955  mov     qword [rbp-0x98], rax\n0000095c  mov     rax, qword [rbp-0xa8]\n00000963  lea     rdx, [rax*8]\n0000096b  lea     rax, [rel data_2014e0]\n00000972  mov     rax, qword [rdx+rax]\n00000976  cmp     qword [rbp-0x98], rax\n0000097d  je      0x995\n\n0000097f  lea     rdi, [rel data_a7b]  {"Incorrect!"}\n00000986  call    puts\n0000098b  mov     edi, 0x1\n00000990  call    exit\n{ Does not return }\n\n00000995  add     qword [rbp-0xa8], 0x1\n\n0000099d  mov     rax, qword [rbp-0xa8]\n000009a4  cmp     rax, qword [rbp-0xa0]\n000009ab  jb      0x937\n\n000009ad  lea     rdi, [rel data_a86]  {"Correct!"}\n000009b4  call    puts\n000009b9  mov     eax, 0x0\n000009be  mov     rcx, qword [rbp-0x8]\n000009c2  xor     rcx, qword [fs:0x28]\n000009cb  je      0x9d2\n\n000009cd  call    __stack_chk_fail\n{ Does not return }\n\n000009d2  leave   \n000009d3  retn    \n', annotations=None),
-  ])
+  '''
+  
+    int32_t main(int32_t argc, char** argv, char** envp)
+  
+  000008a1  push    rbp
+  000008a2  mov     rbp, rsp
+  000008a5  sub     rsp, 0xc0
+  000008ac  mov     dword [rbp-0xb4], edi
+  000008b2  mov     qword [rbp-0xc0], rsi
+  000008b9  mov     rax, qword [fs:0x28]
+  000008c2  mov     qword [rbp-0x8], rax
+  000008c6  xor     eax, eax
+  000008c8  lea     rdi, [rel data_a64]  {"Enter the flag\n>>> "}
+  000008cf  mov     eax, 0x0
+  000008d4  call    printf
+  000008d9  lea     rax, [rbp-0x90]
+  000008e0  mov     rsi, rax
+  000008e3  lea     rdi, [rel data_a78]
+  000008ea  mov     eax, 0x0
+  000008ef  call    __isoc99_scanf
+  000008f4  lea     rax, [rbp-0x90]
+  000008fb  mov     rdi, rax
+  000008fe  call    strlen
+  00000903  mov     qword [rbp-0xa0], rax
+  0000090a  cmp     qword [rbp-0xa0], 0x20
+  00000912  ja      0x92a
+  
+  00000914  lea     rdi, [rel data_a7b]  {"Incorrect!"}
+  0000091b  call    puts
+  00000920  mov     edi, 0x1
+  00000925  call    exit
+  { Does not return }
+  
+  0000092a  mov     qword [rbp-0xa8], 0x0
+  00000935  jmp     0x99d
+  
+  00000937  lea     rdx, [rbp-0x90]
+  0000093e  mov     rax, qword [rbp-0xa8]
+  00000945  add     rax, rdx
+  00000948  movzx   eax, byte [rax]
+  0000094b  movsx   eax, al
+  0000094e  mov     edi, eax
+  00000950  call    sub_7fa
+  00000955  mov     qword [rbp-0x98], rax
+  0000095c  mov     rax, qword [rbp-0xa8]
+  00000963  lea     rdx, [rax*8]
+  0000096b  lea     rax, [rel data_2014e0]
+  00000972  mov     rax, qword [rdx+rax]
+  00000976  cmp     qword [rbp-0x98], rax
+  0000097d  je      0x995
+  
+  0000097f  lea     rdi, [rel data_a7b]  {"Incorrect!"}
+  00000986  call    puts
+  0000098b  mov     edi, 0x1
+  00000990  call    exit
+  { Does not return }
+  
+  00000995  add     qword [rbp-0xa8], 0x1
+  
+  0000099d  mov     rax, qword [rbp-0xa8]
+  000009a4  cmp     rax, qword [rbp-0xa0]
+  000009ab  jb      0x937
+  
+  000009ad  lea     rdi, [rel data_a86]  {"Correct!"}
+  000009b4  call    puts
+  000009b9  mov     eax, 0x0
+  000009be  mov     rcx, qword [rbp-0x8]
+  000009c2  xor     rcx, qword [fs:0x28]
+  000009cb  je      0x9d2
+  
+  000009cd  call    __stack_chk_fail
+  { Does not return }
+  
+  000009d2  leave   
+  000009d3  retn    
+  
+  '''
 # ---
 # name: test_disassembly_range
+  '''
+  0x8a1: push    rbp
+  0x8a2: mov     rbp, rsp
+  0x8a5: sub     rsp, 0xc0
+  0x8ac: mov     dword [rbp-0xb4], edi
+  '''
+# ---
+# name: test_get_data_variables
   list([
-    TextContent(type='text', text='0x8a1: push    rbp\n0x8a2: mov     rbp, rsp\n0x8a5: sub     rsp, 0xc0\n0x8ac: mov     dword [rbp-0xb4], edi', annotations=None),
+    dict({
+      'address': '0x0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__elf_header',
+        'short_name': '__elf_header',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'struct Elf64_Header',
+    }),
+    dict({
+      'address': '0x40',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__elf_program_headers',
+        'short_name': '__elf_program_headers',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'struct Elf64_ProgramHeader[0x9]',
+    }),
+    dict({
+      'address': '0x238',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__elf_interp',
+        'short_name': '__elf_interp',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'char[0x1c]',
+    }),
+    dict({
+      'address': '0x2b8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__elf_symbol_table',
+        'short_name': '__elf_symbol_table',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'struct Elf64_Sym[0xc]',
+    }),
+    dict({
+      'address': '0x3d9',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xa]',
+    }),
+    dict({
+      'address': '0x3e3',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x5]',
+    }),
+    dict({
+      'address': '0x3e8',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xf]',
+    }),
+    dict({
+      'address': '0x3f7',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x5]',
+    }),
+    dict({
+      'address': '0x3fc',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x11]',
+    }),
+    dict({
+      'address': '0x40d',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x7]',
+    }),
+    dict({
+      'address': '0x414',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x7]',
+    }),
+    dict({
+      'address': '0x41b',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xf]',
+    }),
+    dict({
+      'address': '0x42a',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x12]',
+    }),
+    dict({
+      'address': '0x43c',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xa]',
+    }),
+    dict({
+      'address': '0x446',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xa]',
+    }),
+    dict({
+      'address': '0x450',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xc]',
+    }),
+    dict({
+      'address': '0x45c',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x1c]',
+    }),
+    dict({
+      'address': '0x478',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0xf]',
+    }),
+    dict({
+      'address': '0x487',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char[0x1a]',
+    }),
+    dict({
+      'address': '0x500',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__elf_rela_table',
+        'short_name': '__elf_rela_table',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'struct Elf64_Rela[0x8]',
+    }),
+    dict({
+      'address': '0x650',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '_init',
+        'short_name': '_init',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x670',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': None,
+    }),
+    dict({
+      'address': '0x680',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'puts',
+        'short_name': 'puts',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x690',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'strlen',
+        'short_name': 'strlen',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x6a0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__stack_chk_fail',
+        'short_name': '__stack_chk_fail',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x6b0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'printf',
+        'short_name': 'printf',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x6c0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__isoc99_scanf',
+        'short_name': '__isoc99_scanf',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x6d0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'exit',
+        'short_name': 'exit',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x6e0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__cxa_finalize',
+        'short_name': '__cxa_finalize',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x720',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'deregister_tm_clones',
+        'short_name': 'deregister_tm_clones',
+        'type': 'SymbolType.LibraryFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x760',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'register_tm_clones',
+        'short_name': 'register_tm_clones',
+        'type': 'SymbolType.LibraryFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x7fa',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': None,
+    }),
+    dict({
+      'address': '0x8a1',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'main',
+        'short_name': 'main',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x9e0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'init',
+        'short_name': 'init',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0xa50',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'fini',
+        'short_name': 'fini',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0xa64',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char const[0x14]',
+    }),
+    dict({
+      'address': '0xa78',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': None,
+    }),
+    dict({
+      'address': '0xa7b',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char const[0xb]',
+    }),
+    dict({
+      'address': '0xa86',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char const[0x9]',
+    }),
+    dict({
+      'address': '0x200d90',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'init_array',
+        'short_name': 'init_array',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'void (*[0x1])()',
+    }),
+    dict({
+      'address': '0x200d98',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'fini_array',
+        'short_name': 'fini_array',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'void (*[0x1])()',
+    }),
+    dict({
+      'address': '0x200da0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__elf_dynamic_table',
+        'short_name': '__elf_dynamic_table',
+        'type': 'SymbolType.DataSymbol',
+      }),
+      'type': 'struct Elf64_Dyn[0x1b]',
+    }),
+    dict({
+      'address': '0x200f98',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'int64_t',
+    }),
+    dict({
+      'address': '0x200fa0',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'int64_t',
+    }),
+    dict({
+      'address': '0x200fa8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'puts',
+        'short_name': 'puts',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'int32_t (* const)(char const* str)',
+    }),
+    dict({
+      'address': '0x200fb0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'strlen',
+        'short_name': 'strlen',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'uint64_t (* const)(char const*)',
+    }),
+    dict({
+      'address': '0x200fb8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__stack_chk_fail',
+        'short_name': '__stack_chk_fail',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'void (* const)() __noreturn',
+    }),
+    dict({
+      'address': '0x200fc0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'printf',
+        'short_name': 'printf',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'int32_t (* const)(char const* format, ...)',
+    }),
+    dict({
+      'address': '0x200fc8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__isoc99_scanf',
+        'short_name': '__isoc99_scanf',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'int32_t (* const)(char const* format, ...)',
+    }),
+    dict({
+      'address': '0x200fd0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'exit',
+        'short_name': 'exit',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'void (* const)(int32_t status) __noreturn',
+    }),
+    dict({
+      'address': '0x200fd8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '_ITM_deregisterTMCloneTable',
+        'short_name': '_ITM_deregisterTMCloneTable',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'int64_t (* const)()',
+    }),
+    dict({
+      'address': '0x200fe0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__libc_start_main',
+        'short_name': '__libc_start_main',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'void (* const)(int32_t (* main)(int32_t argc, char** argv, char** envp), int32_t argc, char** ubp_av, void (* init)(), void (* fini)(), void (* rtld_fini)(), void* stack_end) __noreturn',
+    }),
+    dict({
+      'address': '0x200fe8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__gmon_start__',
+        'short_name': '__gmon_start__',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'int64_t (* const)()',
+    }),
+    dict({
+      'address': '0x200ff0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '_ITM_registerTMCloneTable',
+        'short_name': '_ITM_registerTMCloneTable',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'int64_t (* const)()',
+    }),
+    dict({
+      'address': '0x200ff8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__cxa_finalize',
+        'short_name': '__cxa_finalize',
+        'type': 'SymbolType.ImportAddressSymbol',
+      }),
+      'type': 'void (* const)(void* d)',
+    }),
+    dict({
+      'address': '0x201008',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'void*',
+    }),
+    dict({
+      'address': '0x201020',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'wchar32[0x7]',
+    }),
+    dict({
+      'address': '0x2014e0',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': None,
+    }),
+    dict({
+      'address': '0x2015e8',
+      'auto_discovered': True,
+      'symbol': None,
+      'type': 'char',
+    }),
+    dict({
+      'address': '0x2015f0',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '_ITM_deregisterTMCloneTable',
+        'short_name': '_ITM_deregisterTMCloneTable',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x2015f8',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '_ITM_registerTMCloneTable',
+        'short_name': '_ITM_registerTMCloneTable',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201600',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__cxa_finalize',
+        'short_name': '__cxa_finalize',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201608',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__gmon_start__',
+        'short_name': '__gmon_start__',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201610',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__isoc99_scanf',
+        'short_name': '__isoc99_scanf',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201618',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__libc_start_main',
+        'short_name': '__libc_start_main',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201620',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__stack_chk_fail',
+        'short_name': '__stack_chk_fail',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201628',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'exit',
+        'short_name': 'exit',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201630',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'printf',
+        'short_name': 'printf',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201638',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'puts',
+        'short_name': 'puts',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201640',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': 'strlen',
+        'short_name': 'strlen',
+        'type': 'SymbolType.ExternalSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201650',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__builtin_memcpy',
+        'short_name': '__builtin_memcpy',
+        'type': 'SymbolType.SymbolicFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201658',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__builtin_memset',
+        'short_name': '__builtin_memset',
+        'type': 'SymbolType.SymbolicFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201660',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__builtin_strcpy',
+        'short_name': '__builtin_strcpy',
+        'type': 'SymbolType.SymbolicFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201668',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__builtin_strncpy',
+        'short_name': '__builtin_strncpy',
+        'type': 'SymbolType.SymbolicFunctionSymbol',
+      }),
+      'type': None,
+    }),
+    dict({
+      'address': '0x201670',
+      'auto_discovered': True,
+      'symbol': dict({
+        'name': '__builtin_wcscpy',
+        'short_name': '__builtin_wcscpy',
+        'type': 'SymbolType.SymbolicFunctionSymbol',
+      }),
+      'type': None,
+    }),
   ])
+# ---
+# name: test_get_exports
+  list([
+    dict({
+      'address': '0x6f0',
+      'name': '_start',
+      'ordinal': 0,
+      'type': 'SymbolType.FunctionSymbol',
+    }),
+    dict({
+      'address': '0x7b0',
+      'name': '_FINI_0',
+      'ordinal': 0,
+      'type': 'SymbolType.FunctionSymbol',
+    }),
+    dict({
+      'address': '0x7f0',
+      'name': '_INIT_0',
+      'ordinal': 0,
+      'type': 'SymbolType.FunctionSymbol',
+    }),
+  ])
+# ---
+# name: test_get_functions
+  list([
+    dict({
+      'basic_block_count': 3,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': '_init',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x650',
+      'symbol': dict({
+        'name': '_init',
+        'short_name': '_init',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_670',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x670',
+      'symbol': dict({
+        'name': 'sub_670',
+        'short_name': 'sub_670',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': 'puts',
+      'parameter_count': 1,
+      'return_type': 'int32_t',
+      'start': '0x680',
+      'symbol': dict({
+        'name': 'puts',
+        'short_name': 'puts',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_686',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x686',
+      'symbol': dict({
+        'name': 'sub_686',
+        'short_name': 'sub_686',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': 'strlen',
+      'parameter_count': 1,
+      'return_type': 'uint64_t',
+      'start': '0x690',
+      'symbol': dict({
+        'name': 'strlen',
+        'short_name': 'strlen',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_696',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x696',
+      'symbol': dict({
+        'name': 'sub_696',
+        'short_name': 'sub_696',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': '__stack_chk_fail',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x6a0',
+      'symbol': dict({
+        'name': '__stack_chk_fail',
+        'short_name': '__stack_chk_fail',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_6a6',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x6a6',
+      'symbol': dict({
+        'name': 'sub_6a6',
+        'short_name': 'sub_6a6',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': 'printf',
+      'parameter_count': 1,
+      'return_type': 'int32_t',
+      'start': '0x6b0',
+      'symbol': dict({
+        'name': 'printf',
+        'short_name': 'printf',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_6b6',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x6b6',
+      'symbol': dict({
+        'name': 'sub_6b6',
+        'short_name': 'sub_6b6',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': '__isoc99_scanf',
+      'parameter_count': 1,
+      'return_type': 'int32_t',
+      'start': '0x6c0',
+      'symbol': dict({
+        'name': '__isoc99_scanf',
+        'short_name': '__isoc99_scanf',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_6c6',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x6c6',
+      'symbol': dict({
+        'name': 'sub_6c6',
+        'short_name': 'sub_6c6',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': 'exit',
+      'parameter_count': 1,
+      'return_type': None,
+      'start': '0x6d0',
+      'symbol': dict({
+        'name': 'exit',
+        'short_name': 'exit',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_6d6',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0x6d6',
+      'symbol': dict({
+        'name': 'sub_6d6',
+        'short_name': 'sub_6d6',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': True,
+      'is_thunk': False,
+      'name': '__cxa_finalize',
+      'parameter_count': 1,
+      'return_type': None,
+      'start': '0x6e0',
+      'symbol': dict({
+        'name': '__cxa_finalize',
+        'short_name': '__cxa_finalize',
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': '_start',
+      'parameter_count': 3,
+      'return_type': None,
+      'start': '0x6f0',
+      'symbol': dict({
+        'name': '_start',
+        'short_name': '_start',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 4,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'deregister_tm_clones',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x720',
+      'symbol': dict({
+        'name': 'deregister_tm_clones',
+        'short_name': 'deregister_tm_clones',
+        'type': 'SymbolType.LibraryFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 4,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'register_tm_clones',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x760',
+      'symbol': dict({
+        'name': 'register_tm_clones',
+        'short_name': 'register_tm_clones',
+        'type': 'SymbolType.LibraryFunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 5,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': '_FINI_0',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x7b0',
+      'symbol': dict({
+        'name': '_FINI_0',
+        'short_name': '_FINI_0',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': '_INIT_0',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x7f0',
+      'symbol': dict({
+        'name': '_INIT_0',
+        'short_name': '_INIT_0',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 10,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'sub_7fa',
+      'parameter_count': 1,
+      'return_type': 'int64_t',
+      'start': '0x7fa',
+      'symbol': dict({
+        'name': 'sub_7fa',
+        'short_name': 'sub_7fa',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 10,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'main',
+      'parameter_count': 3,
+      'return_type': 'int32_t',
+      'start': '0x8a1',
+      'symbol': dict({
+        'name': 'main',
+        'short_name': 'main',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 4,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'init',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0x9e0',
+      'symbol': dict({
+        'name': 'init',
+        'short_name': 'init',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': 'fini',
+      'parameter_count': 0,
+      'return_type': None,
+      'start': '0xa50',
+      'symbol': dict({
+        'name': 'fini',
+        'short_name': 'fini',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+    dict({
+      'basic_block_count': 1,
+      'has_prototype': False,
+      'is_imported': False,
+      'is_thunk': False,
+      'name': '_fini',
+      'parameter_count': 0,
+      'return_type': 'int64_t',
+      'start': '0xa54',
+      'symbol': dict({
+        'name': '_fini',
+        'short_name': '_fini',
+        'type': 'SymbolType.FunctionSymbol',
+      }),
+    }),
+  ])
+# ---
+# name: test_get_imports
+  dict({
+    'BNINTERNALNAMESPACE': list([
+      dict({
+        'address': '0x680',
+        'name': 'puts',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      dict({
+        'address': '0x690',
+        'name': 'strlen',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      dict({
+        'address': '0x6a0',
+        'name': '__stack_chk_fail',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      dict({
+        'address': '0x6b0',
+        'name': 'printf',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      dict({
+        'address': '0x6c0',
+        'name': '__isoc99_scanf',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      dict({
+        'address': '0x6d0',
+        'name': 'exit',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+      dict({
+        'address': '0x6e0',
+        'name': '__cxa_finalize',
+        'ordinal': 0,
+        'type': 'SymbolType.ImportedFunctionSymbol',
+      }),
+    ]),
+  })
+# ---
+# name: test_get_sections
+  list([
+    dict({
+      'align': 1,
+      'end': '0x2015f0',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 8,
+      'linked_section': '',
+      'name': '.bss',
+      'start': '0x2015e8',
+      'type': 'NOBITS',
+    }),
+    dict({
+      'align': 32,
+      'end': '0x2015e8',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 1512,
+      'linked_section': '',
+      'name': '.data',
+      'start': '0x201000',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x200f90',
+      'entry_size': 16,
+      'info_data': 0,
+      'info_section': '',
+      'length': 496,
+      'linked_section': '.dynstr',
+      'name': '.dynamic',
+      'start': '0x200da0',
+      'type': 'DYNAMIC',
+    }),
+    dict({
+      'align': 1,
+      'end': '0x4a1',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 201,
+      'linked_section': '',
+      'name': '.dynstr',
+      'start': '0x3d8',
+      'type': 'STRTAB',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x3d8',
+      'entry_size': 24,
+      'info_data': 1,
+      'info_section': '',
+      'length': 288,
+      'linked_section': '.dynstr',
+      'name': '.dynsym',
+      'start': '0x2b8',
+      'type': 'DYNSYM',
+    }),
+    dict({
+      'align': 8,
+      'end': '0xc00',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 296,
+      'linked_section': '',
+      'name': '.eh_frame',
+      'start': '0xad8',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 4,
+      'end': '0xad4',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 68,
+      'linked_section': '',
+      'name': '.eh_frame_hdr',
+      'start': '0xa90',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 1,
+      'end': '0x201648',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 88,
+      'linked_section': '',
+      'name': '.extern',
+      'start': '0x2015f0',
+      'type': '',
+    }),
+    dict({
+      'align': 4,
+      'end': '0xa5d',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 9,
+      'linked_section': '',
+      'name': '.fini',
+      'start': '0xa54',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x200da0',
+      'entry_size': 8,
+      'info_data': 0,
+      'info_section': '',
+      'length': 8,
+      'linked_section': '',
+      'name': '.fini_array',
+      'start': '0x200d98',
+      'type': '',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x2b4',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 28,
+      'linked_section': '.dynsym',
+      'name': '.gnu.hash',
+      'start': '0x298',
+      'type': '',
+    }),
+    dict({
+      'align': 2,
+      'end': '0x4ba',
+      'entry_size': 2,
+      'info_data': 0,
+      'info_section': '',
+      'length': 24,
+      'linked_section': '.dynsym',
+      'name': '.gnu.version',
+      'start': '0x4a2',
+      'type': '',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x500',
+      'entry_size': 0,
+      'info_data': 1,
+      'info_section': '',
+      'length': 64,
+      'linked_section': '.dynstr',
+      'name': '.gnu.version_r',
+      'start': '0x4c0',
+      'type': '',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x201000',
+      'entry_size': 8,
+      'info_data': 0,
+      'info_section': '',
+      'length': 112,
+      'linked_section': '',
+      'name': '.got',
+      'start': '0x200f90',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 4,
+      'end': '0x667',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 23,
+      'linked_section': '',
+      'name': '.init',
+      'start': '0x650',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x200d98',
+      'entry_size': 8,
+      'info_data': 0,
+      'info_section': '',
+      'length': 8,
+      'linked_section': '',
+      'name': '.init_array',
+      'start': '0x200d90',
+      'type': '',
+    }),
+    dict({
+      'align': 1,
+      'end': '0x254',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 28,
+      'linked_section': '',
+      'name': '.interp',
+      'start': '0x238',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 4,
+      'end': '0x274',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 32,
+      'linked_section': '',
+      'name': '.note.ABI-tag',
+      'start': '0x254',
+      'type': 'NOTE',
+    }),
+    dict({
+      'align': 4,
+      'end': '0x298',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 36,
+      'linked_section': '',
+      'name': '.note.gnu.build-id',
+      'start': '0x274',
+      'type': 'NOTE',
+    }),
+    dict({
+      'align': 16,
+      'end': '0x6e0',
+      'entry_size': 16,
+      'info_data': 0,
+      'info_section': '',
+      'length': 112,
+      'linked_section': '',
+      'name': '.plt',
+      'start': '0x670',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x6e8',
+      'entry_size': 8,
+      'info_data': 0,
+      'info_section': '',
+      'length': 8,
+      'linked_section': '',
+      'name': '.plt.got',
+      'start': '0x6e0',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x5c0',
+      'entry_size': 24,
+      'info_data': 0,
+      'info_section': '',
+      'length': 192,
+      'linked_section': '.dynsym',
+      'name': '.rela.dyn',
+      'start': '0x500',
+      'type': 'RELA',
+    }),
+    dict({
+      'align': 8,
+      'end': '0x650',
+      'entry_size': 24,
+      'info_data': 22,
+      'info_section': '',
+      'length': 144,
+      'linked_section': '.dynsym',
+      'name': '.rela.plt',
+      'start': '0x5c0',
+      'type': 'RELA',
+    }),
+    dict({
+      'align': 4,
+      'end': '0xa8f',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 47,
+      'linked_section': '',
+      'name': '.rodata',
+      'start': '0xa60',
+      'type': 'PROGBITS',
+    }),
+    dict({
+      'align': 1,
+      'end': '0x201678',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 40,
+      'linked_section': '',
+      'name': '.synthetic_builtins',
+      'start': '0x201650',
+      'type': '',
+    }),
+    dict({
+      'align': 16,
+      'end': '0xa52',
+      'entry_size': 0,
+      'info_data': 0,
+      'info_section': '',
+      'length': 866,
+      'linked_section': '',
+      'name': '.text',
+      'start': '0x6f0',
+      'type': 'PROGBITS',
+    }),
+  ])
+# ---
+# name: test_get_segments
+  list([
+    dict({
+      'data_end': 3072,
+      'data_length': 3072,
+      'data_offset': 0,
+      'end': '0xc00',
+      'executable': True,
+      'length': 3072,
+      'readable': True,
+      'start': '0x0',
+      'writable': False,
+    }),
+    dict({
+      'data_end': 2102760,
+      'data_length': 2136,
+      'data_offset': 3472,
+      'end': '0x2015e8',
+      'executable': False,
+      'length': 2136,
+      'readable': True,
+      'start': '0x200d90',
+      'writable': True,
+    }),
+    dict({
+      'data_end': 2102760,
+      'data_length': 0,
+      'data_offset': 0,
+      'end': '0x2015f0',
+      'executable': False,
+      'length': 8,
+      'readable': True,
+      'start': '0x2015e8',
+      'writable': True,
+    }),
+    dict({
+      'data_end': 2102768,
+      'data_length': 0,
+      'data_offset': 0,
+      'end': '0x201648',
+      'executable': False,
+      'length': 88,
+      'readable': False,
+      'start': '0x2015f0',
+      'writable': False,
+    }),
+    dict({
+      'data_end': 2102864,
+      'data_length': 0,
+      'data_offset': 0,
+      'end': '0x201678',
+      'executable': False,
+      'length': 40,
+      'readable': False,
+      'start': '0x201650',
+      'writable': False,
+    }),
+  ])
+# ---
+# name: test_get_strings
+  list([
+    dict({
+      'length': 8,
+      'start': '0x34',
+      'type': 'StringType.Utf16String',
+      'value': '@8\t@',
+    }),
+    dict({
+      'length': 27,
+      'start': '0x238',
+      'type': 'StringType.AsciiString',
+      'value': '/lib64/ld-linux-x86-64.so.2',
+    }),
+    dict({
+      'length': 7,
+      'start': '0x28e',
+      'type': 'StringType.AsciiString',
+      'value': 'g@:lo+6',
+    }),
+    dict({
+      'length': 9,
+      'start': '0x3d9',
+      'type': 'StringType.AsciiString',
+      'value': 'libc.so.6',
+    }),
+    dict({
+      'length': 4,
+      'start': '0x3e3',
+      'type': 'StringType.AsciiString',
+      'value': 'exit',
+    }),
+    dict({
+      'length': 14,
+      'start': '0x3e8',
+      'type': 'StringType.AsciiString',
+      'value': '__isoc99_scanf',
+    }),
+    dict({
+      'length': 4,
+      'start': '0x3f7',
+      'type': 'StringType.AsciiString',
+      'value': 'puts',
+    }),
+    dict({
+      'length': 16,
+      'start': '0x3fc',
+      'type': 'StringType.AsciiString',
+      'value': '__stack_chk_fail',
+    }),
+    dict({
+      'length': 6,
+      'start': '0x40d',
+      'type': 'StringType.AsciiString',
+      'value': 'printf',
+    }),
+    dict({
+      'length': 6,
+      'start': '0x414',
+      'type': 'StringType.AsciiString',
+      'value': 'strlen',
+    }),
+    dict({
+      'length': 14,
+      'start': '0x41b',
+      'type': 'StringType.AsciiString',
+      'value': '__cxa_finalize',
+    }),
+    dict({
+      'length': 17,
+      'start': '0x42a',
+      'type': 'StringType.AsciiString',
+      'value': '__libc_start_main',
+    }),
+    dict({
+      'length': 9,
+      'start': '0x43c',
+      'type': 'StringType.AsciiString',
+      'value': 'GLIBC_2.7',
+    }),
+    dict({
+      'length': 9,
+      'start': '0x446',
+      'type': 'StringType.AsciiString',
+      'value': 'GLIBC_2.4',
+    }),
+    dict({
+      'length': 11,
+      'start': '0x450',
+      'type': 'StringType.AsciiString',
+      'value': 'GLIBC_2.2.5',
+    }),
+    dict({
+      'length': 27,
+      'start': '0x45c',
+      'type': 'StringType.AsciiString',
+      'value': '_ITM_deregisterTMCloneTable',
+    }),
+    dict({
+      'length': 14,
+      'start': '0x478',
+      'type': 'StringType.AsciiString',
+      'value': '__gmon_start__',
+    }),
+    dict({
+      'length': 25,
+      'start': '0x487',
+      'type': 'StringType.AsciiString',
+      'value': '_ITM_registerTMCloneTable',
+    }),
+    dict({
+      'length': 4,
+      'start': '0x671',
+      'type': 'StringType.AsciiString',
+      'value': '5"\t ',
+    }),
+    dict({
+      'length': 4,
+      'start': '0x677',
+      'type': 'StringType.AsciiString',
+      'value': '%$\t ',
+    }),
+    dict({
+      'length': 4,
+      'start': '0x681',
+      'type': 'StringType.AsciiString',
+      'value': '%"\t ',
+    }),
+    dict({
+      'length': 4,
+      'start': '0x6b1',
+      'type': 'StringType.AsciiString',
+      'value': '''
+        %
+        	 
+      ''',
+    }),
+    dict({
+      'length': 5,
+      'start': '0x9e0',
+      'type': 'StringType.AsciiString',
+      'value': 'AWAVI',
+    }),
+    dict({
+      'length': 5,
+      'start': '0x9e7',
+      'type': 'StringType.AsciiString',
+      'value': 'AUATL',
+    }),
+    dict({
+      'length': 10,
+      'start': '0xa3a',
+      'type': 'StringType.AsciiString',
+      'value': '[]A\\A]A^A_',
+    }),
+    dict({
+      'length': 19,
+      'start': '0xa64',
+      'type': 'StringType.AsciiString',
+      'value': '''
+        Enter the flag
+        >>> 
+      ''',
+    }),
+    dict({
+      'length': 10,
+      'start': '0xa7b',
+      'type': 'StringType.AsciiString',
+      'value': 'Incorrect!',
+    }),
+    dict({
+      'length': 8,
+      'start': '0xa86',
+      'type': 'StringType.AsciiString',
+      'value': 'Correct!',
+    }),
+    dict({
+      'length': 5,
+      'start': '0xb3f',
+      'type': 'StringType.AsciiString',
+      'value': ';*3$"',
+    }),
+    dict({
+      'length': 28,
+      'start': '0x201020',
+      'type': 'StringType.Utf32String',
+      'value': 'wf{_ny}',
+    }),
+  ])
+# ---
+# name: test_get_triage_summary
+  dict({
+    'binary_info': dict({
+      'address_size': 8,
+      'architecture': 'x86_64',
+      'base_address': '0x0',
+      'end_address': '0x201678',
+      'endianness': 'LittleEndian',
+      'entry_point': '0x6f0',
+      'platform': 'linux-x86_64',
+    }),
+    'file_metadata': dict({
+      'file_size': 2102904,
+      'filename': 'tests/binary/beleaf.elf.bndb',
+      'view_type': 'ELF',
+    }),
+    'statistics': dict({
+      'function_count': 25,
+      'section_count': 26,
+      'segment_count': 5,
+      'string_count': 30,
+    }),
+  })
 # ---
 # name: test_high_level_il
-  list([
-    TextContent(type='text', text='0x8ac: int32_t argc_1 = argc\n0x8b2: char** argv_1 = argv\n0x8b9: void* fsbase\n0x8b9: int64_t rax = *(fsbase + 0x28)\n0x8d4: printf("Enter the flag\\n>>> ")\n0x8ef: void var_98\n0x8ef: __isoc99_scanf("%s", &var_98)\n0x8fe: uint64_t rax_3 = strlen(&var_98)\n0x912: if (rax_3 u<= 0x20)\n0x91b: puts("Incorrect!")\n0x925: exit(1)\n0x925: noreturn\n0x92a: int64_t i = 0\n0x9ab: while (i u< rax_3)\n0x97d: if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n0x986: puts("Incorrect!")\n0x990: exit(1)\n0x990: noreturn\n0x995: i += 1\n0x9b4: puts("Correct!")\n0x9cb: if (rax == *(fsbase + 0x28))\n0x9d3: return 0\n0x9cd: __stack_chk_fail()\n0x9cd: noreturn\n', annotations=None),
-  ])
+  '''
+  0x8ac: int32_t argc_1 = argc
+  0x8b2: char** argv_1 = argv
+  0x8b9: void* fsbase
+  0x8b9: int64_t rax = *(fsbase + 0x28)
+  0x8d4: printf("Enter the flag\n>>> ")
+  0x8ef: void var_98
+  0x8ef: __isoc99_scanf("%s", &var_98)
+  0x8fe: uint64_t rax_3 = strlen(&var_98)
+  0x912: if (rax_3 u<= 0x20)
+  0x91b: puts("Incorrect!")
+  0x925: exit(1)
+  0x925: noreturn
+  0x92a: int64_t i = 0
+  0x9ab: while (i u< rax_3)
+  0x97d: if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))
+  0x986: puts("Incorrect!")
+  0x990: exit(1)
+  0x990: noreturn
+  0x995: i += 1
+  0x9b4: puts("Correct!")
+  0x9cb: if (rax == *(fsbase + 0x28))
+  0x9d3: return 0
+  0x9cd: __stack_chk_fail()
+  0x9cd: noreturn
+  
+  '''
 # ---
 # name: test_medium_level_il
-  list([
-    TextContent(type='text', text='0x8ac: argc_1 = argc\n0x8b2: argv_1 = argv\n0x8b9: rax = [fsbase + 0x28].q\n0x8c2: var_10 = rax\n0x8cf: rax_1 = 0\n0x8d4: 0x6b0("Enter the flag\\n>>> ")\n0x8e0: rsi = &var_98\n0x8ea: rax_2 = 0\n0x8ef: 0x6c0("%s", rsi)\n0x8fb: rdi = &var_98\n0x8fe: rax_3 = 0x690(rdi)\n0x903: var_a8 = rax_3\n0x912: if (var_a8 u> 0x20) then 13 @ 0x92a else 15 @ 0x91b\n0x92a: i = 0\n0x935: goto 18 @ 0x99d\n0x91b: 0x680("Incorrect!")\n0x925: 0x6d0(1)\n0x925: noreturn\n0x99d: rax_11 = i\n0x9ab: if (rax_11 u< var_a8) then 20 @ 0x93e else 31 @ 0x9b4\n0x93e: rax_4 = i\n0x945: rax_5 = rax_4 + &var_98\n0x948: rax_6 = [rax_5].b\n0x94b: rax_7 = rax_6\n0x94e: rdi_1 = rax_7\n0x950: rax_8 = 0x7fa(rdi_1)\n0x955: var_a0_1 = rax_8\n0x95c: rax_9 = i\n0x963: rdx = rax_9 << 3\n0x972: rax_10 = [rdx + 0x2014e0].q\n0x97d: if (var_a0_1 == rax_10) then 36 @ 0x995 else 38 @ 0x986\n0x9b4: 0x680("Correct!")\n0x9b9: rax_12 = 0\n0x9be: rcx = var_10\n0x9c2: rcx_1 = rcx ^ [fsbase + 0x28].q\n0x9cb: if (rcx_1 == 0) then 41 @ 0x9d3 else 42 @ 0x9cd\n0x995: i = i + 1\n0x995: goto 18 @ 0x99d\n0x986: 0x680("Incorrect!")\n0x990: 0x6d0(1)\n0x990: noreturn\n0x9d3: return 0\n0x9cd: 0x6a0()\n0x9cd: noreturn\n', annotations=None),
-  ])
+  '''
+  0x8ac: argc_1 = argc
+  0x8b2: argv_1 = argv
+  0x8b9: rax = [fsbase + 0x28].q
+  0x8c2: var_10 = rax
+  0x8cf: rax_1 = 0
+  0x8d4: 0x6b0("Enter the flag\n>>> ")
+  0x8e0: rsi = &var_98
+  0x8ea: rax_2 = 0
+  0x8ef: 0x6c0("%s", rsi)
+  0x8fb: rdi = &var_98
+  0x8fe: rax_3 = 0x690(rdi)
+  0x903: var_a8 = rax_3
+  0x912: if (var_a8 u> 0x20) then 13 @ 0x92a else 15 @ 0x91b
+  0x92a: i = 0
+  0x935: goto 18 @ 0x99d
+  0x91b: 0x680("Incorrect!")
+  0x925: 0x6d0(1)
+  0x925: noreturn
+  0x99d: rax_11 = i
+  0x9ab: if (rax_11 u< var_a8) then 20 @ 0x93e else 31 @ 0x9b4
+  0x93e: rax_4 = i
+  0x945: rax_5 = rax_4 + &var_98
+  0x948: rax_6 = [rax_5].b
+  0x94b: rax_7 = rax_6
+  0x94e: rdi_1 = rax_7
+  0x950: rax_8 = 0x7fa(rdi_1)
+  0x955: var_a0_1 = rax_8
+  0x95c: rax_9 = i
+  0x963: rdx = rax_9 << 3
+  0x972: rax_10 = [rdx + 0x2014e0].q
+  0x97d: if (var_a0_1 == rax_10) then 36 @ 0x995 else 38 @ 0x986
+  0x9b4: 0x680("Correct!")
+  0x9b9: rax_12 = 0
+  0x9be: rcx = var_10
+  0x9c2: rcx_1 = rcx ^ [fsbase + 0x28].q
+  0x9cb: if (rcx_1 == 0) then 41 @ 0x9d3 else 42 @ 0x9cd
+  0x995: i = i + 1
+  0x995: goto 18 @ 0x99d
+  0x986: 0x680("Incorrect!")
+  0x990: 0x6d0(1)
+  0x990: noreturn
+  0x9d3: return 0
+  0x9cd: 0x6a0()
+  0x9cd: noreturn
+  
+  '''
 # ---
 # name: test_pseudo_c
-  list([
-    TextContent(type='text', text='\n  int32_t main(int32_t argc, char** argv, char** envp)\n\n{\n   int32_t argc_1 = argc;\n   char** argv_1 = argv;\n   void* fsbase;\n   int64_t rax = *(fsbase + 0x28);\n   printf("Enter the flag\\n>>> ");\n   void var_98;\n   __isoc99_scanf("%s", &var_98);\n   uint64_t rax_3 = strlen(&var_98);\n   \n   if (rax_3 <= 0x20)\n   {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for (int64_t i = 0; i < rax_3; i += 1)\n   {\n      if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n      {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if (rax == *(fsbase + 0x28))\n      return 0;\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
-  ])
-# ---
-# name: test_pseudo_c_invalid_address
-  list([
-    TextContent(type='text', text="Error: No function found with name/address 'invalid_address'", annotations=None),
-  ])
+  '''
+  
+    int32_t main(int32_t argc, char** argv, char** envp)
+  
+  {
+     int32_t argc_1 = argc;
+     char** argv_1 = argv;
+     void* fsbase;
+     int64_t rax = *(fsbase + 0x28);
+     printf("Enter the flag\n>>> ");
+     void var_98;
+     __isoc99_scanf("%s", &var_98);
+     uint64_t rax_3 = strlen(&var_98);
+     
+     if (rax_3 <= 0x20)
+     {
+        puts("Incorrect!");
+        exit(1);
+        /* no return */
+     }
+     
+     for (int64_t i = 0; i < rax_3; i += 1)
+     {
+        if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))
+        {
+           puts("Incorrect!");
+           exit(1);
+           /* no return */
+        }
+     }
+     
+     puts("Correct!");
+     
+     if (rax == *(fsbase + 0x28))
+        return 0;
+     
+     __stack_chk_fail();
+     /* no return */
+  }
+  
+  
+  '''
 # ---
 # name: test_pseudo_rust
-  list([
-    TextContent(type='text', text='\n  fn main(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32\n\n{\n   let argc_1: i32 = argc;\n   let argv_1: *mut *mut i8 = argv;\n   let fsbase: *mut c_void;\n   let rax: i64 = *fsbase.byte_offset(0x28);\n   printf("Enter the flag\\n>>> ");\n   let mut var_98: ();\n   __isoc99_scanf("%s", &var_98);\n   let rax_3: u64 = strlen(&var_98);\n   \n   if rax_3 <= 0x20 {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for i in 0..rax_3 {\n      if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if rax == *fsbase.byte_offset(0x28) {\n      return 0;\n   }\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None),
-  ])
+  '''
+  
+    fn main(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32
+  
+  {
+     let argc_1: i32 = argc;
+     let argv_1: *mut *mut i8 = argv;
+     let fsbase: *mut c_void;
+     let rax: i64 = *fsbase.byte_offset(0x28);
+     printf("Enter the flag\n>>> ");
+     let mut var_98: ();
+     __isoc99_scanf("%s", &var_98);
+     let rax_3: u64 = strlen(&var_98);
+     
+     if rax_3 <= 0x20 {
+        puts("Incorrect!");
+        exit(1);
+        /* no return */
+     }
+     
+     for i in 0..rax_3 {
+        if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {
+           puts("Incorrect!");
+           exit(1);
+           /* no return */
+        }
+     }
+     
+     puts("Correct!");
+     
+     if rax == *fsbase.byte_offset(0x28) {
+        return 0;
+     }
+     
+     __stack_chk_fail();
+     /* no return */
+  }
+  
+  
+  '''
 # ---
 # name: test_rename_symbol_function
-  list([
-    TextContent(type='text', text="Successfully renamed function at 0x8a1 from 'main' to 'new_function_name'", annotations=None),
-  ])
-# ---
-# name: test_rename_symbol_invalid_address
-  list([
-    TextContent(type='text', text="Error: No function or data variable found with name/address 'invalid_address'", annotations=None),
-  ])
+  "Successfully renamed function at 0x8a1 from 'main' to 'new_function_name'"
 # ---
 # name: test_update_analysis_and_wait
-  list([
-    TextContent(type='text', text='Analysis updated successfully for tests/binary/beleaf.elf.bndb', annotations=None),
-  ])
+  'Analysis updated successfully for tests/binary/beleaf.elf.bndb'
 # ---
