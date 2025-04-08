@@ -1,61 +1,389 @@
 # serializer version: 1
 # name: test_disassembly[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='\n  int32_t main(int32_t argc, char** argv, char** envp)\n\n000008a1  push    rbp\n000008a2  mov     rbp, rsp\n000008a5  sub     rsp, 0xc0\n000008ac  mov     dword [rbp-0xb4], edi\n000008b2  mov     qword [rbp-0xc0], rsi\n000008b9  mov     rax, qword [fs:0x28]\n000008c2  mov     qword [rbp-0x8], rax\n000008c6  xor     eax, eax\n000008c8  lea     rdi, [rel data_a64]  {"Enter the flag\\n>>> "}\n000008cf  mov     eax, 0x0\n000008d4  call    printf\n000008d9  lea     rax, [rbp-0x90]\n000008e0  mov     rsi, rax\n000008e3  lea     rdi, [rel data_a78]\n000008ea  mov     eax, 0x0\n000008ef  call    __isoc99_scanf\n000008f4  lea     rax, [rbp-0x90]\n000008fb  mov     rdi, rax\n000008fe  call    strlen\n00000903  mov     qword [rbp-0xa0], rax\n0000090a  cmp     qword [rbp-0xa0], 0x20\n00000912  ja      0x92a\n\n00000914  lea     rdi, [rel data_a7b]  {"Incorrect!"}\n0000091b  call    puts\n00000920  mov     edi, 0x1\n00000925  call    exit\n{ Does not return }\n\n0000092a  mov     qword [rbp-0xa8], 0x0\n00000935  jmp     0x99d\n\n00000937  lea     rdx, [rbp-0x90]\n0000093e  mov     rax, qword [rbp-0xa8]\n00000945  add     rax, rdx\n00000948  movzx   eax, byte [rax]\n0000094b  movsx   eax, al\n0000094e  mov     edi, eax\n00000950  call    sub_7fa\n00000955  mov     qword [rbp-0x98], rax\n0000095c  mov     rax, qword [rbp-0xa8]\n00000963  lea     rdx, [rax*8]\n0000096b  lea     rax, [rel data_2014e0]\n00000972  mov     rax, qword [rdx+rax]\n00000976  cmp     qword [rbp-0x98], rax\n0000097d  je      0x995\n\n0000097f  lea     rdi, [rel data_a7b]  {"Incorrect!"}\n00000986  call    puts\n0000098b  mov     edi, 0x1\n00000990  call    exit\n{ Does not return }\n\n00000995  add     qword [rbp-0xa8], 0x1\n\n0000099d  mov     rax, qword [rbp-0xa8]\n000009a4  cmp     rax, qword [rbp-0xa0]\n000009ab  jb      0x937\n\n000009ad  lea     rdi, [rel data_a86]  {"Correct!"}\n000009b4  call    puts\n000009b9  mov     eax, 0x0\n000009be  mov     rcx, qword [rbp-0x8]\n000009c2  xor     rcx, qword [fs:0x28]\n000009cb  je      0x9d2\n\n000009cd  call    __stack_chk_fail\n{ Does not return }\n\n000009d2  leave   \n000009d3  retn    \n', annotations=None)], isError=False)
+  '''
+  
+    int32_t main(int32_t argc, char** argv, char** envp)
+  
+  000008a1  push    rbp
+  000008a2  mov     rbp, rsp
+  000008a5  sub     rsp, 0xc0
+  000008ac  mov     dword [rbp-0xb4], edi
+  000008b2  mov     qword [rbp-0xc0], rsi
+  000008b9  mov     rax, qword [fs:0x28]
+  000008c2  mov     qword [rbp-0x8], rax
+  000008c6  xor     eax, eax
+  000008c8  lea     rdi, [rel data_a64]  {"Enter the flag\n>>> "}
+  000008cf  mov     eax, 0x0
+  000008d4  call    printf
+  000008d9  lea     rax, [rbp-0x90]
+  000008e0  mov     rsi, rax
+  000008e3  lea     rdi, [rel data_a78]
+  000008ea  mov     eax, 0x0
+  000008ef  call    __isoc99_scanf
+  000008f4  lea     rax, [rbp-0x90]
+  000008fb  mov     rdi, rax
+  000008fe  call    strlen
+  00000903  mov     qword [rbp-0xa0], rax
+  0000090a  cmp     qword [rbp-0xa0], 0x20
+  00000912  ja      0x92a
+  
+  00000914  lea     rdi, [rel data_a7b]  {"Incorrect!"}
+  0000091b  call    puts
+  00000920  mov     edi, 0x1
+  00000925  call    exit
+  { Does not return }
+  
+  0000092a  mov     qword [rbp-0xa8], 0x0
+  00000935  jmp     0x99d
+  
+  00000937  lea     rdx, [rbp-0x90]
+  0000093e  mov     rax, qword [rbp-0xa8]
+  00000945  add     rax, rdx
+  00000948  movzx   eax, byte [rax]
+  0000094b  movsx   eax, al
+  0000094e  mov     edi, eax
+  00000950  call    sub_7fa
+  00000955  mov     qword [rbp-0x98], rax
+  0000095c  mov     rax, qword [rbp-0xa8]
+  00000963  lea     rdx, [rax*8]
+  0000096b  lea     rax, [rel data_2014e0]
+  00000972  mov     rax, qword [rdx+rax]
+  00000976  cmp     qword [rbp-0x98], rax
+  0000097d  je      0x995
+  
+  0000097f  lea     rdi, [rel data_a7b]  {"Incorrect!"}
+  00000986  call    puts
+  0000098b  mov     edi, 0x1
+  00000990  call    exit
+  { Does not return }
+  
+  00000995  add     qword [rbp-0xa8], 0x1
+  
+  0000099d  mov     rax, qword [rbp-0xa8]
+  000009a4  cmp     rax, qword [rbp-0xa0]
+  000009ab  jb      0x937
+  
+  000009ad  lea     rdi, [rel data_a86]  {"Correct!"}
+  000009b4  call    puts
+  000009b9  mov     eax, 0x0
+  000009be  mov     rcx, qword [rbp-0x8]
+  000009c2  xor     rcx, qword [fs:0x28]
+  000009cb  je      0x9d2
+  
+  000009cd  call    __stack_chk_fail
+  { Does not return }
+  
+  000009d2  leave   
+  000009d3  retn    
+  
+  '''
 # ---
 # name: test_disassembly[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No symbol found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool disassembly: No symbol found with name/address '0xINVALID'"
+# ---
+# name: test_disassembly[nonexist.elf-0x000008a1]
+  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_disassembly[nonexist.elf-0xINVALID]
+  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_disassembly_with_length[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='0x8a1: push    rbp\n0x8a2: mov     rbp, rsp\n0x8a5: sub     rsp, 0xc0\n0x8ac: mov     dword [rbp-0xb4], edi', annotations=None)], isError=False)
+  '''
+  0x8a1: push    rbp
+  0x8a2: mov     rbp, rsp
+  0x8a5: sub     rsp, 0xc0
+  0x8ac: mov     dword [rbp-0xb4], edi
+  '''
 # ---
 # name: test_disassembly_with_length[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No symbol found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool disassembly: No symbol found with name/address '0xINVALID'"
+# ---
+# name: test_disassembly_with_length[nonexist.elf-0x000008a1]
+  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_disassembly_with_length[nonexist.elf-0xINVALID]
+  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_get_data_variables[beleaf.elf.bndb]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='[\n  {\n    "address": "0x0",\n    "type": "struct Elf64_Header",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__elf_header",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "__elf_header"\n    }\n  },\n  {\n    "address": "0x40",\n    "type": "struct Elf64_ProgramHeader[0x9]",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__elf_program_headers",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "__elf_program_headers"\n    }\n  },\n  {\n    "address": "0x238",\n    "type": "char[0x1c]",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__elf_interp",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "__elf_interp"\n    }\n  },\n  {\n    "address": "0x2b8",\n    "type": "struct Elf64_Sym[0xc]",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__elf_symbol_table",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "__elf_symbol_table"\n    }\n  },\n  {\n    "address": "0x3d9",\n    "type": "char[0xa]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x3e3",\n    "type": "char[0x5]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x3e8",\n    "type": "char[0xf]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x3f7",\n    "type": "char[0x5]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x3fc",\n    "type": "char[0x11]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x40d",\n    "type": "char[0x7]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x414",\n    "type": "char[0x7]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x41b",\n    "type": "char[0xf]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x42a",\n    "type": "char[0x12]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x43c",\n    "type": "char[0xa]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x446",\n    "type": "char[0xa]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x450",\n    "type": "char[0xc]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x45c",\n    "type": "char[0x1c]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x478",\n    "type": "char[0xf]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x487",\n    "type": "char[0x1a]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x500",\n    "type": "struct Elf64_Rela[0x8]",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__elf_rela_table",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "__elf_rela_table"\n    }\n  },\n  {\n    "address": "0x650",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "_init",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "_init"\n    }\n  },\n  {\n    "address": "0x670",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x680",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "puts",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "puts"\n    }\n  },\n  {\n    "address": "0x690",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "strlen",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "strlen"\n    }\n  },\n  {\n    "address": "0x6a0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__stack_chk_fail",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "__stack_chk_fail"\n    }\n  },\n  {\n    "address": "0x6b0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "printf",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "printf"\n    }\n  },\n  {\n    "address": "0x6c0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__isoc99_scanf",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "__isoc99_scanf"\n    }\n  },\n  {\n    "address": "0x6d0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "exit",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "exit"\n    }\n  },\n  {\n    "address": "0x6e0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__cxa_finalize",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "__cxa_finalize"\n    }\n  },\n  {\n    "address": "0x720",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "deregister_tm_clones",\n      "type": "SymbolType.LibraryFunctionSymbol",\n      "short_name": "deregister_tm_clones"\n    }\n  },\n  {\n    "address": "0x760",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "register_tm_clones",\n      "type": "SymbolType.LibraryFunctionSymbol",\n      "short_name": "register_tm_clones"\n    }\n  },\n  {\n    "address": "0x7fa",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x8a1",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "main",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "main"\n    }\n  },\n  {\n    "address": "0x9e0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "init",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "init"\n    }\n  },\n  {\n    "address": "0xa50",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "fini",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "fini"\n    }\n  },\n  {\n    "address": "0xa64",\n    "type": "char const[0x14]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0xa78",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0xa7b",\n    "type": "char const[0xb]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0xa86",\n    "type": "char const[0x9]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x200d90",\n    "type": "void (*[0x1])()",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "init_array",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "init_array"\n    }\n  },\n  {\n    "address": "0x200d98",\n    "type": "void (*[0x1])()",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "fini_array",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "fini_array"\n    }\n  },\n  {\n    "address": "0x200da0",\n    "type": "struct Elf64_Dyn[0x1b]",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__elf_dynamic_table",\n      "type": "SymbolType.DataSymbol",\n      "short_name": "__elf_dynamic_table"\n    }\n  },\n  {\n    "address": "0x200f98",\n    "type": "int64_t",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x200fa0",\n    "type": "int64_t",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x200fa8",\n    "type": "int32_t (* const)(char const* str)",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "puts",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "puts"\n    }\n  },\n  {\n    "address": "0x200fb0",\n    "type": "uint64_t (* const)(char const*)",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "strlen",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "strlen"\n    }\n  },\n  {\n    "address": "0x200fb8",\n    "type": "void (* const)() __noreturn",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__stack_chk_fail",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "__stack_chk_fail"\n    }\n  },\n  {\n    "address": "0x200fc0",\n    "type": "int32_t (* const)(char const* format, ...)",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "printf",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "printf"\n    }\n  },\n  {\n    "address": "0x200fc8",\n    "type": "int32_t (* const)(char const* format, ...)",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__isoc99_scanf",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "__isoc99_scanf"\n    }\n  },\n  {\n    "address": "0x200fd0",\n    "type": "void (* const)(int32_t status) __noreturn",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "exit",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "exit"\n    }\n  },\n  {\n    "address": "0x200fd8",\n    "type": "int64_t (* const)()",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "_ITM_deregisterTMCloneTable",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "_ITM_deregisterTMCloneTable"\n    }\n  },\n  {\n    "address": "0x200fe0",\n    "type": "void (* const)(int32_t (* main)(int32_t argc, char** argv, char** envp), int32_t argc, char** ubp_av, void (* init)(), void (* fini)(), void (* rtld_fini)(), void* stack_end) __noreturn",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__libc_start_main",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "__libc_start_main"\n    }\n  },\n  {\n    "address": "0x200fe8",\n    "type": "int64_t (* const)()",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__gmon_start__",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "__gmon_start__"\n    }\n  },\n  {\n    "address": "0x200ff0",\n    "type": "int64_t (* const)()",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "_ITM_registerTMCloneTable",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "_ITM_registerTMCloneTable"\n    }\n  },\n  {\n    "address": "0x200ff8",\n    "type": "void (* const)(void* d)",\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__cxa_finalize",\n      "type": "SymbolType.ImportAddressSymbol",\n      "short_name": "__cxa_finalize"\n    }\n  },\n  {\n    "address": "0x201008",\n    "type": "void*",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x201020",\n    "type": "wchar32[0x7]",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x2014e0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x2015e8",\n    "type": "char",\n    "auto_discovered": true,\n    "symbol": null\n  },\n  {\n    "address": "0x2015f0",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "_ITM_deregisterTMCloneTable",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "_ITM_deregisterTMCloneTable"\n    }\n  },\n  {\n    "address": "0x2015f8",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "_ITM_registerTMCloneTable",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "_ITM_registerTMCloneTable"\n    }\n  },\n  {\n    "address": "0x201600",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__cxa_finalize",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "__cxa_finalize"\n    }\n  },\n  {\n    "address": "0x201608",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__gmon_start__",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "__gmon_start__"\n    }\n  },\n  {\n    "address": "0x201610",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__isoc99_scanf",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "__isoc99_scanf"\n    }\n  },\n  {\n    "address": "0x201618",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__libc_start_main",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "__libc_start_main"\n    }\n  },\n  {\n    "address": "0x201620",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__stack_chk_fail",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "__stack_chk_fail"\n    }\n  },\n  {\n    "address": "0x201628",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "exit",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "exit"\n    }\n  },\n  {\n    "address": "0x201630",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "printf",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "printf"\n    }\n  },\n  {\n    "address": "0x201638",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "puts",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "puts"\n    }\n  },\n  {\n    "address": "0x201640",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "strlen",\n      "type": "SymbolType.ExternalSymbol",\n      "short_name": "strlen"\n    }\n  },\n  {\n    "address": "0x201650",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__builtin_memcpy",\n      "type": "SymbolType.SymbolicFunctionSymbol",\n      "short_name": "__builtin_memcpy"\n    }\n  },\n  {\n    "address": "0x201658",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__builtin_memset",\n      "type": "SymbolType.SymbolicFunctionSymbol",\n      "short_name": "__builtin_memset"\n    }\n  },\n  {\n    "address": "0x201660",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__builtin_strcpy",\n      "type": "SymbolType.SymbolicFunctionSymbol",\n      "short_name": "__builtin_strcpy"\n    }\n  },\n  {\n    "address": "0x201668",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__builtin_strncpy",\n      "type": "SymbolType.SymbolicFunctionSymbol",\n      "short_name": "__builtin_strncpy"\n    }\n  },\n  {\n    "address": "0x201670",\n    "type": null,\n    "auto_discovered": true,\n    "symbol": {\n      "name": "__builtin_wcscpy",\n      "type": "SymbolType.SymbolicFunctionSymbol",\n      "short_name": "__builtin_wcscpy"\n    }\n  }\n]', annotations=None)], isError=False)
+  '{"address": "0x0", "type": "struct Elf64_Header", "auto_discovered": true, "symbol": {"name": "__elf_header", "type": "SymbolType.DataSymbol", "short_name": "__elf_header"}}'
+# ---
+# name: test_get_data_variables[nonexist.elf]
+  "Error executing tool get_data_variables: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_get_exports[beleaf.elf.bndb]
+  '{"name": "_start", "address": "0x6f0", "type": "SymbolType.FunctionSymbol", "ordinal": 0}'
+# ---
+# name: test_get_exports[nonexist.elf]
+  "Error executing tool get_exports: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_get_functions[beleaf.elf.bndb]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='[\n  {\n    "name": "_init",\n    "start": "0x650",\n    "symbol": {\n      "name": "_init",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "_init"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 3\n  },\n  {\n    "name": "sub_670",\n    "start": "0x670",\n    "symbol": {\n      "name": "sub_670",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_670"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "puts",\n    "start": "0x680",\n    "symbol": {\n      "name": "puts",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "puts"\n    },\n    "parameter_count": 1,\n    "return_type": "int32_t",\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_686",\n    "start": "0x686",\n    "symbol": {\n      "name": "sub_686",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_686"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "strlen",\n    "start": "0x690",\n    "symbol": {\n      "name": "strlen",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "strlen"\n    },\n    "parameter_count": 1,\n    "return_type": "uint64_t",\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_696",\n    "start": "0x696",\n    "symbol": {\n      "name": "sub_696",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_696"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "__stack_chk_fail",\n    "start": "0x6a0",\n    "symbol": {\n      "name": "__stack_chk_fail",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "__stack_chk_fail"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_6a6",\n    "start": "0x6a6",\n    "symbol": {\n      "name": "sub_6a6",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_6a6"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "printf",\n    "start": "0x6b0",\n    "symbol": {\n      "name": "printf",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "printf"\n    },\n    "parameter_count": 1,\n    "return_type": "int32_t",\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_6b6",\n    "start": "0x6b6",\n    "symbol": {\n      "name": "sub_6b6",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_6b6"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "__isoc99_scanf",\n    "start": "0x6c0",\n    "symbol": {\n      "name": "__isoc99_scanf",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "__isoc99_scanf"\n    },\n    "parameter_count": 1,\n    "return_type": "int32_t",\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_6c6",\n    "start": "0x6c6",\n    "symbol": {\n      "name": "sub_6c6",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_6c6"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "exit",\n    "start": "0x6d0",\n    "symbol": {\n      "name": "exit",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "exit"\n    },\n    "parameter_count": 1,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_6d6",\n    "start": "0x6d6",\n    "symbol": {\n      "name": "sub_6d6",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_6d6"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "__cxa_finalize",\n    "start": "0x6e0",\n    "symbol": {\n      "name": "__cxa_finalize",\n      "type": "SymbolType.ImportedFunctionSymbol",\n      "short_name": "__cxa_finalize"\n    },\n    "parameter_count": 1,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": true,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "_start",\n    "start": "0x6f0",\n    "symbol": {\n      "name": "_start",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "_start"\n    },\n    "parameter_count": 3,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "deregister_tm_clones",\n    "start": "0x720",\n    "symbol": {\n      "name": "deregister_tm_clones",\n      "type": "SymbolType.LibraryFunctionSymbol",\n      "short_name": "deregister_tm_clones"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 4\n  },\n  {\n    "name": "register_tm_clones",\n    "start": "0x760",\n    "symbol": {\n      "name": "register_tm_clones",\n      "type": "SymbolType.LibraryFunctionSymbol",\n      "short_name": "register_tm_clones"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 4\n  },\n  {\n    "name": "_FINI_0",\n    "start": "0x7b0",\n    "symbol": {\n      "name": "_FINI_0",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "_FINI_0"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 5\n  },\n  {\n    "name": "_INIT_0",\n    "start": "0x7f0",\n    "symbol": {\n      "name": "_INIT_0",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "_INIT_0"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "sub_7fa",\n    "start": "0x7fa",\n    "symbol": {\n      "name": "sub_7fa",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "sub_7fa"\n    },\n    "parameter_count": 1,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 10\n  },\n  {\n    "name": "main",\n    "start": "0x8a1",\n    "symbol": {\n      "name": "main",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "main"\n    },\n    "parameter_count": 3,\n    "return_type": "int32_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 10\n  },\n  {\n    "name": "init",\n    "start": "0x9e0",\n    "symbol": {\n      "name": "init",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "init"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 4\n  },\n  {\n    "name": "fini",\n    "start": "0xa50",\n    "symbol": {\n      "name": "fini",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "fini"\n    },\n    "parameter_count": 0,\n    "return_type": null,\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  },\n  {\n    "name": "_fini",\n    "start": "0xa54",\n    "symbol": {\n      "name": "_fini",\n      "type": "SymbolType.FunctionSymbol",\n      "short_name": "_fini"\n    },\n    "parameter_count": 0,\n    "return_type": "int64_t",\n    "has_prototype": false,\n    "is_imported": false,\n    "is_thunk": false,\n    "basic_block_count": 1\n  }\n]', annotations=None)], isError=False)
+  '{"name": "_init", "start": "0x650", "symbol": {"name": "_init", "type": "SymbolType.FunctionSymbol", "short_name": "_init"}, "parameter_count": 0, "return_type": null, "has_prototype": false, "is_imported": false, "is_thunk": false, "basic_block_count": 3}'
+# ---
+# name: test_get_functions[nonexist.elf]
+  "Error executing tool get_functions: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_get_imports[beleaf.elf.bndb]
+  "{'BNINTERNALNAMESPACE': [{'name': 'puts', 'address': '0x680', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': 'strlen', 'address': '0x690', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': '__stack_chk_fail', 'address': '0x6a0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': 'printf', 'address': '0x6b0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': '__isoc99_scanf', 'address': '0x6c0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': 'exit', 'address': '0x6d0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': '__cxa_finalize', 'address': '0x6e0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}]}"
+# ---
+# name: test_get_imports[nonexist.elf]
+  "Error executing tool get_imports: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_get_sections[beleaf.elf.bndb]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='[\n  {\n    "name": ".bss",\n    "start": "0x2015e8",\n    "end": "0x2015f0",\n    "length": 8,\n    "type": "NOBITS",\n    "align": 1,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".data",\n    "start": "0x201000",\n    "end": "0x2015e8",\n    "length": 1512,\n    "type": "PROGBITS",\n    "align": 32,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".dynamic",\n    "start": "0x200da0",\n    "end": "0x200f90",\n    "length": 496,\n    "type": "DYNAMIC",\n    "align": 8,\n    "entry_size": 16,\n    "linked_section": ".dynstr",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".dynstr",\n    "start": "0x3d8",\n    "end": "0x4a1",\n    "length": 201,\n    "type": "STRTAB",\n    "align": 1,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".dynsym",\n    "start": "0x2b8",\n    "end": "0x3d8",\n    "length": 288,\n    "type": "DYNSYM",\n    "align": 8,\n    "entry_size": 24,\n    "linked_section": ".dynstr",\n    "info_section": "",\n    "info_data": 1\n  },\n  {\n    "name": ".eh_frame",\n    "start": "0xad8",\n    "end": "0xc00",\n    "length": 296,\n    "type": "PROGBITS",\n    "align": 8,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".eh_frame_hdr",\n    "start": "0xa90",\n    "end": "0xad4",\n    "length": 68,\n    "type": "PROGBITS",\n    "align": 4,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".extern",\n    "start": "0x2015f0",\n    "end": "0x201648",\n    "length": 88,\n    "type": "",\n    "align": 1,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".fini",\n    "start": "0xa54",\n    "end": "0xa5d",\n    "length": 9,\n    "type": "PROGBITS",\n    "align": 4,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".fini_array",\n    "start": "0x200d98",\n    "end": "0x200da0",\n    "length": 8,\n    "type": "",\n    "align": 8,\n    "entry_size": 8,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".gnu.hash",\n    "start": "0x298",\n    "end": "0x2b4",\n    "length": 28,\n    "type": "",\n    "align": 8,\n    "entry_size": 0,\n    "linked_section": ".dynsym",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".gnu.version",\n    "start": "0x4a2",\n    "end": "0x4ba",\n    "length": 24,\n    "type": "",\n    "align": 2,\n    "entry_size": 2,\n    "linked_section": ".dynsym",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".gnu.version_r",\n    "start": "0x4c0",\n    "end": "0x500",\n    "length": 64,\n    "type": "",\n    "align": 8,\n    "entry_size": 0,\n    "linked_section": ".dynstr",\n    "info_section": "",\n    "info_data": 1\n  },\n  {\n    "name": ".got",\n    "start": "0x200f90",\n    "end": "0x201000",\n    "length": 112,\n    "type": "PROGBITS",\n    "align": 8,\n    "entry_size": 8,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".init",\n    "start": "0x650",\n    "end": "0x667",\n    "length": 23,\n    "type": "PROGBITS",\n    "align": 4,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".init_array",\n    "start": "0x200d90",\n    "end": "0x200d98",\n    "length": 8,\n    "type": "",\n    "align": 8,\n    "entry_size": 8,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".interp",\n    "start": "0x238",\n    "end": "0x254",\n    "length": 28,\n    "type": "PROGBITS",\n    "align": 1,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".note.ABI-tag",\n    "start": "0x254",\n    "end": "0x274",\n    "length": 32,\n    "type": "NOTE",\n    "align": 4,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".note.gnu.build-id",\n    "start": "0x274",\n    "end": "0x298",\n    "length": 36,\n    "type": "NOTE",\n    "align": 4,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".plt",\n    "start": "0x670",\n    "end": "0x6e0",\n    "length": 112,\n    "type": "PROGBITS",\n    "align": 16,\n    "entry_size": 16,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".plt.got",\n    "start": "0x6e0",\n    "end": "0x6e8",\n    "length": 8,\n    "type": "PROGBITS",\n    "align": 8,\n    "entry_size": 8,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".rela.dyn",\n    "start": "0x500",\n    "end": "0x5c0",\n    "length": 192,\n    "type": "RELA",\n    "align": 8,\n    "entry_size": 24,\n    "linked_section": ".dynsym",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".rela.plt",\n    "start": "0x5c0",\n    "end": "0x650",\n    "length": 144,\n    "type": "RELA",\n    "align": 8,\n    "entry_size": 24,\n    "linked_section": ".dynsym",\n    "info_section": "",\n    "info_data": 22\n  },\n  {\n    "name": ".rodata",\n    "start": "0xa60",\n    "end": "0xa8f",\n    "length": 47,\n    "type": "PROGBITS",\n    "align": 4,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".synthetic_builtins",\n    "start": "0x201650",\n    "end": "0x201678",\n    "length": 40,\n    "type": "",\n    "align": 1,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  },\n  {\n    "name": ".text",\n    "start": "0x6f0",\n    "end": "0xa52",\n    "length": 866,\n    "type": "PROGBITS",\n    "align": 16,\n    "entry_size": 0,\n    "linked_section": "",\n    "info_section": "",\n    "info_data": 0\n  }\n]', annotations=None)], isError=False)
+  '{"name": ".bss", "start": "0x2015e8", "end": "0x2015f0", "length": 8, "type": "NOBITS", "align": 1, "entry_size": 0, "linked_section": "", "info_section": "", "info_data": 0}'
+# ---
+# name: test_get_sections[nonexist.elf]
+  "Error executing tool get_sections: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_get_segments[beleaf.elf.bndb]
+  '{"start": "0x0", "end": "0xc00", "length": 3072, "data_offset": 0, "data_length": 3072, "data_end": 3072, "readable": true, "writable": false, "executable": true}'
+# ---
+# name: test_get_segments[nonexist.elf]
+  "Error executing tool get_segments: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_get_strings[beleaf.elf.bndb]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='[\n  {\n    "value": "@8\\t@",\n    "start": "0x34",\n    "length": 8,\n    "type": "StringType.Utf16String"\n  },\n  {\n    "value": "/lib64/ld-linux-x86-64.so.2",\n    "start": "0x238",\n    "length": 27,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "g@:lo+6",\n    "start": "0x28e",\n    "length": 7,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "libc.so.6",\n    "start": "0x3d9",\n    "length": 9,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "exit",\n    "start": "0x3e3",\n    "length": 4,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "__isoc99_scanf",\n    "start": "0x3e8",\n    "length": 14,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "puts",\n    "start": "0x3f7",\n    "length": 4,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "__stack_chk_fail",\n    "start": "0x3fc",\n    "length": 16,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "printf",\n    "start": "0x40d",\n    "length": 6,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "strlen",\n    "start": "0x414",\n    "length": 6,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "__cxa_finalize",\n    "start": "0x41b",\n    "length": 14,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "__libc_start_main",\n    "start": "0x42a",\n    "length": 17,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "GLIBC_2.7",\n    "start": "0x43c",\n    "length": 9,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "GLIBC_2.4",\n    "start": "0x446",\n    "length": 9,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "GLIBC_2.2.5",\n    "start": "0x450",\n    "length": 11,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "_ITM_deregisterTMCloneTable",\n    "start": "0x45c",\n    "length": 27,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "__gmon_start__",\n    "start": "0x478",\n    "length": 14,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "_ITM_registerTMCloneTable",\n    "start": "0x487",\n    "length": 25,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "5\\"\\t ",\n    "start": "0x671",\n    "length": 4,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "%$\\t ",\n    "start": "0x677",\n    "length": 4,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "%\\"\\t ",\n    "start": "0x681",\n    "length": 4,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "%\\n\\t ",\n    "start": "0x6b1",\n    "length": 4,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "AWAVI",\n    "start": "0x9e0",\n    "length": 5,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "AUATL",\n    "start": "0x9e7",\n    "length": 5,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "[]A\\\\A]A^A_",\n    "start": "0xa3a",\n    "length": 10,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "Enter the flag\\n>>> ",\n    "start": "0xa64",\n    "length": 19,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "Incorrect!",\n    "start": "0xa7b",\n    "length": 10,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "Correct!",\n    "start": "0xa86",\n    "length": 8,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": ";*3$\\"",\n    "start": "0xb3f",\n    "length": 5,\n    "type": "StringType.AsciiString"\n  },\n  {\n    "value": "wf{_ny}",\n    "start": "0x201020",\n    "length": 28,\n    "type": "StringType.Utf32String"\n  }\n]', annotations=None)], isError=False)
+  '{"value": "@8\\t@", "start": "0x34", "length": 8, "type": "StringType.Utf16String"}'
+# ---
+# name: test_get_strings[nonexist.elf]
+  "Error executing tool get_strings: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_get_triage_summary[beleaf.elf.bndb]
+  '{"file_metadata": {"filename": "tests/binary/beleaf.elf.bndb", "file_size": 2102904, "view_type": "ELF"}, "binary_info": {"platform": "linux-x86_64", "entry_point": "0x6f0", "base_address": "0x0", "end_address": "0x201678", "endianness": "LittleEndian", "address_size": 8, "architecture": "x86_64"}, "statistics": {"function_count": 25, "string_count": 30, "segment_count": 5, "section_count": 26}}'
+# ---
+# name: test_get_triage_summary[nonexist.elf]
+  "Error executing tool get_triage_summary: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_high_level_il[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='0x8ac: int32_t argc_1 = argc\n0x8b2: char** argv_1 = argv\n0x8b9: void* fsbase\n0x8b9: int64_t rax = *(fsbase + 0x28)\n0x8d4: printf("Enter the flag\\n>>> ")\n0x8ef: void var_98\n0x8ef: __isoc99_scanf("%s", &var_98)\n0x8fe: uint64_t rax_3 = strlen(&var_98)\n0x912: if (rax_3 u<= 0x20)\n0x91b: puts("Incorrect!")\n0x925: exit(1)\n0x925: noreturn\n0x92a: int64_t i = 0\n0x9ab: while (i u< rax_3)\n0x97d: if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n0x986: puts("Incorrect!")\n0x990: exit(1)\n0x990: noreturn\n0x995: i += 1\n0x9b4: puts("Correct!")\n0x9cb: if (rax == *(fsbase + 0x28))\n0x9d3: return 0\n0x9cd: __stack_chk_fail()\n0x9cd: noreturn\n', annotations=None)], isError=False)
+  '''
+  0x8ac: int32_t argc_1 = argc
+  0x8b2: char** argv_1 = argv
+  0x8b9: void* fsbase
+  0x8b9: int64_t rax = *(fsbase + 0x28)
+  0x8d4: printf("Enter the flag\n>>> ")
+  0x8ef: void var_98
+  0x8ef: __isoc99_scanf("%s", &var_98)
+  0x8fe: uint64_t rax_3 = strlen(&var_98)
+  0x912: if (rax_3 u<= 0x20)
+  0x91b: puts("Incorrect!")
+  0x925: exit(1)
+  0x925: noreturn
+  0x92a: int64_t i = 0
+  0x9ab: while (i u< rax_3)
+  0x97d: if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))
+  0x986: puts("Incorrect!")
+  0x990: exit(1)
+  0x990: noreturn
+  0x995: i += 1
+  0x9b4: puts("Correct!")
+  0x9cb: if (rax == *(fsbase + 0x28))
+  0x9d3: return 0
+  0x9cd: __stack_chk_fail()
+  0x9cd: noreturn
+  
+  '''
 # ---
 # name: test_high_level_il[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No function found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool high_level_il: No function found with name/address '0xINVALID'"
+# ---
+# name: test_high_level_il[nonexist.elf-0x000008a1]
+  "Error executing tool high_level_il: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_high_level_il[nonexist.elf-0xINVALID]
+  "Error executing tool high_level_il: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_list_filename
-  CallToolResult(meta=None, content=[TextContent(type='text', text='beleaf.elf.bndb', annotations=None), TextContent(type='text', text='beleaf.elf', annotations=None)], isError=False)
+  'beleaf.elf.bndb'
 # ---
 # name: test_list_tools
-  ListToolsResult(meta=None, nextCursor=None, tools=[Tool(name='list_filename', description='List file names of all opened files', inputSchema={'properties': {}, 'title': 'list_filenameArguments', 'type': 'object'}), Tool(name='get_triage_summary', description='Get basic information as shown in BinaryNinja Triage view', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_triage_summaryArguments', 'type': 'object'}), Tool(name='get_imports', description='Get dictionary of imported symbols', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_importsArguments', 'type': 'object'}), Tool(name='get_exports', description='Get dictionary of exported symbols', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_exportsArguments', 'type': 'object'}), Tool(name='get_segments', description='Get list of memory segments', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_segmentsArguments', 'type': 'object'}), Tool(name='get_sections', description='Get list of binary sections', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_sectionsArguments', 'type': 'object'}), Tool(name='get_strings', description='Get list of strings found in the binary', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_stringsArguments', 'type': 'object'}), Tool(name='get_functions', description='Get list of functions', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_functionsArguments', 'type': 'object'}), Tool(name='get_data_variables', description='Get list of data variables', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_data_variablesArguments', 'type': 'object'}), Tool(name='rename_symbol', description='Rename a function or a data variable', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}, 'new_name': {'title': 'New Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name', 'new_name'], 'title': 'rename_symbolArguments', 'type': 'object'}), Tool(name='pseudo_c', description='Get pseudo C code of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'pseudo_cArguments', 'type': 'object'}), Tool(name='pseudo_rust', description='Get pseudo Rust code of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'pseudo_rustArguments', 'type': 'object'}), Tool(name='high_level_il', description='Get high level IL of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'high_level_ilArguments', 'type': 'object'}), Tool(name='medium_level_il', description='Get medium level IL of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'medium_level_ilArguments', 'type': 'object'}), Tool(name='disassembly', description='Get disassembly of a function or specified range', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}, 'length': {'anyOf': [{'type': 'integer'}, {'type': 'null'}], 'default': None, 'title': 'Length'}}, 'required': ['filename', 'address_or_name'], 'title': 'disassemblyArguments', 'type': 'object'}), Tool(name='update_analysis_and_wait', description='Update analysis for the binary and wait for it to complete', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'update_analysis_and_waitArguments', 'type': 'object'})])
+  list([
+    Tool(name='list_filename', description='List file names of all opened files', inputSchema={'properties': {}, 'title': 'list_filenameArguments', 'type': 'object'}),
+    Tool(name='get_triage_summary', description='Get basic information as shown in BinaryNinja Triage view', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_triage_summaryArguments', 'type': 'object'}),
+    Tool(name='get_imports', description='Get dictionary of imported symbols', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_importsArguments', 'type': 'object'}),
+    Tool(name='get_exports', description='Get dictionary of exported symbols', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_exportsArguments', 'type': 'object'}),
+    Tool(name='get_segments', description='Get list of memory segments', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_segmentsArguments', 'type': 'object'}),
+    Tool(name='get_sections', description='Get list of binary sections', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_sectionsArguments', 'type': 'object'}),
+    Tool(name='get_strings', description='Get list of strings found in the binary', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_stringsArguments', 'type': 'object'}),
+    Tool(name='get_functions', description='Get list of functions', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_functionsArguments', 'type': 'object'}),
+    Tool(name='get_data_variables', description='Get list of data variables', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'get_data_variablesArguments', 'type': 'object'}),
+    Tool(name='rename_symbol', description='Rename a function or a data variable', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}, 'new_name': {'title': 'New Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name', 'new_name'], 'title': 'rename_symbolArguments', 'type': 'object'}),
+    Tool(name='pseudo_c', description='Get pseudo C code of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'pseudo_cArguments', 'type': 'object'}),
+    Tool(name='pseudo_rust', description='Get pseudo Rust code of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'pseudo_rustArguments', 'type': 'object'}),
+    Tool(name='high_level_il', description='Get high level IL of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'high_level_ilArguments', 'type': 'object'}),
+    Tool(name='medium_level_il', description='Get medium level IL of a specified function', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}}, 'required': ['filename', 'address_or_name'], 'title': 'medium_level_ilArguments', 'type': 'object'}),
+    Tool(name='disassembly', description='Get disassembly of a function or specified range', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}, 'address_or_name': {'title': 'Address Or Name', 'type': 'string'}, 'length': {'anyOf': [{'type': 'integer'}, {'type': 'null'}], 'default': None, 'title': 'Length'}}, 'required': ['filename', 'address_or_name'], 'title': 'disassemblyArguments', 'type': 'object'}),
+    Tool(name='update_analysis_and_wait', description='Update analysis for the binary and wait for it to complete', inputSchema={'properties': {'filename': {'title': 'Filename', 'type': 'string'}}, 'required': ['filename'], 'title': 'update_analysis_and_waitArguments', 'type': 'object'}),
+  ])
 # ---
 # name: test_medium_level_il[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='0x8ac: argc_1 = argc\n0x8b2: argv_1 = argv\n0x8b9: rax = [fsbase + 0x28].q\n0x8c2: var_10 = rax\n0x8cf: rax_1 = 0\n0x8d4: 0x6b0("Enter the flag\\n>>> ")\n0x8e0: rsi = &var_98\n0x8ea: rax_2 = 0\n0x8ef: 0x6c0("%s", rsi)\n0x8fb: rdi = &var_98\n0x8fe: rax_3 = 0x690(rdi)\n0x903: var_a8 = rax_3\n0x912: if (var_a8 u> 0x20) then 13 @ 0x92a else 15 @ 0x91b\n0x92a: i = 0\n0x935: goto 18 @ 0x99d\n0x91b: 0x680("Incorrect!")\n0x925: 0x6d0(1)\n0x925: noreturn\n0x99d: rax_11 = i\n0x9ab: if (rax_11 u< var_a8) then 20 @ 0x93e else 31 @ 0x9b4\n0x93e: rax_4 = i\n0x945: rax_5 = rax_4 + &var_98\n0x948: rax_6 = [rax_5].b\n0x94b: rax_7 = rax_6\n0x94e: rdi_1 = rax_7\n0x950: rax_8 = 0x7fa(rdi_1)\n0x955: var_a0_1 = rax_8\n0x95c: rax_9 = i\n0x963: rdx = rax_9 << 3\n0x972: rax_10 = [rdx + 0x2014e0].q\n0x97d: if (var_a0_1 == rax_10) then 36 @ 0x995 else 38 @ 0x986\n0x9b4: 0x680("Correct!")\n0x9b9: rax_12 = 0\n0x9be: rcx = var_10\n0x9c2: rcx_1 = rcx ^ [fsbase + 0x28].q\n0x9cb: if (rcx_1 == 0) then 41 @ 0x9d3 else 42 @ 0x9cd\n0x995: i = i + 1\n0x995: goto 18 @ 0x99d\n0x986: 0x680("Incorrect!")\n0x990: 0x6d0(1)\n0x990: noreturn\n0x9d3: return 0\n0x9cd: 0x6a0()\n0x9cd: noreturn\n', annotations=None)], isError=False)
+  '''
+  0x8ac: argc_1 = argc
+  0x8b2: argv_1 = argv
+  0x8b9: rax = [fsbase + 0x28].q
+  0x8c2: var_10 = rax
+  0x8cf: rax_1 = 0
+  0x8d4: 0x6b0("Enter the flag\n>>> ")
+  0x8e0: rsi = &var_98
+  0x8ea: rax_2 = 0
+  0x8ef: 0x6c0("%s", rsi)
+  0x8fb: rdi = &var_98
+  0x8fe: rax_3 = 0x690(rdi)
+  0x903: var_a8 = rax_3
+  0x912: if (var_a8 u> 0x20) then 13 @ 0x92a else 15 @ 0x91b
+  0x92a: i = 0
+  0x935: goto 18 @ 0x99d
+  0x91b: 0x680("Incorrect!")
+  0x925: 0x6d0(1)
+  0x925: noreturn
+  0x99d: rax_11 = i
+  0x9ab: if (rax_11 u< var_a8) then 20 @ 0x93e else 31 @ 0x9b4
+  0x93e: rax_4 = i
+  0x945: rax_5 = rax_4 + &var_98
+  0x948: rax_6 = [rax_5].b
+  0x94b: rax_7 = rax_6
+  0x94e: rdi_1 = rax_7
+  0x950: rax_8 = 0x7fa(rdi_1)
+  0x955: var_a0_1 = rax_8
+  0x95c: rax_9 = i
+  0x963: rdx = rax_9 << 3
+  0x972: rax_10 = [rdx + 0x2014e0].q
+  0x97d: if (var_a0_1 == rax_10) then 36 @ 0x995 else 38 @ 0x986
+  0x9b4: 0x680("Correct!")
+  0x9b9: rax_12 = 0
+  0x9be: rcx = var_10
+  0x9c2: rcx_1 = rcx ^ [fsbase + 0x28].q
+  0x9cb: if (rcx_1 == 0) then 41 @ 0x9d3 else 42 @ 0x9cd
+  0x995: i = i + 1
+  0x995: goto 18 @ 0x99d
+  0x986: 0x680("Incorrect!")
+  0x990: 0x6d0(1)
+  0x990: noreturn
+  0x9d3: return 0
+  0x9cd: 0x6a0()
+  0x9cd: noreturn
+  
+  '''
 # ---
 # name: test_medium_level_il[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No function found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool medium_level_il: No function found with name/address '0xINVALID'"
+# ---
+# name: test_medium_level_il[nonexist.elf-0x000008a1]
+  "Error executing tool medium_level_il: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_medium_level_il[nonexist.elf-0xINVALID]
+  "Error executing tool medium_level_il: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_pseudo_c[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='\n  int32_t main(int32_t argc, char** argv, char** envp)\n\n{\n   int32_t argc_1 = argc;\n   char** argv_1 = argv;\n   void* fsbase;\n   int64_t rax = *(fsbase + 0x28);\n   printf("Enter the flag\\n>>> ");\n   void var_98;\n   __isoc99_scanf("%s", &var_98);\n   uint64_t rax_3 = strlen(&var_98);\n   \n   if (rax_3 <= 0x20)\n   {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for (int64_t i = 0; i < rax_3; i += 1)\n   {\n      if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))\n      {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if (rax == *(fsbase + 0x28))\n      return 0;\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None)], isError=False)
+  '''
+  
+    int32_t main(int32_t argc, char** argv, char** envp)
+  
+  {
+     int32_t argc_1 = argc;
+     char** argv_1 = argv;
+     void* fsbase;
+     int64_t rax = *(fsbase + 0x28);
+     printf("Enter the flag\n>>> ");
+     void var_98;
+     __isoc99_scanf("%s", &var_98);
+     uint64_t rax_3 = strlen(&var_98);
+     
+     if (rax_3 <= 0x20)
+     {
+        puts("Incorrect!");
+        exit(1);
+        /* no return */
+     }
+     
+     for (int64_t i = 0; i < rax_3; i += 1)
+     {
+        if (sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0))
+        {
+           puts("Incorrect!");
+           exit(1);
+           /* no return */
+        }
+     }
+     
+     puts("Correct!");
+     
+     if (rax == *(fsbase + 0x28))
+        return 0;
+     
+     __stack_chk_fail();
+     /* no return */
+  }
+  
+  
+  '''
 # ---
 # name: test_pseudo_c[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No function found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool pseudo_c: No function found with name/address '0xINVALID'"
+# ---
+# name: test_pseudo_c[nonexist.elf-0x000008a1]
+  "Error executing tool pseudo_c: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_pseudo_c[nonexist.elf-0xINVALID]
+  "Error executing tool pseudo_c: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_pseudo_rust[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text='\n  fn main(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32\n\n{\n   let argc_1: i32 = argc;\n   let argv_1: *mut *mut i8 = argv;\n   let fsbase: *mut c_void;\n   let rax: i64 = *fsbase.byte_offset(0x28);\n   printf("Enter the flag\\n>>> ");\n   let mut var_98: ();\n   __isoc99_scanf("%s", &var_98);\n   let rax_3: u64 = strlen(&var_98);\n   \n   if rax_3 <= 0x20 {\n      puts("Incorrect!");\n      exit(1);\n      /* no return */\n   }\n   \n   for i in 0..rax_3 {\n      if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {\n         puts("Incorrect!");\n         exit(1);\n         /* no return */\n      }\n   }\n   \n   puts("Correct!");\n   \n   if rax == *fsbase.byte_offset(0x28) {\n      return 0;\n   }\n   \n   __stack_chk_fail();\n   /* no return */\n}\n\n', annotations=None)], isError=False)
+  '''
+  
+    fn main(argc: i32, argv: *mut *mut i8, envp: *mut *mut i8) -> i32
+  
+  {
+     let argc_1: i32 = argc;
+     let argv_1: *mut *mut i8 = argv;
+     let fsbase: *mut c_void;
+     let rax: i64 = *fsbase.byte_offset(0x28);
+     printf("Enter the flag\n>>> ");
+     let mut var_98: ();
+     __isoc99_scanf("%s", &var_98);
+     let rax_3: u64 = strlen(&var_98);
+     
+     if rax_3 <= 0x20 {
+        puts("Incorrect!");
+        exit(1);
+        /* no return */
+     }
+     
+     for i in 0..rax_3 {
+        if sub_7fa(*(i + &var_98)) != *((i << 3) + &data_2014e0) {
+           puts("Incorrect!");
+           exit(1);
+           /* no return */
+        }
+     }
+     
+     puts("Correct!");
+     
+     if rax == *fsbase.byte_offset(0x28) {
+        return 0;
+     }
+     
+     __stack_chk_fail();
+     /* no return */
+  }
+  
+  
+  '''
 # ---
 # name: test_pseudo_rust[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No function found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool pseudo_rust: No function found with name/address '0xINVALID'"
+# ---
+# name: test_pseudo_rust[nonexist.elf-0x000008a1]
+  "Error executing tool pseudo_rust: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_pseudo_rust[nonexist.elf-0xINVALID]
+  "Error executing tool pseudo_rust: 'BinaryView not found: nonexist.elf'"
 # ---
 # name: test_rename_symbol[beleaf.elf.bndb-0x000008a1]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Successfully renamed function at 0x8a1 from 'main' to 'test_renamed_function'", annotations=None)], isError=False)
+  "Successfully renamed function at 0x8a1 from 'main' to 'test_renamed_function'"
 # ---
 # name: test_rename_symbol[beleaf.elf.bndb-0xINVALID]
-  CallToolResult(meta=None, content=[TextContent(type='text', text="Error: No function or data variable found with name/address '0xINVALID'", annotations=None)], isError=False)
+  "Error executing tool rename_symbol: No function or data variable found with name/address '0xINVALID'"
+# ---
+# name: test_rename_symbol[nonexist.elf-0x000008a1]
+  "Error executing tool rename_symbol: 'BinaryView not found: nonexist.elf'"
+# ---
+# name: test_rename_symbol[nonexist.elf-0xINVALID]
+  "Error executing tool rename_symbol: 'BinaryView not found: nonexist.elf'"
 # ---
