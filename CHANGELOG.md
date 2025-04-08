@@ -4,16 +4,26 @@
 
 ### Major Changes
 
-- Refactored server implementation with FastMCP
-- Improved error handling using FastMCP error handling system
+- Now the **Start/Stop Server** button in UI actually worked!!
+- Added client option `--retry-interval` to improve connection reliability
 
 ### Fixes
 
 - Fixed compatibility issues with ExceptionGroup imports
 - Fixed resource tools functionality
+- Fixed ClientSession interference with STDIO clients
+
+### Improvements
+
+- Implemented SSEServerThread for correct server lifecycle management
+- Refactored server implementation with FastMCP
+- Improved error handling using FastMCP error handling system
+- Updated project metadata
+- Enhanced documentation in README
 
 ### Development Changes
 
+- Replaced Starlette with Hypercorn for improved server performance
 - Added test cases for MCP Server with snapshot testing
 - Removed pytest dependency from release workflow and smoke tests
 - Added workflow permissions for GitHub release creation
