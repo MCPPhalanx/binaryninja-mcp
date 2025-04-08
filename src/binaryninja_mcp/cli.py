@@ -66,12 +66,14 @@ def server(listen_host, listen_port, filename):
 @cli.command()
 @click.option('--host', default='localhost', help='SSE server host')
 @click.option('--port', default=DEFAULT_PORT, help='SSE server port')
-def client(host, port):
+@click.option(
+	'--retry-interval', default=3, help='Retry interval in seconds when server disconnects'
+)
+def client(host, port, retry_interval):
 	"""Connect to an MCP SSE server and relay to stdio"""
 
 	import anyio
 	import mcp.types as types
-	from mcp.client.session import ClientSession
 	from mcp.client.sse import sse_client
 	from mcp.server.stdio import stdio_server
 	from mcp.shared.session import RequestResponder
@@ -85,60 +87,72 @@ def client(host, port):
 			logger.error('Error: %s', message)
 			return
 
-	async def run_client():
-		# Connect to SSE server
-		url = f'http://{host}:{port}/sse'
-		logger.info('Connecting to MCP server at %s', url)
+	async def run_client(retry_seconds):
 		# Create stdio server to relay messages
 		async with stdio_server() as (stdio_read, stdio_write):
-			# Connect to SSE server
-			async with sse_client(url) as (sse_read, sse_write):
-				# Create client session
-				async with ClientSession(sse_read, sse_write, message_handler=message_handler):
-					logger.info('Connected to MCP server at %s:%d', host, port)
+			while True:  # Infinite retry loop
+				try:
+					# Connect to SSE server
+					url = f'http://{host}:{port}/sse'
+					logger.info('Connecting to MCP server at %s', url)
 
-					# Create a disconnection event to signal when either connection is broken
-					disconnection_event = anyio.Event()
+					# Connect to SSE server
+					async with sse_client(url) as (sse_read, sse_write):
+						logger.info('Connected to MCP server at %s:%d', host, port)
 
-					# Create a proxy to relay messages between stdio and SSE
-					# Forward messages from stdio to SSE
-					async def forward_stdio_to_sse():
-						try:
-							while True:
-								message = await stdio_read.receive()
-								await sse_write.send(message)
-						except Exception as e:
-							logger.error('Error forwarding stdio to SSE: %s', e)
-							# Signal disconnection and exit
-							disconnection_event.set()
+						# Create a disconnection event to signal when either connection is broken
+						disconnection_event = anyio.Event()
 
-					# Forward messages from SSE to stdio
-					async def forward_sse_to_stdio():
-						try:
-							while True:
-								message = await sse_read.receive()
-								await stdio_write.send(message)
-						except Exception as e:
-							logger.error('Error forwarding SSE to stdio: %s', e)
-							# Signal disconnection and exit
-							disconnection_event.set()
+						# Create a proxy to relay messages between stdio and SSE
+						# Forward messages from stdio to SSE
+						async def forward_stdio_to_sse():
+							try:
+								while True:
+									message = await stdio_read.receive()
+									logger.debug('STDIO -> SSE: %s', message)
+									await sse_write.send(message)
+							except Exception as e:
+								logger.error('Error forwarding stdio to SSE: %s', e)
+								# Signal disconnection and exit
+								disconnection_event.set()
 
-					# Function to wait for disconnection and exit
-					async def wait_for_disconnection():
-						await disconnection_event.wait()
-						# Once disconnection is detected, just return to exit the task group
-						logger.info('Disconnection detected, exiting...')
-						raise SystemExit(0)
+						# Forward messages from SSE to stdio
+						async def forward_sse_to_stdio():
+							try:
+								while True:
+									message = await sse_read.receive()
+									logger.debug('SSE -> STDIO: %s', message)
+									await stdio_write.send(message)
+							except Exception as e:
+								logger.error('Error forwarding SSE to stdio: %s', e)
+								# Signal disconnection and exit
+								disconnection_event.set()
 
-					# Run all tasks concurrently
-					async with anyio.create_task_group() as tg:
-						tg.start_soon(forward_stdio_to_sse)
-						tg.start_soon(forward_sse_to_stdio)
-						tg.start_soon(wait_for_disconnection)
+						# Function to wait for disconnection and retry
+						async def wait_for_disconnection():
+							await disconnection_event.wait()
+							# Once disconnection is detected, just return to exit the task group
+							logger.warning('Server disconnected, attempting to reconnect...')
+
+						# Run all tasks concurrently
+						async with anyio.create_task_group() as tg:
+							tg.start_soon(forward_stdio_to_sse)
+							tg.start_soon(forward_sse_to_stdio)
+							logger.debug('STDIO-SSE relay client started')
+							tg.start_soon(wait_for_disconnection)
+
+						# If we get here, the task group has exited due to disconnection
+						# We'll retry connecting in the next loop iteration
+
+				except Exception as e:
+					if isinstance(e, KeyboardInterrupt):
+						raise  # Re-raise KeyboardInterrupt to be caught by the outer try/except
+					logger.warning(f'Connection error: {e}. Retrying in {retry_seconds} seconds...')
+					await anyio.sleep(retry_seconds)  # Wait before retrying
 
 	try:
 		# Use anyio.run with trio backend as in the reference code
-		anyio.run(run_client, backend='trio')
+		anyio.run(run_client, retry_interval, backend='trio')
 	except KeyboardInterrupt:
 		logger.info('\nDisconnected')
 	except Exception as e:
