@@ -1,15 +1,13 @@
 import logging
-import threading
 from typing import Dict, Optional
 
-import uvicorn
 from binaryninja.binaryview import BinaryView, BinaryViewType
-from binaryninja.plugin import BackgroundTaskThread, PluginCommand
+from binaryninja.plugin import PluginCommand
 from binaryninja.settings import Settings
 
 from binaryninja_mcp.consts import DEFAULT_PORT
 from binaryninja_mcp.log import setup_logging
-from binaryninja_mcp.server import create_mcp_server
+from binaryninja_mcp.server import SSEServerThread, create_mcp_server
 from binaryninja_mcp.utils import bv_name
 
 logger = logging.getLogger(__name__)
@@ -19,8 +17,7 @@ SETTINGS_NAMESPACE = 'mcpserver'
 class MCPServerPlugin:
 	def __init__(self):
 		self.bvs: Dict[str, BinaryView] = {}
-		self.server_thread: Optional[BackgroundTaskThread] = None
-		self.uvicorn_server: Optional[uvicorn.Server] = None
+		self.server_thread: Optional[SSEServerThread] = None
 		self.settings = Settings()
 		self.register_settings()
 		self.load_settings()
@@ -64,33 +61,12 @@ class MCPServerPlugin:
 	def server_running(self) -> bool:
 		return bool(self.server_thread and self.server_thread.is_alive())
 
-	def run_server(self):
-		"""Background task thread entry point"""
-		logger.debug('Starting Uvicorn Server thread')
-		try:
-			mcp = create_mcp_server(list(self.bvs.values()))
-			app = mcp.sse_app()
-			config = uvicorn.Config(
-				app,
-				host=self.listen_host,
-				port=self.listen_port,
-				# loop="asyncio",
-				log_level='warning',
-				timeout_graceful_shutdown=2,
-			)
-			self.uvicorn_server = uvicorn.Server(config)
-			self.uvicorn_server.run()
-		except Exception as e:
-			logger.error('Server error: %s', repr(e))
-		logger.debug('Uvicorn Server thread stopped')
-
 	def start_server(self):
 		"""Start the MCP server"""
 		self.load_settings()
-		if not self.server_thread or not self.server_thread.is_alive():
-			self.server_thread = threading.Thread(
-				target=self.run_server, name='Uvicorn Server Thread', daemon=False
-			)
+		if not self.server_running():
+			mcp = create_mcp_server(list(self.bvs.values()))
+			self.server_thread = SSEServerThread(mcp.sse_app(), self.listen_host, self.listen_port)
 			self.server_thread.start()
 			logger.info('MCP Server started on %s:%d', self.listen_host, self.listen_port)
 
@@ -103,8 +79,7 @@ class MCPServerPlugin:
 
 		if self.server_thread:
 			logger.debug('Stopping background thread')
-			raise NotImplementedError('TODO: proper shutdown SSE Server')
-			# self.server_thread.join()
+			self.server_thread.stop()
 		logger.info('MCP Server stopped')
 
 	def menu_server_control(self, bv: BinaryView):

@@ -1,9 +1,14 @@
 import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
+from threading import Event, Thread
 from typing import AsyncIterator, Dict, List, Optional
 
+import anyio
 import binaryninja as bn
+from anyio import to_thread
+from hypercorn.config import Config
+from hypercorn.trio import serve
 from mcp.server.fastmcp import Context, FastMCP
 
 from binaryninja_mcp.consts import TEST_BINARY_PATH_ELF
@@ -66,7 +71,9 @@ class BNContext:
 		bv = self.bvs.get(name)
 		if not bv:
 			logger.error('BinaryView not found: %s', name)
-			raise KeyError(f'BinaryView not found: {name}')
+			raise KeyError(
+				f'filename not found: {name}, currently opened: {" , ".join(self.bvs.keys())}'
+			)
 		return bv
 
 
@@ -305,11 +312,39 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None, **mcp_s
 	return mcp
 
 
+class SSEServerThread(Thread):
+	def __init__(self, asgiapp, host, port):
+		super().__init__(name='SSE Server Thread', daemon=True)
+		self.app = asgiapp
+		self.config = Config()
+		self.config.bind = [f'{host}:{port}']
+
+	def run(self):
+		self.shutdown_signal = Event()
+		return anyio.run(self.arun, backend='trio')
+
+	def stop(self):
+		self.shutdown_signal.set()
+
+	# When running event loop from a thread, anyio.open_signal_receiver does not work
+	# (it only works from main thread). We have to use our own way to send signals.
+	# In order to send signal from a synchronous thread to an asynchronous task,
+	# I choose to use anyio.to_thread helper with threading.Event to bridge between those two worlds.
+
+	async def arun(self):
+		return await serve(self.app, self.config, shutdown_trigger=self._shutdown_trigger)
+
+	async def _shutdown_trigger(self):
+		logger.debug('Start listenning for shutdown event')
+		await to_thread.run_sync(self.shutdown_signal.wait)
+		logger.debug('Shutdown event triggered')
+
+
 if __name__ == '__main__':
 	"""
-    uv add anyio --dev
-    uv run ./src/binaryninja_mcp/server.py
-    """
+	uv add anyio --dev
+	uv run ./src/binaryninja_mcp/server.py
+	"""
 
 	disable_binaryninja_user_plugins()
 	bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)

@@ -1,10 +1,11 @@
 import logging
+import time
 
 import click
-import uvicorn
 
 from binaryninja_mcp.consts import DEFAULT_PORT
 from binaryninja_mcp.log import setup_logging
+from binaryninja_mcp.server import SSEServerThread
 from binaryninja_mcp.utils import (
 	disable_binaryninja_user_plugins,
 	find_binaryninja_path,
@@ -32,7 +33,7 @@ def server(listen_host, listen_port, filename):
 	"""Start an MCP server for the given binary file"""
 	from binaryninja import load
 
-	from binaryninja_mcp.server import create_mcp_server, create_sse_app
+	from binaryninja_mcp.server import create_mcp_server
 
 	disable_binaryninja_user_plugins()
 
@@ -47,8 +48,19 @@ def server(listen_host, listen_port, filename):
 	# Run SSE server
 	logger.info('Starting MCP server for %s on port %d', filename, listen_port)
 
-	app = create_sse_app(mcp)
-	uvicorn.run(app, host=listen_host, port=listen_port, timeout_graceful_shutdown=2)
+	# Why separate thread?
+	# because it's easier to maintain a single interface to SSE lifecycle management.
+	thread = SSEServerThread(mcp.sse_app(), listen_host, listen_port)
+
+	try:
+		thread.start()
+		while True:
+			# thread.join will block Ctrl-C, use plain old time.sleep
+			time.sleep(1000)
+	except KeyboardInterrupt:
+		logger.warning('Exiting...')
+	finally:
+		thread.stop()
 
 
 @cli.command()
