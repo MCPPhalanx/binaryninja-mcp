@@ -8,8 +8,8 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "anyio>=4.9.0",
+    "hypercorn>=0.17.3",
     "mcp>=1.6.0",
-    "starlette>=0.46.1",
     "trio>=0.29.0",
 ]
 
