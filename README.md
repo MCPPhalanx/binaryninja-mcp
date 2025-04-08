@@ -4,7 +4,7 @@
 
 <strong>The MCP (Model Context Protocol) Server for Binary Ninja</strong>
 
-[![PyPI][pypi-badge]][pypi-url] [![MIT licensed][mit-badge]][mit-url]
+[![PyPI][pypi-badge]][pypi-url] [![Apache licensed][license-badge]][license-url]
 [![Python Version][python-badge]][python-url]
 [![GitHub Discussions][discussions-badge]][discussions-url]
 
@@ -12,8 +12,8 @@
 
 [pypi-badge]: https://img.shields.io/pypi/v/binaryninja-mcp.svg
 [pypi-url]: https://pypi.org/project/binaryninja-mcp/
-[mit-badge]: https://img.shields.io/pypi/l/binaryninja-mcp.svg
-[mit-url]: https://github.com/modelcontextprotocol/python-sdk/blob/main/LICENSE
+[license-badge]: https://img.shields.io/pypi/l/binaryninja-mcp.svg
+[license-url]: https://github.com/MCPPhalanx/binaryninja-mcp/blob/main/LICENSE
 [python-badge]: https://img.shields.io/pypi/pyversions/binaryninja-mcp.svg
 [python-url]: https://www.python.org/downloads/
 [discussions-badge]:
