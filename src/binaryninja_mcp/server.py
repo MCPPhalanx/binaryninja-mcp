@@ -333,7 +333,7 @@ class SSEServerThread(Thread):
 		return await serve(self.app, self.config, shutdown_trigger=self._shutdown_trigger)
 
 	async def _shutdown_trigger(self):
-		logger.debug('Start listenning for shutdown event')
+		logger.debug('Start listening for shutdown event')
 		await to_thread.run_sync(self.shutdown_signal.wait)
 		logger.debug('Shutdown event triggered')
 
