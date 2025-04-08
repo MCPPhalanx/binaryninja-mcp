@@ -6,6 +6,10 @@
 
 - Now the **Start/Stop Server** button in UI actually worked!!
 - Added client option `--retry-interval` to improve connection reliability
+- `binaryninja-mcp install-api` now works in uv, previously you need a
+  `--install-on-pyenv` flag, since uv is _the_ project management tool for the
+  MCP community, this flag is now set by default, and could be disabled by
+  `--install-on-usersite`
 
 ### Fixes
 
