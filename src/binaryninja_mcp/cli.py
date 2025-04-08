@@ -173,8 +173,8 @@ def client(host, port, retry_interval):
 @click.option('--uninstall', is_flag=True, help='Uninstall instead of install')
 @click.option('--force', is_flag=True, help='Force installation')
 @click.option('--install-on-root', is_flag=True, help='Install to system Python')
-@click.option('--install-on-pyenv', is_flag=True, help='Install to pyenv')
-def install_api(binja_path, silent, uninstall, force, install_on_root, install_on_pyenv):
+@click.option('--install-on-usersite', is_flag=True, help='Install to user sitepackage')
+def install_api(binja_path, silent, uninstall, force, install_on_root, install_on_usersite):
 	"""Install/uninstall Binary Ninja API"""
 	install_path = find_binaryninja_path(binja_path)
 	if not install_path:
@@ -197,7 +197,7 @@ def install_api(binja_path, silent, uninstall, force, install_on_root, install_o
 		result = module.install(
 			interactive=not silent,
 			on_root=install_on_root,
-			on_pyenv=install_on_pyenv,
+			on_pyenv=not install_on_usersite,
 			force=force,
 		)
 
