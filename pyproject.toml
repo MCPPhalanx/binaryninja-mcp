@@ -1,10 +1,28 @@
 [project]
 name = "binaryninja-mcp"
-description = "MCP Server for Binary Ninja"
+description = "The MCP server plugin for Binary Ninja, enables LLM integration by Model Context Protocol (MCP) through SSE or STDIO transport."
 readme = "README.md"
 authors = [
     { name = "ttimasdf", email = "opensource@rabit.pw" }
 ]
+
+keywords = ["mcp", "automation", "binaryninja", "plugin", "llm", "gpt", "server", "client"]
+license = { text = "Apache 2.0" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+]
+
 requires-python = ">=3.10"
 dependencies = [
     "anyio>=4.9.0",
