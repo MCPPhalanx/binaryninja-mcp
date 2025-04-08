@@ -1,6 +1,30 @@
-# binaryninja-mcp
+# Another™ MCP Server for Binary Ninja
 
-MCP Server for Binary Ninja
+<div align="center">
+
+<strong>The MCP (Model Context Protocol) Server for Binary Ninja</strong>
+
+[![PyPI][pypi-badge]][pypi-url] [![MIT licensed][mit-badge]][mit-url]
+[![Python Version][python-badge]][python-url]
+[![GitHub Discussions][discussions-badge]][discussions-url]
+
+</div>
+
+[pypi-badge]: https://img.shields.io/pypi/v/binaryninja-mcp.svg
+[pypi-url]: https://pypi.org/project/binaryninja-mcp/
+[mit-badge]: https://img.shields.io/pypi/l/binaryninja-mcp.svg
+[mit-url]: https://github.com/modelcontextprotocol/python-sdk/blob/main/LICENSE
+[python-badge]: https://img.shields.io/pypi/pyversions/binaryninja-mcp.svg
+[python-url]: https://www.python.org/downloads/
+[discussions-badge]:
+  https://img.shields.io/github/discussions/MCPPhalanx/binaryninja-mcp
+[discussions-url]: https://github.com/MCPPhalanx/binaryninja-mcp/discussions
+
+# Demo
+
+The [tests/binary/beleaf.elf](tests/binary/beleaf.elf) is taken from [CSAW'19: Beleaf - Nightmare](https://guyinatuxedo.github.io/03-beginner_re/csaw19_beleaf/index.html). You can also find the complete writeup from the link above!
+
+![demo](docs/demo-1.jpg)
 
 # Installation
 
@@ -20,6 +44,7 @@ There are two ways to run the MCP server:
 
 2. **Binary Ninja Headless Mode**:
    ```bash
+   uvx binaryninja-mcp install-api  # only run once
    uvx binaryninja-mcp server <filename> [filename]...
    ```
    - `filename` could be any binary files or BNDB, like in UI mode, all opened
@@ -52,6 +77,8 @@ There are two ways to run the MCP server:
        binaryninja-mcp
        client
        ```
+
+Add `--port 12345` to both server and client command line if you prefer to run MCP server on port other than default.
 
 # Available Tools for MCP Clients
 
