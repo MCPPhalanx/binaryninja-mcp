@@ -1,4 +1,5 @@
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
 import binaryninja as bn
 
 
@@ -14,7 +15,7 @@ class MCPResource:
 		result = {
 			'file_metadata': {
 				'filename': self.bv.file.filename,
-				'file_size': self.bv.file.length,
+				'file_size': self.bv.length,
 				'view_type': self.bv.view_type,
 			},
 			'binary_info': {
@@ -77,25 +78,27 @@ class MCPResource:
 		"""Get dictionary of exported symbols or functions with properties"""
 		result = []
 
-		for sym in self.bv.get_symbols_of_type(bn.SymbolType.ExportedFunctionSymbol):
-			result.append(
-				{
-					'name': sym.name,
-					'address': hex(sym.address),
-					'type': str(sym.type),
-					'ordinal': sym.ordinal if hasattr(sym, 'ordinal') else None,
-				}
-			)
+		for sym in self.bv.get_symbols_of_type(bn.SymbolType.FunctionSymbol):
+			if sym.binding == bn.SymbolBinding.GlobalBinding:
+				result.append(
+					{
+						'name': sym.name,
+						'address': hex(sym.address),
+						'type': str(sym.type),
+						'ordinal': sym.ordinal if hasattr(sym, 'ordinal') else None,
+					}
+				)
 
-		for sym in self.bv.get_symbols_of_type(bn.SymbolType.ExportedDataSymbol):
-			result.append(
-				{
-					'name': sym.name,
-					'address': hex(sym.address),
-					'type': str(sym.type),
-					'ordinal': sym.ordinal if hasattr(sym, 'ordinal') else None,
-				}
-			)
+		for sym in self.bv.get_symbols_of_type(bn.SymbolType.DataSymbol):
+			if sym.binding == bn.SymbolBinding.GlobalBinding:
+				result.append(
+					{
+						'name': sym.name,
+						'address': hex(sym.address),
+						'type': str(sym.type),
+						'ordinal': sym.ordinal if hasattr(sym, 'ordinal') else None,
+					}
+				)
 
 		return result
 
@@ -109,12 +112,12 @@ class MCPResource:
 					'start': hex(segment.start),
 					'end': hex(segment.end),
 					'length': segment.length,
-					'data_length': segment.data_length,
 					'data_offset': segment.data_offset,
+					'data_length': segment.data_length,
+					'data_end': segment.data_end,
 					'readable': segment.readable,
 					'writable': segment.writable,
 					'executable': segment.executable,
-					'flags': segment.flags,
 				}
 			)
 
