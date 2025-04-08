@@ -10,6 +10,8 @@
 
 </div>
 
+English | [中文](README.zh.md)
+
 [pypi-badge]: https://img.shields.io/pypi/v/binaryninja-mcp.svg
 [pypi-url]: https://pypi.org/project/binaryninja-mcp/
 [license-badge]: https://img.shields.io/pypi/l/binaryninja-mcp.svg
@@ -27,6 +29,11 @@ The [tests/binary/beleaf.elf](tests/binary/beleaf.elf) is taken from
 You can also find the complete writeup from the link above!
 
 ![demo](docs/demo-1.jpg)
+
+## ... but why _Another_?
+
+See:
+[Key Differences from the Existing Plugin](https://github.com/Vector35/community-plugins/issues/305)
 
 # Installation
 
