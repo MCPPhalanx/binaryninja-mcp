@@ -1,4 +1,5 @@
 import pytest
+
 from binaryninja_mcp.tools import MCPTools
 
 ADDR_MAIN = '0x000008a1'

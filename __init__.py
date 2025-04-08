@@ -1,5 +1,6 @@
-from binaryninja_mcp.plugin import plugin_init
 import binaryninja as bn
+
+from binaryninja_mcp.plugin import plugin_init
 
 # check if binaryninja plugin system is initialized
 if bn.core_ui_enabled():
