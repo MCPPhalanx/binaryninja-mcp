@@ -22,7 +22,9 @@
 
 # Demo
 
-The [tests/binary/beleaf.elf](tests/binary/beleaf.elf) is taken from [CSAW'19: Beleaf - Nightmare](https://guyinatuxedo.github.io/03-beginner_re/csaw19_beleaf/index.html). You can also find the complete writeup from the link above!
+The [tests/binary/beleaf.elf](tests/binary/beleaf.elf) is taken from
+[CSAW'19: Beleaf - Nightmare](https://guyinatuxedo.github.io/03-beginner_re/csaw19_beleaf/index.html).
+You can also find the complete writeup from the link above!
 
 ![demo](docs/demo-1.jpg)
 
@@ -78,7 +80,8 @@ There are two ways to run the MCP server:
        client
        ```
 
-Add `--port 12345` to both server and client command line if you prefer to run MCP server on port other than default.
+Add `--port 12345` to both server and client command line if you prefer to run
+MCP server on port other than default.
 
 # Available Tools for MCP Clients
 
