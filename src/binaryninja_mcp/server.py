@@ -89,10 +89,8 @@ async def lifespan(server: FastMCP) -> AsyncIterator[BNContext]:
 	try:
 		yield context
 	finally:
-		logger.info('Cleaning up BNContext')
-		if not bn.core_ui_enabled():
-			# TODO: Cleanup resources
-			pass
+		logger.debug('Cleaning up BNContext')
+		context.bvs.clear()
 
 
 def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None, **mcp_settings) -> FastMCP:
