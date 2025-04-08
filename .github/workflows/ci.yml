@@ -24,7 +24,7 @@ jobs:
         run: uv run ruff format --diff .
       # This isn't a general Python lint, this style is just used in this repository
       - name: Prettier format
-        run: npx prettier --prose-wrap always --check "**/*.md"
+        run: npx prettier@3.1.0 --prose-wrap always --check "**/*.md"
 
   test:
     name: Run tests
