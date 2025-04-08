@@ -1,14 +1,16 @@
-from binaryninja.binaryview import BinaryView, BinaryViewType
 import logging
-from binaryninja_mcp.log import setup_logging
-from binaryninja.plugin import PluginCommand, BackgroundTaskThread
-from binaryninja.settings import Settings
-from binaryninja_mcp.consts import DEFAULT_PORT
-from binaryninja_mcp.utils import bv_name
-from binaryninja_mcp.server import create_mcp_server, create_sse_app
-from typing import Optional, Dict
 import threading
+from typing import Dict, Optional
+
 import uvicorn
+from binaryninja.binaryview import BinaryView, BinaryViewType
+from binaryninja.plugin import BackgroundTaskThread, PluginCommand
+from binaryninja.settings import Settings
+
+from binaryninja_mcp.consts import DEFAULT_PORT
+from binaryninja_mcp.log import setup_logging
+from binaryninja_mcp.server import create_mcp_server
+from binaryninja_mcp.utils import bv_name
 
 logger = logging.getLogger(__name__)
 SETTINGS_NAMESPACE = 'mcpserver'
@@ -54,7 +56,7 @@ class MCPServerPlugin:
 	def on_binaryview_initial_analysis_completion(self, bv: BinaryView):
 		name = bv_name(bv)
 		self.bvs[name] = bv
-		logger.debug('bv=%s bv.file=%s name=%s', bv, bv.file, name)
+		logger.debug('Detected new BinaryView. bv=%s bv.file=%s name=%s', bv, bv.file, name)
 		if self.auto_start and not self.server_running():
 			# Auto-start server on plugin init
 			self.start_server()
@@ -64,9 +66,10 @@ class MCPServerPlugin:
 
 	def run_server(self):
 		"""Background task thread entry point"""
+		logger.debug('Starting Uvicorn Server thread')
 		try:
 			mcp = create_mcp_server(list(self.bvs.values()))
-			app = create_sse_app(mcp)
+			app = mcp.sse_app()
 			config = uvicorn.Config(
 				app,
 				host=self.listen_host,
@@ -79,21 +82,29 @@ class MCPServerPlugin:
 			self.uvicorn_server.run()
 		except Exception as e:
 			logger.error('Server error: %s', repr(e))
+		logger.debug('Uvicorn Server thread stopped')
 
 	def start_server(self):
 		"""Start the MCP server"""
 		self.load_settings()
 		if not self.server_thread or not self.server_thread.is_alive():
-			self.server_thread = threading.Thread(target=self.run_server, daemon=False)
+			self.server_thread = threading.Thread(
+				target=self.run_server, name='Uvicorn Server Thread', daemon=False
+			)
 			self.server_thread.start()
 			logger.info('MCP Server started on %s:%d', self.listen_host, self.listen_port)
 
 	def stop_server(self):
 		"""Stop the MCP server"""
 		if self.uvicorn_server:
-			self.uvicorn_server.shutdown()
+			logger.debug('Shutting down SSE server')
+			raise NotImplementedError('TODO: proper shutdown SSE Server')
+			# anyio.run(self.uvicorn_server.shutdown)
+
 		if self.server_thread:
-			self.server_thread.join()
+			logger.debug('Stopping background thread')
+			raise NotImplementedError('TODO: proper shutdown SSE Server')
+			# self.server_thread.join()
 		logger.info('MCP Server stopped')
 
 	def menu_server_control(self, bv: BinaryView):
@@ -115,7 +126,7 @@ plugin = MCPServerPlugin()
 
 def plugin_init():
 	# Binary Ninja has log filter in GUI, always output debug logs
-	setup_logging(logging.DEBUG)
+	setup_logging(logging.DEBUG, setup_for_plugin=True)
 	# Register global handler for all BinaryView events
 	BinaryViewType.add_binaryview_initial_analysis_completion_event(
 		plugin.on_binaryview_initial_analysis_completion

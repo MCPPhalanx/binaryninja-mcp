@@ -17,7 +17,6 @@ dynamic = ["version"]
 
 [dependency-groups]
 dev = [
-    "mcp[cli]>=1.6.0",
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",
     "ruff>=0.11.3",
@@ -38,6 +37,9 @@ pattern = '"version" *: *"(?P<version>[^"]+)"'
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
+extend-select = ["I"]
 
 [tool.ruff.format]
 quote-style = "single"

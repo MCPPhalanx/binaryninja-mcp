@@ -1,12 +1,14 @@
+import logging
+
 import click
 import uvicorn
-import logging
+
 from binaryninja_mcp.consts import DEFAULT_PORT
+from binaryninja_mcp.log import setup_logging
 from binaryninja_mcp.utils import (
 	disable_binaryninja_user_plugins,
 	find_binaryninja_path,
 )
-from binaryninja_mcp.log import setup_logging
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +31,7 @@ def cli(verbose):
 def server(listen_host, listen_port, filename):
 	"""Start an MCP server for the given binary file"""
 	from binaryninja import load
+
 	from binaryninja_mcp.server import create_mcp_server, create_sse_app
 
 	disable_binaryninja_user_plugins()
@@ -55,11 +58,11 @@ def client(host, port):
 	"""Connect to an MCP SSE server and relay to stdio"""
 
 	import anyio
+	import mcp.types as types
 	from mcp.client.session import ClientSession
 	from mcp.client.sse import sse_client
-	from mcp.shared.session import RequestResponder
 	from mcp.server.stdio import stdio_server
-	import mcp.types as types
+	from mcp.shared.session import RequestResponder
 
 	async def message_handler(
 		message: RequestResponder[types.ServerRequest, types.ClientResult]
