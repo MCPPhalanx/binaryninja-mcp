@@ -82,10 +82,10 @@
   "Error executing tool disassembly: No symbol found with name/address '0xINVALID'"
 # ---
 # name: test_disassembly[nonexist.elf-0x000008a1]
-  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool disassembly: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_disassembly[nonexist.elf-0xINVALID]
-  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool disassembly: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_disassembly_with_length[beleaf.elf.bndb-0x000008a1]
   '''
@@ -99,58 +99,58 @@
   "Error executing tool disassembly: No symbol found with name/address '0xINVALID'"
 # ---
 # name: test_disassembly_with_length[nonexist.elf-0x000008a1]
-  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool disassembly: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_disassembly_with_length[nonexist.elf-0xINVALID]
-  "Error executing tool disassembly: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool disassembly: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_data_variables[beleaf.elf.bndb]
   '{"address": "0x0", "type": "struct Elf64_Header", "auto_discovered": true, "symbol": {"name": "__elf_header", "type": "SymbolType.DataSymbol", "short_name": "__elf_header"}}'
 # ---
 # name: test_get_data_variables[nonexist.elf]
-  "Error executing tool get_data_variables: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_data_variables: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_exports[beleaf.elf.bndb]
   '{"name": "_start", "address": "0x6f0", "type": "SymbolType.FunctionSymbol", "ordinal": 0}'
 # ---
 # name: test_get_exports[nonexist.elf]
-  "Error executing tool get_exports: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_exports: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_functions[beleaf.elf.bndb]
   '{"name": "_init", "start": "0x650", "symbol": {"name": "_init", "type": "SymbolType.FunctionSymbol", "short_name": "_init"}, "parameter_count": 0, "return_type": null, "has_prototype": false, "is_imported": false, "is_thunk": false, "basic_block_count": 3}'
 # ---
 # name: test_get_functions[nonexist.elf]
-  "Error executing tool get_functions: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_functions: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_imports[beleaf.elf.bndb]
   "{'BNINTERNALNAMESPACE': [{'name': 'puts', 'address': '0x680', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': 'strlen', 'address': '0x690', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': '__stack_chk_fail', 'address': '0x6a0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': 'printf', 'address': '0x6b0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': '__isoc99_scanf', 'address': '0x6c0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': 'exit', 'address': '0x6d0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}, {'name': '__cxa_finalize', 'address': '0x6e0', 'type': 'SymbolType.ImportedFunctionSymbol', 'ordinal': 0}]}"
 # ---
 # name: test_get_imports[nonexist.elf]
-  "Error executing tool get_imports: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_imports: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_sections[beleaf.elf.bndb]
   '{"name": ".bss", "start": "0x2015e8", "end": "0x2015f0", "length": 8, "type": "NOBITS", "align": 1, "entry_size": 0, "linked_section": "", "info_section": "", "info_data": 0}'
 # ---
 # name: test_get_sections[nonexist.elf]
-  "Error executing tool get_sections: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_sections: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_segments[beleaf.elf.bndb]
   '{"start": "0x0", "end": "0xc00", "length": 3072, "data_offset": 0, "data_length": 3072, "data_end": 3072, "readable": true, "writable": false, "executable": true}'
 # ---
 # name: test_get_segments[nonexist.elf]
-  "Error executing tool get_segments: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_segments: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_strings[beleaf.elf.bndb]
   '{"value": "@8\\t@", "start": "0x34", "length": 8, "type": "StringType.Utf16String"}'
 # ---
 # name: test_get_strings[nonexist.elf]
-  "Error executing tool get_strings: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_strings: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_get_triage_summary[beleaf.elf.bndb]
   '{"file_metadata": {"filename": "tests/binary/beleaf.elf.bndb", "file_size": 2102904, "view_type": "ELF"}, "binary_info": {"platform": "linux-x86_64", "entry_point": "0x6f0", "base_address": "0x0", "end_address": "0x201678", "endianness": "LittleEndian", "address_size": 8, "architecture": "x86_64"}, "statistics": {"function_count": 25, "string_count": 30, "segment_count": 5, "section_count": 26}}'
 # ---
 # name: test_get_triage_summary[nonexist.elf]
-  "Error executing tool get_triage_summary: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool get_triage_summary: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_high_level_il[beleaf.elf.bndb-0x000008a1]
   '''
@@ -185,10 +185,10 @@
   "Error executing tool high_level_il: No function found with name/address '0xINVALID'"
 # ---
 # name: test_high_level_il[nonexist.elf-0x000008a1]
-  "Error executing tool high_level_il: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool high_level_il: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_high_level_il[nonexist.elf-0xINVALID]
-  "Error executing tool high_level_il: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool high_level_il: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_list_filename
   'beleaf.elf.bndb'
@@ -266,10 +266,10 @@
   "Error executing tool medium_level_il: No function found with name/address '0xINVALID'"
 # ---
 # name: test_medium_level_il[nonexist.elf-0x000008a1]
-  "Error executing tool medium_level_il: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool medium_level_il: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_medium_level_il[nonexist.elf-0xINVALID]
-  "Error executing tool medium_level_il: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool medium_level_il: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_pseudo_c[beleaf.elf.bndb-0x000008a1]
   '''
@@ -319,10 +319,10 @@
   "Error executing tool pseudo_c: No function found with name/address '0xINVALID'"
 # ---
 # name: test_pseudo_c[nonexist.elf-0x000008a1]
-  "Error executing tool pseudo_c: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool pseudo_c: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_pseudo_c[nonexist.elf-0xINVALID]
-  "Error executing tool pseudo_c: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool pseudo_c: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_pseudo_rust[beleaf.elf.bndb-0x000008a1]
   '''
@@ -370,10 +370,10 @@
   "Error executing tool pseudo_rust: No function found with name/address '0xINVALID'"
 # ---
 # name: test_pseudo_rust[nonexist.elf-0x000008a1]
-  "Error executing tool pseudo_rust: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool pseudo_rust: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_pseudo_rust[nonexist.elf-0xINVALID]
-  "Error executing tool pseudo_rust: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool pseudo_rust: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_rename_symbol[beleaf.elf.bndb-0x000008a1]
   "Successfully renamed function at 0x8a1 from 'main' to 'test_renamed_function'"
@@ -382,8 +382,8 @@
   "Error executing tool rename_symbol: No function or data variable found with name/address '0xINVALID'"
 # ---
 # name: test_rename_symbol[nonexist.elf-0x000008a1]
-  "Error executing tool rename_symbol: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool rename_symbol: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
 # name: test_rename_symbol[nonexist.elf-0xINVALID]
-  "Error executing tool rename_symbol: 'BinaryView not found: nonexist.elf'"
+  "Error executing tool rename_symbol: 'filename not found: nonexist.elf, currently opened: beleaf.elf.bndb , beleaf.elf'"
 # ---
