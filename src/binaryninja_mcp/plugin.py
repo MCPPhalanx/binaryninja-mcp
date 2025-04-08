@@ -59,7 +59,9 @@ class MCPServerPlugin:
 			self.start_server()
 
 	def server_running(self) -> bool:
-		return bool(self.server_thread and self.server_thread.is_alive())
+		status = bool(self.server_thread and self.server_thread.is_alive())
+		logger.debug('server_running: %s', status)
+		return status
 
 	def start_server(self):
 		"""Start the MCP server"""
@@ -72,14 +74,8 @@ class MCPServerPlugin:
 
 	def stop_server(self):
 		"""Stop the MCP server"""
-		if self.uvicorn_server:
-			logger.debug('Shutting down SSE server')
-			raise NotImplementedError('TODO: proper shutdown SSE Server')
-			# anyio.run(self.uvicorn_server.shutdown)
-
-		if self.server_thread:
-			logger.debug('Stopping background thread')
-			self.server_thread.stop()
+		logger.debug('Stopping background thread')
+		self.server_thread.stop()
 		logger.info('MCP Server stopped')
 
 	def menu_server_control(self, bv: BinaryView):
