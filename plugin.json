@@ -1,6 +1,6 @@
 {
 	"pluginmetadataversion": 2,
-	"name": "MCP Server",
+	"name": "Another MCP Server",
 	"type": [
 		"ui",
 		"helper"
@@ -8,7 +8,7 @@
 	"api": [
 		"python3"
 	],
-	"description": "MCP Server for Binary Ninja.",
+	"description": "The MCP server plugin, enables LLM integration by Model Context Protocol (MCP) through SSE or STDIO transport.",
 	"longdescription": "",
 	"license": {
 		"name": "Apache-2.0",
@@ -26,10 +26,10 @@
 	},
 	"dependencies": {
 		"pip": [
-			"binaryninja-mcp==0.2.2"
+			"binaryninja-mcp==0.3.0"
 		]
 	},
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"author": "Known Rabbit",
 	"minimumbinaryninjaversion": 3164
 }
