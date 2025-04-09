@@ -54,7 +54,7 @@ def setup_logging(
 		except ImportError:
 			warnings.warn('Skipped BinaryNinja Logger since BN API not installed')
 	else:
-		logging.StreamHandler(sys.stderr)
+		log_handlers.append(logging.StreamHandler(sys.stderr))
 
 	logging.basicConfig(level=third_party_log_level, handlers=log_handlers)
 
