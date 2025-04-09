@@ -11,11 +11,9 @@ from hypercorn.config import Config
 from hypercorn.trio import serve
 from mcp.server.fastmcp import Context, FastMCP
 
-from binaryninja_mcp.consts import TEST_BINARY_PATH_ELF
-from binaryninja_mcp.log import setup_logging
 from binaryninja_mcp.resources import MCPResource
 from binaryninja_mcp.tools import MCPTools
-from binaryninja_mcp.utils import bv_name, disable_binaryninja_user_plugins
+from binaryninja_mcp.utils import bv_name
 
 logger = logging.getLogger(__name__)
 
@@ -336,24 +334,3 @@ class SSEServerThread(Thread):
 		logger.debug('Start listening for shutdown event')
 		await to_thread.run_sync(self.shutdown_signal.wait)
 		logger.debug('Shutdown event triggered')
-
-
-if __name__ == '__main__':
-	"""
-	uv add anyio --dev
-	uv run ./src/binaryninja_mcp/server.py
-	"""
-
-	disable_binaryninja_user_plugins()
-	bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
-	setup_logging(logging.DEBUG)
-	server = create_mcp_server([bv])
-
-	transport = 'stdio'
-	server.run(transport)
-
-# launched by `mcp dev server.py`
-elif __name__ == 'server_module':
-	print('loading server module')
-	bv = bn.load(TEST_BINARY_PATH_ELF, update_analysis=False)
-	server = create_mcp_server([bv])
