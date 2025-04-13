@@ -5,6 +5,7 @@ from typing import Any, Optional
 import binaryninja as bn
 
 from binaryninja_mcp.resources import MCPResource
+from binaryninja_mcp.utils import hex_to_human
 
 # Set up logger
 logger = logging.getLogger('binaryninja_mcp.tools')
@@ -355,3 +356,25 @@ class MCPTools:
 		# Start the analysis update
 		self.bv.update_analysis_and_wait()
 		return f'Analysis updated successfully for {self.bv.file.filename}'
+
+	@handle_exceptions
+	def get_data_dump(
+		self, address: str, window_size: int = 128, human_readable: bool = True
+	) -> str:
+		"""Get binary data at address.
+		human_readable: return in human readable hex format
+		"""
+		addr = self.resolve_symbol(address)
+		if addr is None:
+			raise ValueError(f"No symbol found with name/address '{address}'")
+
+		# Get binary data
+		data = self.bv.read(addr, window_size)
+		if not data:
+			raise ValueError(f'Failed to read data at address {hex(addr)}')
+
+		# Convert to human-readable format if requested
+		if human_readable:
+			return hex_to_human(data, addr)
+
+		return data.hex()

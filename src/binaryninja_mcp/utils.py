@@ -48,3 +48,39 @@ def find_binaryninja_path(extra_path: str = None) -> Path | None:
 		script_path = path / 'scripts/install_api.py'
 		if script_path.exists():
 			return path
+
+
+def hex_to_human(data: bytes, base_address: int = 0) -> str:
+	"""Convert binary data to human-readable format like in hex viewers (hex + ascii)
+
+	Args:
+		data: Binary data to convert
+		base_address: Base address for the data
+
+	Returns:
+		Human-readable hex string
+	"""
+
+	offset = base_address
+	hex_lines = []
+	# add formatted header: byte number and ascii section
+	hex_lines.append('Address       00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F   ASCII')
+
+	while data:
+		# Format the address
+		address_str = f'{offset:08x}     '
+		chunk = data[:16]
+
+		# Format the hex part
+		hex_str = ' '.join(f'{byte:02x}' for byte in chunk)
+		hex_str += '   '
+		# Format the ASCII part
+		ascii_str = ''.join(chr(byte) if 32 <= byte < 127 else '.' for byte in chunk)
+		# Pad the hex string to 48 characters
+		hex_str = hex_str.ljust(48)
+		# Combine address, hex, and ASCII parts
+		hex_lines.append(f'{address_str}{hex_str}{ascii_str}')
+		# Move to the next chunk
+		data = data[16:]
+		offset += 16
+	return '\n'.join(hex_lines)

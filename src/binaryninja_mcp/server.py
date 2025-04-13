@@ -307,6 +307,20 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None, **mcp_s
 		tools = MCPTools(bv)
 		return tools.update_analysis_and_wait()
 
+	@mcp.tool()
+	def get_data_dump(
+		filename: str,
+		address: str,
+		ctx: Context,
+		window_size: int = 128,
+		human_readable: bool = True,
+	) -> str:
+		"""Return a hex/data listing around a given address"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		tools = MCPTools(bv)
+		return tools.get_data_dump(address, window_size, human_readable)
+
 	return mcp
 
 
