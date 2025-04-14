@@ -355,3 +355,30 @@ class MCPTools:
 		# Start the analysis update
 		self.bv.update_analysis_and_wait()
 		return f'Analysis updated successfully for {self.bv.file.filename}'
+
+	@handle_exceptions
+	def set_comment(self, address_or_name: str, comment: str) -> bool:
+		"""Set a comment at the specified address
+
+		Args:
+		    address: Address (hex string) to set the comment
+		    comment: Comment text to set
+
+		Returns:
+		    True if successful, False otherwise
+		"""
+		addr = self.resolve_symbol(address_or_name)
+		if addr is None:
+			raise ValueError(f"No symbol found with name/address '{address_or_name}'")
+
+		# function comments are located above function
+		if func := self.bv.get_function_at(addr):
+			func.comment = comment
+			return True
+
+		try:
+			self.bv.set_comment_at(addr, comment)
+			return True
+		except Exception as e:
+			logger.exception(f'Failed to set comment at {hex(addr)}: {str(e)}')
+		return False
