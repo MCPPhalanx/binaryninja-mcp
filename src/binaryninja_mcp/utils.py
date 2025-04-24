@@ -37,8 +37,8 @@ def find_binaryninja_path(extra_path: str = None) -> Path | None:
 			]
 		elif system == 'Darwin':
 			binja_paths = [
-				Path('/Applications/Binary Ninja.app'),
-				Path.home() / 'Applications/Binary Ninja.app',
+				Path('/Applications/Binary Ninja.app/Contents/Resources'),
+				Path.home() / 'Applications/Binary Ninja.app/Contents/Resources',
 			]
 		else:  # Linux/other
 			binja_paths = [Path('/opt/binaryninja'), Path.home() / 'binaryninja']
