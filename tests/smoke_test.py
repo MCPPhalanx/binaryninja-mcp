@@ -14,9 +14,9 @@ def test_binja_plugin_version():
 	with open('plugin.json') as f:
 		plugin = json.load(f)
 	with open('requirements.txt') as f:
-		lines = f.readlines()
+		requirements = f.readlines()
 
-	pip_package, pip_version = lines[0].split('==', maxsplit=1)
+	pip_package, pip_version = requirements[0].strip().split('==', maxsplit=1)
 	json_version = plugin['version']
 	assert pip_package == 'binaryninja-mcp'
 	assert pip_version == json_version
