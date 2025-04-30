@@ -24,12 +24,7 @@
 		"Linux": "no special instructions, package manager is recommended",
 		"Windows": "no special instructions, package manager is recommended"
 	},
-	"dependencies": {
-		"pip": [
-			"binaryninja-mcp==0.3.0"
-		]
-	},
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"author": "Known Rabbit",
 	"minimumbinaryninjaversion": 3164
 }
