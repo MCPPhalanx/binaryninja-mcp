@@ -1,6 +1,7 @@
 /api-docs/
 .vscode/
 /tests/binary/beleaf.elf.*.bndb
+/tests/bnuserconfig/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
