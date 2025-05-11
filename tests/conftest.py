@@ -14,14 +14,15 @@ def setup_binaryninja_user_config():
 	"""
 	# copy license file to new user config directory.
 	userconfigdir_current = Path(bn.user_directory())
-	userconfigdir_isolated = Path(__file__).parent / 'bnuserconfig'
+	userconfigdir_new = Path(__file__).parent / 'bnuserconfig'
 
 	license_file = userconfigdir_current / 'license.dat'
-	if not userconfigdir_isolated.exists():
-		userconfigdir_isolated.mkdir()
-	if not license_file.exists():
-		shutil.copy(license_file, userconfigdir_isolated)
-	os.environ['BN_USER_DIRECTORY'] = str(userconfigdir_isolated)
+	license_file_new = userconfigdir_new / 'license.dat'
+	if not userconfigdir_new.exists():
+		userconfigdir_new.mkdir()
+	if not license_file_new.exists():
+		shutil.copy(license_file, license_file_new)
+	os.environ['BN_USER_DIRECTORY'] = str(userconfigdir_new)
 	bn_settings = bn.Settings()
 
 	# opinionated, set tab width to 3
