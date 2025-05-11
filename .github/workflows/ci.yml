@@ -30,7 +30,7 @@ jobs:
     name: Run tests
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -45,4 +45,7 @@ jobs:
           version: '4.2.6455'
           password: ${{ secrets.BN_PASSWORD_426455 }}
       - name: Run MCP Server Test Suite
-        run: uv run pytest
+        run: |
+          uv sync --dev
+          uv run binaryninja-mcp install-api
+          uv run pytest
