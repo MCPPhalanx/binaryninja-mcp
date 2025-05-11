@@ -34,9 +34,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
+      - name: Install uv and setup python environment
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
-      - run: uv run tests/smoke_test.py
+      - name: Setup Binary Ninja
+        uses: MCPPhalanx/action-setup-binaryninja@main
+        with:
+          version: '4.2.6455'
+          password: ${{ secrets.BN_PASSWORD_426455 }}
+      - name: Run MCP Server Test Suite
+        run: uv run pytest
