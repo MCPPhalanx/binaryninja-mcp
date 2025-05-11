@@ -143,7 +143,7 @@ uv sync --dev
 # 安装 binaryninja API
 binaryninja-mcp install-api
 # 检查 API 是否正确安装
-uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabled()}")'
+uv run python -c 'import binaryninja as bn; assert bn._init_plugins() is None; assert bn.core_ui_enabled() is not None; print("BN API check PASSED!!")'
 ```
 
 ## 为开发配置 MCP 客户端

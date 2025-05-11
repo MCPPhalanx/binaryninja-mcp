@@ -148,7 +148,7 @@ uv sync --dev
 # install binaryninja API
 binaryninja-mcp install-api
 # check API is correctly installed
-uv run python -c 'import binaryninja as bn; print(f"ui_enabled={bn.core_ui_enabled()}")'
+uv run python -c 'import binaryninja as bn; assert bn._init_plugins() is None; assert bn.core_ui_enabled() is not None; print("BN API check PASSED!!")'
 ```
 
 ## Setup MCP Client for Development
