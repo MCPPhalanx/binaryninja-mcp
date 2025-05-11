@@ -1,1 +1,1 @@
-binaryninja-mcp==0.4.0
+binaryninja-mcp==0.3.1
