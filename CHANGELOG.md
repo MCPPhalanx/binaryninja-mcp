@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.1
+
+### Fixes
+
+- Fix dependencies not installed by BinaryNinja package manager.
+
+### Development Changes
+
+- Github Actions will now run full test suite instead of a simple smoke test.
+
 ## v0.3.0
 
 ### Major Changes
