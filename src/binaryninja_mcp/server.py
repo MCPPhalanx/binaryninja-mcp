@@ -305,6 +305,15 @@ def create_mcp_server(initial_bvs: Optional[List[bn.BinaryView]] = None, **mcp_s
 		tools = MCPTools(bv)
 		return tools.update_analysis_and_wait()
 
+	@mcp.tool()
+	def set_comment(filename: str, address_or_name: str, comment: str, ctx: Context) -> bool:
+		"""Set a comment for a function or at specific address
+		Note: comments must be a text without `//` characters"""
+		bnctx: BNContext = ctx.request_context.lifespan_context
+		bv = bnctx.get_bv(filename)
+		tools = MCPTools(bv)
+		return tools.set_comment(address_or_name, comment)
+
 	return mcp
 
 
