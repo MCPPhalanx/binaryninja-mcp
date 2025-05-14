@@ -187,6 +187,7 @@ class MCPTools:
 		func = self.bv.get_function_at(addr)
 		if not func:
 			raise ValueError(f'No function found at address {hex(addr)}')
+		comments = func.comments
 
 		# Get HLIL
 		hlil = func.hlil
@@ -195,10 +196,17 @@ class MCPTools:
 
 		# Format the HLIL output
 		lines = []
-		for instruction in hlil.instructions:
-			lines.append(f'{instruction.address:#x}: {instruction}\n')
+		if func.comment:
+			lines.append(f'{func.start:#x}: // {func.comment}')
+		lines.append(f'{func.start:#x}: {func}')
 
-		return ''.join(lines)
+		for line in hlil.root.lines:
+			if line.address in comments:
+				lines.append(f'{line.address:#x}:     {line}  // {comments[line.address]}')
+			else:
+				lines.append(f'{line.address:#x}:     {line}')
+
+		return '\n'.join(lines)
 
 	@handle_exceptions
 	def medium_level_il(self, address_or_name: str) -> str:
@@ -217,6 +225,7 @@ class MCPTools:
 		func = self.bv.get_function_at(addr)
 		if not func:
 			raise ValueError(f'No function found at address {hex(addr)}')
+		comments = func.comments
 
 		# Get MLIL
 		mlil = func.mlil
@@ -225,10 +234,20 @@ class MCPTools:
 
 		# Format the MLIL output
 		lines = []
-		for instruction in mlil.instructions:
-			lines.append(f'{instruction.address:#x}: {instruction}\n')
+		if func.comment:
+			lines.append(f'{func.start:#x}: // {func.comment}')
+		lines.append(f'{func.start:#x}: {func}')
 
-		return ''.join(lines)
+		# MLIL doesn't have a root property like HLIL, so we iterate through instructions directly
+		for instruction in mlil.instructions:
+			if instruction.address in comments:
+				lines.append(
+					f'{instruction.address:#x}:     {instruction}  // {comments[instruction.address]}'
+				)
+			else:
+				lines.append(f'{instruction.address:#x}:     {instruction}')
+
+		return '\n'.join(lines)
 
 	@handle_exceptions
 	def disassembly(self, address_or_name: str, length: Optional[int] = None) -> str:
